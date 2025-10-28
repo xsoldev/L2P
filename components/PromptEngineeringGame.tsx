@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { CheckCircle, XCircle, ArrowRight, Star, Book, Zap, Target, Loader, AlertCircle, Download, Share2, Trophy, Sparkles, Upload, FileText, Mail, BarChart2, TrendingUp, DollarSign, Users } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Button } from '@/components/ui/button';
@@ -47,6 +47,13 @@ const PromptEngineeringGame = () => {
   const [userShape, setUserShape] = useState(null);
   const [easyModeEnabled, setEasyModeEnabled] = useState(false);
   const [usedSuggestion, setUsedSuggestion] = useState(false);
+
+  // Scroll to top whenever lesson changes to fix mobile scroll issue
+  useEffect(() => {
+    if (currentScreen === 'lesson') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentLesson, currentScreen]);
 
   // Dynamic Chart Component
   const DynamicChart = ({ config, data }: { config: any; data: any }) => {
