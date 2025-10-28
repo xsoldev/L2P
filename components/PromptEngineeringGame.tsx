@@ -1761,6 +1761,9 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
     const currentLessonId = lessons[currentLesson].id;
 
+    // Scroll to top for better UX on mobile
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     // Trigger progress celebration
     setShowProgressCelebration(true);
 
@@ -2303,6 +2306,51 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               <Progress value={progress} className="h-2" />
             </motion.div>
           </motion.div>
+        </div>
+
+        {/* Mobile Breadcrumb Navigation - only visible on mobile */}
+        <div className="md:hidden mb-6 overflow-x-auto">
+          <div className="flex items-center gap-2 px-1 pb-2">
+            {lessons.map((lesson, idx) => {
+              const isPast = idx < currentLesson;
+              const isCurrent = idx === currentLesson;
+              const isNext = idx === currentLesson + 1;
+
+              // Only show past lesson, current, and next
+              if (idx === currentLesson - 1 || isCurrent || isNext) {
+                return (
+                  <React.Fragment key={idx}>
+                    {idx === currentLesson - 1 && idx > 0 && (
+                      <div className="flex items-center gap-2">
+                        <div className="text-gray-600 text-xs">...</div>
+                        <ArrowRight className="w-3 h-3 text-gray-700" />
+                      </div>
+                    )}
+                    <div
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full border whitespace-nowrap transition-all ${
+                        isCurrent
+                          ? 'bg-[#70BEFA]/10 border-[#70BEFA] text-[#70BEFA]'
+                          : isPast
+                          ? 'bg-[#0D0D0D] border-gray-800 text-gray-500'
+                          : 'bg-[#0D0D0D] border-gray-800 text-gray-600'
+                      }`}
+                    >
+                      {isPast && <CheckCircle className="w-3 h-3" />}
+                      <span className="text-xs font-mono">{String(idx + 1).padStart(2, '0')}</span>
+                      {isCurrent && <span className="text-xs font-medium truncate max-w-[120px]">{lesson.title}</span>}
+                    </div>
+                    {!isNext && idx < lessons.length - 1 && (
+                      <ArrowRight className={`w-3 h-3 ${isCurrent ? 'text-gray-700' : 'text-gray-800'}`} />
+                    )}
+                  </React.Fragment>
+                );
+              }
+              return null;
+            })}
+            {currentLesson < lessons.length - 2 && (
+              <div className="text-gray-600 text-xs">...</div>
+            )}
+          </div>
         </div>
 
         {/* Asymmetric Grid Layout */}
