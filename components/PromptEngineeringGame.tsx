@@ -2036,7 +2036,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           </div>
 
           {/* Social Media Share Card - Beautiful Design with Orb Hero */}
-          <div className="relative mb-8 mx-auto max-w-2xl">
+          <div className="relative mb-8 mx-auto w-full max-w-2xl px-4 sm:px-0">
             {/* Outer glow effect for the card */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#70BEFA]/20 via-transparent to-[#70BEFA]/20 rounded-3xl blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
 
@@ -2136,35 +2136,35 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             </div>
 
             {/* Content Section */}
-            <div className="relative z-10 px-8 pb-10 space-y-6">
+            <div className="relative z-10 px-4 sm:px-8 pb-6 sm:pb-10 space-y-4 sm:space-y-6">
               {/* Main Message */}
-              <div className="text-center space-y-2">
-                <h2 className="text-4xl font-bold text-white leading-tight tracking-tight">
+              <div className="text-center space-y-1 sm:space-y-2">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight tracking-tight">
                   Course Complete!
                 </h2>
                 {userName && (
-                  <p className="text-xl font-bold text-[#70BEFA]">{userName}</p>
+                  <p className="text-base sm:text-lg md:text-xl font-bold text-[#70BEFA]">{userName}</p>
                 )}
               </div>
 
               {/* Stats - Beautiful Spacing */}
-              <div className="flex justify-center gap-6 py-4">
+              <div className="flex justify-center gap-3 sm:gap-6 py-2 sm:py-4">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#70BEFA] font-mono">{score}</div>
-                  <div className="text-xs text-gray-400 font-mono tracking-wider mt-1">POINTS</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-[#70BEFA] font-mono">{score}</div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 font-mono tracking-wider mt-1">POINTS</div>
                 </div>
-                <div className="text-center border-l border-r border-gray-700/50 px-6">
-                  <div className="text-3xl font-bold text-white font-mono">{completedLessons.length}</div>
-                  <div className="text-xs text-gray-400 font-mono tracking-wider mt-1">LESSONS</div>
+                <div className="text-center border-l border-r border-gray-700/50 px-3 sm:px-6">
+                  <div className="text-2xl sm:text-3xl font-bold text-white font-mono">{completedLessons.length}</div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 font-mono tracking-wider mt-1">LESSONS</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[#70BEFA] font-mono">100%</div>
-                  <div className="text-xs text-gray-400 font-mono tracking-wider mt-1">COMPLETE</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-[#70BEFA] font-mono">100%</div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 font-mono tracking-wider mt-1">COMPLETE</div>
                 </div>
               </div>
 
               {/* Achievement badges - Better Visual Hierarchy */}
-              <div className="flex justify-center gap-3 flex-wrap">
+              <div className="flex justify-center gap-2 sm:gap-3 flex-wrap">
                 <div className="bg-gradient-to-r from-[#1A1A1A] to-[#0D0D0D] border border-[#70BEFA]/30 rounded-full px-4 py-2 flex items-center gap-2 shadow-lg shadow-[#70BEFA]/10">
                   <CheckCircle className="w-4 h-4 text-[#70BEFA]" />
                   <span className="text-xs font-mono text-gray-300 tracking-wider">CLARITY</span>

@@ -131,9 +131,9 @@ export default function CertificatePage() {
   const completedLessons = 7;
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-8">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4 sm:p-8">
       {/* Social Media Share Card - Beautiful Design with Orb Hero */}
-      <div className="relative mx-auto max-w-2xl w-full">
+      <div className="relative mx-auto max-w-2xl w-full px-4 sm:px-0">
         {/* Outer glow effect for the card */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#70BEFA]/20 via-transparent to-[#70BEFA]/20 rounded-3xl blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
 
@@ -215,48 +215,48 @@ export default function CertificatePage() {
           </div>
 
           {/* Hero Section - Orb Takes Center Stage */}
-          <div className="relative z-10 bg-gradient-to-b from-black/50 via-black/30 to-transparent flex flex-col items-center justify-center gap-4 pt-12 pb-10">
+          <div className="relative z-10 bg-gradient-to-b from-black/50 via-black/30 to-transparent flex flex-col items-center justify-center gap-3 sm:gap-4 pt-8 sm:pt-12 pb-6 sm:pb-10">
             {/* Large Prominent Orb */}
             <div className="flex-shrink-0">
               <CertificateShape shapeConfig={sampleShape} size="large" />
             </div>
 
             {/* Shape Name Badge */}
-            <div className="px-5 py-2 bg-gradient-to-r from-[#0D0D0D]/90 to-[#1A1A1A]/90 border border-[#70BEFA]/50 rounded-full backdrop-blur-md shadow-lg shadow-[#70BEFA]/20">
-              <p className="text-sm font-mono text-[#70BEFA] tracking-[0.2em] font-bold">
+            <div className="px-4 sm:px-5 py-1.5 sm:py-2 bg-gradient-to-r from-[#0D0D0D]/90 to-[#1A1A1A]/90 border border-[#70BEFA]/50 rounded-full backdrop-blur-md shadow-lg shadow-[#70BEFA]/20">
+              <p className="text-xs sm:text-sm font-mono text-[#70BEFA] tracking-[0.2em] font-bold">
                 {sampleShape.name.toUpperCase()}
               </p>
             </div>
           </div>
 
           {/* Content Section */}
-          <div className="relative z-10 px-8 pb-10 space-y-6">
+          <div className="relative z-10 px-4 sm:px-8 pb-6 sm:pb-10 space-y-4 sm:space-y-6">
             {/* Main Message */}
-            <div className="text-center space-y-2">
-              <h2 className="text-4xl font-bold text-white leading-tight tracking-tight">
+            <div className="text-center space-y-1 sm:space-y-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight tracking-tight">
                 Course Complete!
               </h2>
-              <p className="text-xl font-bold text-[#70BEFA]">{userName}</p>
+              <p className="text-base sm:text-lg md:text-xl font-bold text-[#70BEFA]">{userName}</p>
             </div>
 
             {/* Stats - Beautiful Spacing */}
-            <div className="flex justify-center gap-6 py-4">
+            <div className="flex justify-center gap-3 sm:gap-6 py-2 sm:py-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-[#70BEFA] font-mono">{score}</div>
-                <div className="text-xs text-gray-400 font-mono tracking-wider mt-1">POINTS</div>
+                <div className="text-2xl sm:text-3xl font-bold text-[#70BEFA] font-mono">{score}</div>
+                <div className="text-[10px] sm:text-xs text-gray-400 font-mono tracking-wider mt-1">POINTS</div>
               </div>
-              <div className="text-center border-l border-r border-gray-700/50 px-6">
-                <div className="text-3xl font-bold text-white font-mono">{completedLessons}</div>
-                <div className="text-xs text-gray-400 font-mono tracking-wider mt-1">LESSONS</div>
+              <div className="text-center border-l border-r border-gray-700/50 px-3 sm:px-6">
+                <div className="text-2xl sm:text-3xl font-bold text-white font-mono">{completedLessons}</div>
+                <div className="text-[10px] sm:text-xs text-gray-400 font-mono tracking-wider mt-1">LESSONS</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-[#70BEFA] font-mono">100%</div>
-                <div className="text-xs text-gray-400 font-mono tracking-wider mt-1">COMPLETE</div>
+                <div className="text-2xl sm:text-3xl font-bold text-[#70BEFA] font-mono">100%</div>
+                <div className="text-[10px] sm:text-xs text-gray-400 font-mono tracking-wider mt-1">COMPLETE</div>
               </div>
             </div>
 
             {/* Achievement badges - Better Visual Hierarchy */}
-            <div className="flex justify-center gap-3 flex-wrap">
+            <div className="flex justify-center gap-2 sm:gap-3 flex-wrap">
               <div className="bg-gradient-to-r from-[#1A1A1A] to-[#0D0D0D] border border-[#70BEFA]/30 rounded-full px-4 py-2 flex items-center gap-2 shadow-lg shadow-[#70BEFA]/10">
                 <CheckCircle className="w-4 h-4 text-[#70BEFA]" />
                 <span className="text-xs font-mono text-gray-300 tracking-wider">CLARITY</span>
@@ -272,18 +272,18 @@ export default function CertificatePage() {
             </div>
 
             {/* Branding Footer - Elegant Separator */}
-            <div className="border-t border-gray-800/50 pt-4 text-center space-y-1">
-              <div className="text-base font-bold text-[#70BEFA] tracking-wide">Novagen Labs</div>
-              <div className="text-xs text-gray-500 font-mono tracking-wider">AI PROMPT ENGINEERING</div>
+            <div className="border-t border-gray-800/50 pt-3 sm:pt-4 text-center space-y-1">
+              <div className="text-sm sm:text-base font-bold text-[#70BEFA] tracking-wide">Novagen Labs</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 font-mono tracking-wider">AI PROMPT ENGINEERING</div>
             </div>
 
             {/* Call to Action - More Prominent */}
-            <div className="bg-gradient-to-r from-[#70BEFA]/10 to-[#70BEFA]/5 border border-[#70BEFA]/30 rounded-xl p-4 text-center shadow-lg shadow-[#70BEFA]/10">
-              <div className="text-xs text-gray-400 tracking-wider">Try it yourself:</div>
-              <div className="text-sm font-bold text-[#70BEFA] font-mono tracking-wide mt-1">
+            <div className="bg-gradient-to-r from-[#70BEFA]/10 to-[#70BEFA]/5 border border-[#70BEFA]/30 rounded-xl p-3 sm:p-4 text-center shadow-lg shadow-[#70BEFA]/10">
+              <div className="text-[10px] sm:text-xs text-gray-400 tracking-wider">Try it yourself:</div>
+              <div className="text-xs sm:text-sm font-bold text-[#70BEFA] font-mono tracking-wide mt-1">
                 learn2prompt.xyz
               </div>
-              <div className="text-xs text-gray-500 mt-1">Beat my score! 🎯</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 mt-1">Beat my score! 🎯</div>
             </div>
           </div>
         </motion.div>

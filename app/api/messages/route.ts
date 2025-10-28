@@ -1,9 +1,13 @@
 import { streamText } from 'ai';
-import { anthropic } from '@ai-sdk/anthropic';
+import { createAnthropic } from '@ai-sdk/anthropic';
 
 export async function POST(request: Request) {
   try {
     const { messages, system } = await request.json();
+
+    const anthropic = createAnthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    });
 
     const result = streamText({
       model: anthropic('claude-3-5-sonnet-20241022'),
