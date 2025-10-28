@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     });
 
     const result = streamText({
-      model: anthropic('claude-3-5-sonnet-20241022'),
+      model: anthropic('claude-sonnet-4-5-20250929'),
       system: system || 'You are a helpful assistant.',
       messages: messages.map((msg: any) => ({
         role: msg.role,
