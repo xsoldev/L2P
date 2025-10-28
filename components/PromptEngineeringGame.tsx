@@ -2150,36 +2150,46 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 )}
               </div>
 
-              {/* Stats - Beautiful Spacing */}
-              <div className="flex justify-center gap-3 sm:gap-6 py-2 sm:py-4">
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-[#70BEFA] font-mono">{score}</div>
-                  <div className="text-[10px] sm:text-xs text-gray-400 font-mono tracking-wider mt-1">POINTS</div>
+              {/* Stats - Compact Single Row */}
+              <div className="flex justify-center items-center gap-2 sm:gap-4 py-2">
+                <div className="flex items-center gap-1.5">
+                  <div className="text-xl sm:text-2xl font-bold text-[#70BEFA] font-mono">{score}</div>
+                  <div className="text-[10px] text-gray-400 font-mono">PTS</div>
                 </div>
-                <div className="text-center border-l border-r border-gray-700/50 px-3 sm:px-6">
-                  <div className="text-2xl sm:text-3xl font-bold text-white font-mono">{completedLessons.length}</div>
-                  <div className="text-[10px] sm:text-xs text-gray-400 font-mono tracking-wider mt-1">LESSONS</div>
+                <div className="w-px h-6 bg-gray-700/50"></div>
+                <div className="flex items-center gap-1.5">
+                  <div className="text-xl sm:text-2xl font-bold text-white font-mono">{completedLessons.length}</div>
+                  <div className="text-[10px] text-gray-400 font-mono">LESSONS</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-[#70BEFA] font-mono">100%</div>
-                  <div className="text-[10px] sm:text-xs text-gray-400 font-mono tracking-wider mt-1">COMPLETE</div>
+                <div className="w-px h-6 bg-gray-700/50"></div>
+                <div className="flex items-center gap-1.5">
+                  <div className="text-xl sm:text-2xl font-bold text-[#70BEFA] font-mono">100%</div>
                 </div>
               </div>
 
-              {/* Achievement badges - Better Visual Hierarchy */}
-              <div className="flex justify-center gap-2 sm:gap-3 flex-wrap">
-                <div className="bg-gradient-to-r from-[#1A1A1A] to-[#0D0D0D] border border-[#70BEFA]/30 rounded-full px-4 py-2 flex items-center gap-2 shadow-lg shadow-[#70BEFA]/10">
-                  <CheckCircle className="w-4 h-4 text-[#70BEFA]" />
-                  <span className="text-xs font-mono text-gray-300 tracking-wider">CLARITY</span>
-                </div>
-                <div className="bg-gradient-to-r from-[#1A1A1A] to-[#0D0D0D] border border-[#70BEFA]/30 rounded-full px-4 py-2 flex items-center gap-2 shadow-lg shadow-[#70BEFA]/10">
-                  <Target className="w-4 h-4 text-[#70BEFA]" />
-                  <span className="text-xs font-mono text-gray-300 tracking-wider">SPECIFICITY</span>
-                </div>
-                <div className="bg-gradient-to-r from-[#1A1A1A] to-[#0D0D0D] border border-[#70BEFA]/30 rounded-full px-4 py-2 flex items-center gap-2 shadow-lg shadow-[#70BEFA]/10">
-                  <Zap className="w-4 h-4 text-[#70BEFA]" />
-                  <span className="text-xs font-mono text-gray-300 tracking-wider">ITERATION</span>
-                </div>
+              {/* Achievement badge - Show best skill */}
+              <div className="flex justify-center">
+                {(() => {
+                  // Determine best badge based on score
+                  let badge, icon;
+                  if (score >= 180) {
+                    badge = 'ITERATION MASTER';
+                    icon = <Zap className="w-4 h-4 text-[#70BEFA]" />;
+                  } else if (score >= 160) {
+                    badge = 'SPECIFICITY EXPERT';
+                    icon = <Target className="w-4 h-4 text-[#70BEFA]" />;
+                  } else {
+                    badge = 'CLARITY CHAMPION';
+                    icon = <CheckCircle className="w-4 h-4 text-[#70BEFA]" />;
+                  }
+
+                  return (
+                    <div className="bg-gradient-to-r from-[#1A1A1A] to-[#0D0D0D] border border-[#70BEFA]/30 rounded-full px-4 py-2 flex items-center gap-2 shadow-lg shadow-[#70BEFA]/10">
+                      {icon}
+                      <span className="text-xs font-mono text-gray-300 tracking-wider">{badge}</span>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Branding Footer - Elegant Separator */}
