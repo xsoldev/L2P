@@ -48,6 +48,40 @@ const PromptEngineeringGame = () => {
   const [easyModeEnabled, setEasyModeEnabled] = useState(false);
   const [usedSuggestion, setUsedSuggestion] = useState(false);
 
+  // Load progress from localStorage on mount
+  useEffect(() => {
+    const savedProgress = localStorage.getItem('learn2prompt-progress');
+    if (savedProgress) {
+      try {
+        const progress = JSON.parse(savedProgress);
+        setCurrentScreen(progress.currentScreen || 'welcome');
+        setCurrentLesson(progress.currentLesson || 0);
+        setScore(progress.score || 0);
+        setCompletedLessons(progress.completedLessons || []);
+        setUserName(progress.userName || '');
+        setUserShape(progress.userShape || null);
+        setExerciseDifficulty(progress.exerciseDifficulty || 'easy');
+      } catch (error) {
+        console.error('Error loading progress:', error);
+      }
+    }
+  }, []);
+
+  // Save progress to localStorage whenever key state changes
+  useEffect(() => {
+    const progress = {
+      currentScreen,
+      currentLesson,
+      score,
+      completedLessons,
+      userName,
+      userShape,
+      exerciseDifficulty,
+      lastSaved: new Date().toISOString(),
+    };
+    localStorage.setItem('learn2prompt-progress', JSON.stringify(progress));
+  }, [currentScreen, currentLesson, score, completedLessons, userName, userShape, exerciseDifficulty]);
+
   // Scroll to top whenever lesson changes to fix mobile scroll issue
   useEffect(() => {
     if (currentScreen === 'lesson') {
@@ -1890,6 +1924,24 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
     window.open(url, '_blank', 'width=600,height=400');
   };
 
+  const resetProgress = () => {
+    if (window.confirm('Are you sure you want to reset all your progress? This cannot be undone.')) {
+      localStorage.removeItem('learn2prompt-progress');
+      setCurrentScreen('welcome');
+      setCurrentLesson(0);
+      setScore(0);
+      setCompletedLessons([]);
+      setUserName('');
+      setUserShape(null);
+      setExerciseDifficulty('easy');
+      setUserInput('');
+      setAiResponse(null);
+      setEvaluation(null);
+      setExerciseAttempts(0);
+      alert('Progress has been reset successfully!');
+    }
+  };
+
   const progress = ((currentLesson + 1) / lessons.length) * 100;
 
   if (currentScreen === 'welcome') {
@@ -1973,9 +2025,19 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     size="lg"
                     className="w-full bg-black text-white hover:bg-black/90 font-semibold py-6 group"
                   >
-                    Start course
+                    {completedLessons.length > 0 ? 'Continue course' : 'Start course'}
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
+                  {completedLessons.length > 0 && (
+                    <Button
+                      onClick={resetProgress}
+                      variant="outline"
+                      size="sm"
+                      className="w-full mt-3 border-black/20 text-black/60 hover:bg-black/5 text-xs"
+                    >
+                      Reset Progress
+                    </Button>
+                  )}
                   <p className="text-black/60 text-xs mt-4 text-center">Free • No signup required</p>
                 </CardContent>
               </Card>
@@ -2261,13 +2323,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
           <div className="text-center">
             <Button
-              onClick={() => {
-                setCurrentScreen('welcome');
-                setCurrentLesson(0);
-                setScore(0);
-                setCompletedLessons([]);
-                setUserName('');
-              }}
+              onClick={resetProgress}
               size="lg"
               className="bg-black text-white border border-[#70BEFA]/30 hover:bg-[#70BEFA] hover:text-black transition-colors"
             >
@@ -2292,9 +2348,18 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               LESSON {currentLesson + 1}/{lessons.length}
             </span>
           </div>
-          <Badge variant="outline" className="text-gray-400 border-gray-700 font-mono text-xs">
-            {score} pts
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-gray-400 border-gray-700 font-mono text-xs">
+              {score} pts
+            </Badge>
+            <button
+              onClick={resetProgress}
+              className="text-xs text-gray-500 hover:text-[#70BEFA] font-mono transition-colors"
+              title="Reset all progress"
+            >
+              Reset
+            </button>
+          </div>
         </div>
 
         {/* Progress bar - enhanced with animation */}
