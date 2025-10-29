@@ -47,6 +47,7 @@ const PromptEngineeringGame = () => {
   const [userShape, setUserShape] = useState(null);
   const [easyModeEnabled, setEasyModeEnabled] = useState(false);
   const [usedSuggestion, setUsedSuggestion] = useState(false);
+  const [isLoadingProgress, setIsLoadingProgress] = useState(true);
 
   // Load progress from localStorage on mount
   useEffect(() => {
@@ -65,10 +66,14 @@ const PromptEngineeringGame = () => {
         console.error('Error loading progress:', error);
       }
     }
+    // Mark loading as complete after a brief delay to ensure state is updated
+    setTimeout(() => setIsLoadingProgress(false), 100);
   }, []);
 
-  // Save progress to localStorage whenever key state changes
+  // Save progress to localStorage whenever key state changes (but not on initial mount)
   useEffect(() => {
+    if (isLoadingProgress) return; // Don't save during initial load
+
     const progress = {
       currentScreen,
       currentLesson,
@@ -80,7 +85,7 @@ const PromptEngineeringGame = () => {
       lastSaved: new Date().toISOString(),
     };
     localStorage.setItem('learn2prompt-progress', JSON.stringify(progress));
-  }, [currentScreen, currentLesson, score, completedLessons, userName, userShape, exerciseDifficulty]);
+  }, [currentScreen, currentLesson, score, completedLessons, userName, userShape, exerciseDifficulty, isLoadingProgress]);
 
   // Scroll to top whenever lesson changes to fix mobile scroll issue
   useEffect(() => {
