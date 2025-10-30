@@ -307,10 +307,23 @@
     }
   ],
   "ui": {
+    "language": {
+      "english": "English",
+      "french": "Français"
+    },
+    "certificate": {
+      "enterName": "Enter Your Name for Certificate"
+    },
+    "completion": {
+      "title": "You did it.",
+      "subtitle": "You've learned the fundamentals of effective AI prompting",
+      "courseCompleted": "COURSE COMPLETED"
+    },
     "navigation": {
       "lessonCounter": "LESSON {{current}}/{{total}}",
       "pointsLabel": "{{score}} pts",
       "reset": "Reset",
+      "resetTitle": "Reset all progress",
       "progress": "{{percent}}% COMPLETE",
       "lessonsCompleted": "{{completed}}/{{total}} LESSONS"
     },
@@ -323,7 +336,14 @@
       "generating": "Generating...",
       "startOver": "Start Over",
       "cancel": "Cancel",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "download": "Download",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "share": "Share",
+      "uploadBusinessReport": "Upload Business Report",
+      "loadCampaignBrief": "Load Campaign Brief",
+      "loadAnalyticsDashboard": "Load Analytics Dashboard"
     },
     "labels": {
       "scenario": "SCENARIO",
@@ -339,10 +359,60 @@
       "watchOut": "WATCH OUT",
       "strengths": "STRENGTHS",
       "improve": "IMPROVE",
-      "nextStep": "NEXT STEP"
+      "nextStep": "NEXT STEP",
+      "share": "SHARE",
+      "aiPreviousResponse": "AI'S PREVIOUS RESPONSE",
+      "needsCorrection": "This response needs correction!",
+      "selectDifficulty": "SELECT DIFFICULTY",
+      "meetingNotes": "MEETING NOTES",
+      "attendeesCount": "{{count}} attendees",
+      "attendees": "ATTENDEES",
+      "discussionPoints": "DISCUSSION POINTS",
+      "actionItems": "ACTION ITEMS",
+      "writeYourPrompt": "WRITE YOUR PROMPT",
+      "step1UploadDocument": "STEP 1: UPLOAD DOCUMENT",
+      "uploadingDocument": "Uploading document...",
+      "businessReportTitle": "{{company}} - Business Report",
+      "uploadSuccess": "10 pages • Uploaded successfully",
+      "documentContents": "DOCUMENT CONTENTS",
+      "company": "Company:",
+      "industry": "Industry:",
+      "employees": "Employees:",
+      "revenue": "Revenue:",
+      "growth": "Growth:",
+      "keyProjects": "Key Projects:",
+      "quarterlySales": "Quarterly Sales:",
+      "marketing": "Marketing:",
+      "budget": "Budget:",
+      "leads": "Leads:",
+      "conversion": "Conversion:",
+      "keyChallenges": "Key Challenges:",
+      "step2WritePrompt": "STEP 2: WRITE YOUR PROMPT",
+      "step1LoadCampaignBrief": "STEP 1: LOAD CAMPAIGN BRIEF",
+      "loadingCampaignBrief": "Loading campaign brief...",
+      "step2WriteCreativePrompt": "STEP 2: WRITE YOUR CREATIVE PROMPT",
+      "step1LoadAnalytics": "STEP 1: LOAD BUSINESS ANALYTICS",
+      "loadingAnalyticsDashboard": "Loading analytics dashboard...",
+      "step2WriteAnalysisPrompt": "STEP 2: WRITE YOUR ANALYSIS PROMPT",
+      "easyModeOn": "Easy Mode: ON",
+      "easyModeOff": "Easy Mode: OFF",
+      "reducedPoints": "(1/10 pts)",
+      "suggestedPrompts": "SUGGESTED PROMPTS",
+      "suggestionWarning": "Using suggestions reduces your score to 1/10 of normal points",
+      "pts": "PTS",
+      "courseCompleted": "COURSE COMPLETED"
     },
     "placeholders": {
-      "promptInput": "Write your prompt here..."
+      "promptInput": "Write your prompt here...",
+      "fullName": "Your full name"
+    },
+    "difficulty": {
+      "easyMode": "Easy Mode",
+      "recommended": "Recommended",
+      "easyDescription": "Analyze simple meeting notes with clear action items.",
+      "hardMode": "Hard Mode",
+      "challenge": "Challenge",
+      "hardDescription": "Upload and analyze comprehensive business reports."
     }
   },
   "difficulty": {

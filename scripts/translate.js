@@ -38,7 +38,7 @@ async function translateToFrench() {
   try {
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 16000,
+      max_tokens: 32000,
       messages: [
         {
           role: 'user',

@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { createTranslator, type Language } from '@/lib/i18n';
+import { createTranslator, getTranslations, type Language } from '@/lib/i18n';
 
 const PromptEngineeringGame = () => {
   const [currentScreen, setCurrentScreen] = useState('welcome');
@@ -53,6 +53,10 @@ const PromptEngineeringGame = () => {
 
   // Create translator function based on current language
   const t = createTranslator(language);
+
+  // Get translations object and lessons array
+  const translations = getTranslations(language);
+  const translatedLessons = translations.lessons;
 
   // Load progress from localStorage on mount
   useEffect(() => {
@@ -359,44 +363,8 @@ const PromptEngineeringGame = () => {
     ];
   };
 
-  // Prompt suggestions for Easy Mode (based on industry best practices)
-  const PROMPT_SUGGESTIONS = {
-    exercise1: [
-      "Write a professional vacation request email. Start with a polite greeting, explain the dates (MM/DD to MM/DD), provide context about planned coverage, and close professionally.",
-      "Create a vacation time-off email to my manager. Include: 1) Greeting 2) Request dates 3) Work coverage plan 4) Express willingness to discuss",
-      "Draft an email requesting vacation approval. Structure: greeting → state dates → explain handover plans → thank manager for consideration"
-    ],
-    exercise2: [
-      "Create a bar chart showing quarterly sales for Q1-Q4 2024. X-axis: quarters, Y-axis: revenue in dollars. Include grid lines and a title 'Quarterly Sales Performance 2024'.",
-      "Generate a visualization with: Type: bar chart, Data: Q1 $450K, Q2 $520K, Q3 $610K, Q4 $580K, Labels on both axes, Legend showing sales data",
-      "Make a sales chart. Specifics: bar graph format, four quarters as categories, sales figures as values, clear axis labels, professional color scheme"
-    ],
-    exercise3: [
-      "The previous post was too casual. Rewrite it with: professional tone, no emojis, focus on value proposition, suitable for LinkedIn, 2-3 sentences maximum.",
-      "Please revise the social media post. Changes needed: remove all emojis, use business-appropriate language, maintain key message but elevate tone, keep under 280 characters.",
-      "Correction: the tone needs to be more professional. Rewrite with: formal business language, no slang or emojis, clear value statement, appropriate for corporate audience"
-    ],
-    exercise4: [
-      "Write a tech blog post about [topic]. Match this style: [paste example]. Use similar: sentence structure, technical depth, tone, paragraph length, and opening hooks.",
-      "Create a blog article following this example: [example text]. Key elements to mirror: casual yet professional tone, use of analogies, paragraph formatting, conclusion style.",
-      "Generate a blog post in the style of: [example]. Replicate: writing voice, technical level, use of examples, paragraph structure, and engaging introductions."
-    ],
-    exercise5: [
-      "Analyze this meeting note document. Extract: 1) Key decisions made 2) Action items with owners 3) Deadlines mentioned 4) Follow-up topics. Format as bulleted lists.",
-      "Review the uploaded document and provide: summary of main topics, list of action items (who/what/when), any risks or blockers mentioned, next steps required.",
-      "Parse this business document. Output: executive summary (3 sentences), action items table (owner, task, deadline), key metrics or numbers, outstanding questions."
-    ],
-    exercise6: [
-      "Based on the campaign brief: create 3 headline options, 2 body copy variations, and 1 call-to-action. Match the target audience tone and address their pain points mentioned in the brief.",
-      "Using the marketing brief provided: develop campaign content including hook/headline, value proposition paragraph, social proof element, and clear CTA. Align with audience demographics.",
-      "Review the campaign brief and generate: attention-grabbing headline, persuasive body copy (150 words), emotional appeal relevant to target audience, strong closing CTA"
-    ],
-    exercise7: [
-      "Analyze the business analytics dashboard. Identify: 3 key growth opportunities, 2 concerning trends, cross-department patterns, and provide 3 actionable recommendations with rationale.",
-      "Review the analytics data across all departments. Create an executive summary with: highlights from each dept, inter-departmental insights, top 3 priorities, recommended actions.",
-      "Examine the business data provided. Deliver: performance highlights, areas needing attention, patterns across departments, strategic recommendations for leadership team with supporting data."
-    ]
-  };
+  // Prompt suggestions for Easy Mode - get from translations
+  const PROMPT_SUGGESTIONS = translations.promptSuggestions;
 
   // Certificate Shape Component - Enhanced with more glow layers
   const CertificateShape = ({ shapeConfig, size = 'large' }) => {
@@ -1001,515 +969,356 @@ const PromptEngineeringGame = () => {
     return scenarios[Math.floor(Math.random() * scenarios.length)];
   };
 
-  const lessons = [
-    {
-      id: 'intro',
-      title: 'The Problem with Vague Prompts',
-      type: 'lesson',
-      content: (
-        <div className="space-y-4">
-          <div className="bg-red-950/20 border-l-4 border-red-500 p-4 rounded-xl">
-            <p className="font-bold text-red-400 mb-2 flex items-center gap-2 text-sm">
-              <XCircle className="w-4 h-4" />
-              Vague Prompt
-            </p>
-            <p className="text-gray-300 text-base italic font-medium">"Make a sandwich"</p>
-          </div>
-
-          <div className="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30">
-            <p className="font-bold text-amber-400 mb-2 text-sm">What the AI might do:</p>
-            <ul className="space-y-1.5 text-gray-300 text-sm">
-              <li className="flex items-start gap-2">
-                <span className="text-[#70BEFA] mt-0.5">—</span>
-                <span>Put ingredients on the counter instead of bread</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#70BEFA] mt-0.5">—</span>
-                <span>Use ingredients you don't want</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#70BEFA] mt-0.5">—</span>
-                <span>Skip steps entirely</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#70BEFA] mt-0.5">—</span>
-                <span>Misunderstand what "sandwich" means to you</span>
-              </li>
-            </ul>
-          </div>
-
-          <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-            <p className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
-              <Sparkles className="w-4 h-4" />
-              The Solution
-            </p>
-            <p className="text-gray-300 text-sm">Break down your request into clear, specific steps. Guide the AI like you're teaching someone who's never made a sandwich before!</p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'lesson1',
-      title: 'Lesson 1: Break It Down',
-      type: 'lesson',
-      content: (
-        <div className="space-y-4">
-          <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-            <h3 className="font-bold text-[#70BEFA] mb-3 flex items-center gap-2 text-sm">
-              <Book className="w-4 h-4" />
-              Key Principle: One Step at a Time
-            </h3>
-            <p className="text-gray-300 mb-4 text-sm">Instead of asking for a complete result, break your task into small, clear steps.</p>
-
-            <div className="bg-[#1A1A1A] p-3 rounded-xl border border-[#70BEFA]/30">
-              <p className="font-semibold text-white mb-2 text-sm">Example: Making eggs</p>
-              <ol className="space-y-1.5 text-gray-300 text-sm">
-                <li className="flex items-start gap-2">
-                  <span className="font-bold text-[#70BEFA] min-w-[16px]">1.</span>
-                  <span>Turn on the stove</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-bold text-[#70BEFA] min-w-[16px]">2.</span>
-                  <span>Put the pan on the stove</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-bold text-[#70BEFA] min-w-[16px]">3.</span>
-                  <span>Add butter to the pan</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-bold text-[#70BEFA] min-w-[16px]">4.</span>
-                  <span>Increase temperature to 60°C</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-bold text-[#70BEFA] min-w-[16px]">5.</span>
-                  <span>Break two eggs in the cooking area</span>
-                </li>
-              </ol>
-            </div>
-          </div>
-
-          <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-            <p className="font-bold text-[#70BEFA] mb-3 text-sm">Why this works:</p>
-            <div className="grid md:grid-cols-2 gap-2">
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Each step is simple and clear</span>
+  const lessons = translatedLessons.map((lesson) => {
+    // Handle lesson types with content (non-exercise lessons)
+    if (lesson.type === 'lesson') {
+      // Intro lesson
+      if (lesson.id === 'intro') {
+        return {
+          id: lesson.id,
+          title: lesson.title,
+          type: lesson.type,
+          content: (
+            <div className="space-y-4">
+              <div className="bg-red-950/20 border-l-4 border-red-500 p-4 rounded-xl">
+                <p className="font-bold text-red-400 mb-2 flex items-center gap-2 text-sm">
+                  <XCircle className="w-4 h-4" />
+                  {lesson.vaguePromptLabel}
+                </p>
+                <p className="text-gray-300 text-base italic font-medium">{lesson.vaguePromptExample}</p>
               </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">You maintain control</span>
+
+              <div className="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30">
+                <p className="font-bold text-amber-400 mb-2 text-sm">{lesson.whatAiMightDoLabel}</p>
+                <ul className="space-y-1.5 text-gray-300 text-sm">
+                  {lesson.aiProblems.map((problem, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-[#70BEFA] mt-0.5">—</span>
+                      <span>{problem}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Catch mistakes early</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">AI knows what to do next</span>
+
+              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
+                <p className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+                  <Sparkles className="w-4 h-4" />
+                  {lesson.solutionLabel}
+                </p>
+                <p className="text-gray-300 text-sm">{lesson.solutionText}</p>
               </div>
             </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'exercise1',
-      title: 'Exercise 1: Break Down a Task',
-      type: 'exercise',
-      scenario: 'You want AI to write a professional email to your manager requesting time off for a vacation.',
-      task: 'Write a prompt that breaks this task down into clear steps. See how the AI responds!',
-      evaluationCriteria: 'breaking the task into steps',
-      hints: [
-        'Think about the email structure: greeting, explanation, request, closing',
-        'What specific information needs to be included?',
-        'How should the tone be?'
-      ]
-    },
-    {
-      id: 'lesson2',
-      title: 'Lesson 2: Be Specific',
-      type: 'lesson',
-      content: (
-        <div className="space-y-4">
-          <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-            <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
-              <Target className="w-4 h-4" />
-              Key Principle: Details Matter
-            </h3>
-            <p className="text-gray-300 text-sm">Vague instructions lead to unexpected results. Add specific details about what, where, and how.</p>
-          </div>
+          )
+        };
+      }
+      
+      // Lesson 1 - Break It Down
+      if (lesson.id === 'lesson1') {
+        return {
+          id: lesson.id,
+          title: lesson.title,
+          type: lesson.type,
+          content: (
+            <div className="space-y-4">
+              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
+                <h3 className="font-bold text-[#70BEFA] mb-3 flex items-center gap-2 text-sm">
+                  <Book className="w-4 h-4" />
+                  {lesson.keyPrincipleLabel}
+                </h3>
+                <p className="text-gray-300 mb-4 text-sm">{lesson.keyPrincipleText}</p>
 
-          <div className="grid md:grid-cols-2 gap-3">
-            <div className="bg-red-950/20 p-4 rounded-xl border border-red-500/30">
-              <p className="font-bold text-red-400 mb-2 flex items-center gap-2 text-sm">
-                <XCircle className="w-4 h-4" />
-                Vague
-              </p>
-              <p className="text-gray-300 italic text-base mb-2">"Add butter"</p>
-              <p className="text-xs text-gray-400">Where? How much? What temperature?</p>
-            </div>
+                <div className="bg-[#1A1A1A] p-3 rounded-xl border border-[#70BEFA]/30">
+                  <p className="font-semibold text-white mb-2 text-sm">{lesson.exampleLabel}</p>
+                  <ol className="space-y-1.5 text-gray-300 text-sm">
+                    {lesson.exampleSteps.map((step, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="font-bold text-[#70BEFA] min-w-[16px]">{index + 1}.</span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
 
-            <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-              <p className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
-                <CheckCircle className="w-4 h-4" />
-                Specific
-              </p>
-              <p className="text-gray-300 italic text-base mb-2">"Add 1 tablespoon of butter to the center of the pan"</p>
-              <p className="text-xs text-gray-400">Clear location and amount!</p>
-            </div>
-          </div>
-
-          <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-            <p className="font-bold text-white mb-3 text-sm">Types of specificity to include:</p>
-            <div className="space-y-2">
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Location:</span>
-                  <span className="text-gray-400 ml-2">"in the pan" not just "add butter"</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Amount:</span>
-                  <span className="text-gray-400 ml-2">"two eggs" not just "add eggs"</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Units:</span>
-                  <span className="text-gray-400 ml-2">"60 degrees Celsius" not just "60 degrees"</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Position:</span>
-                  <span className="text-gray-400 ml-2">"on the second shelf to your left"</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Context:</span>
-                  <span className="text-gray-400 ml-2">"for a professional audience"</span>
+              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
+                <p className="font-bold text-[#70BEFA] mb-3 text-sm">{lesson.whyWorksLabel}</p>
+                <div className="grid md:grid-cols-2 gap-2">
+                  {lesson.benefits.map((benefit, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-300 text-sm">{benefit}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'exercise2',
-      title: 'Exercise 2: Add Specificity',
-      type: 'exercise',
-      scenario: 'You need a data visualization showing your company\'s quarterly sales performance for 2024.',
-      task: 'Write a specific prompt to create a chart from this data. Watch as AI generates the actual visualization based on your instructions!',
-      evaluationCriteria: 'being specific with details (chart type, labels, colors, title, axis labels)',
-      requiresVisualization: true,
-      salesData: [
-        { quarter: 'Q1 2024', sales: 45000, label: 'Q1' },
-        { quarter: 'Q2 2024', sales: 62000, label: 'Q2' },
-        { quarter: 'Q3 2024', sales: 58000, label: 'Q3' },
-        { quarter: 'Q4 2024', sales: 71000, label: 'Q4' }
-      ],
-      hints: [
-        'What type of chart? (bar, line, pie, area?)',
-        'What colors should be used?',
-        'What should the title say?',
-        'Should there be axis labels? What should they say?',
-        'Any specific formatting? (show values, grid lines, legend?)'
-      ]
-    },
-    {
-      id: 'lesson3',
-      title: 'Lesson 3: Iterate & Correct',
-      type: 'lesson',
-      content: (
-        <div className="space-y-4">
-          <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-            <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
-              <Zap className="w-4 h-4" />
-              Key Principle: Fix Misunderstandings Immediately
-            </h3>
-            <p className="text-gray-300 text-sm">AI will sometimes misunderstand. That's okay! Correct it right away and give context for future steps.</p>
-          </div>
-
-          <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-            <p className="font-bold text-white mb-3 text-sm">Example conversation:</p>
-            <div className="space-y-2">
-              <div className="bg-[#0D0D0D] p-3 rounded-xl border border-[#70BEFA]/30">
-                <p className="text-xs text-[#70BEFA] font-semibold mb-1">You:</p>
-                <p className="text-gray-200 text-sm">"Add butter to the pan"</p>
+          )
+        };
+      }
+      
+      // Lesson 2 - Be Specific
+      if (lesson.id === 'lesson2') {
+        return {
+          id: lesson.id,
+          title: lesson.title,
+          type: lesson.type,
+          content: (
+            <div className="space-y-4">
+              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
+                <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+                  <Target className="w-4 h-4" />
+                  {lesson.keyPrincipleLabel}
+                </h3>
+                <p className="text-gray-300 text-sm">{lesson.keyPrincipleText}</p>
               </div>
 
-              <div className="bg-[#0D0D0D] p-3 rounded-xl border border-gray-700">
-                <p className="text-xs text-gray-400 font-semibold mb-1">AI:</p>
-                <p className="text-gray-300 italic text-sm">*Places butter on the pan handle*</p>
-              </div>
+              <div className="grid md:grid-cols-2 gap-3">
+                <div className="bg-red-950/20 p-4 rounded-xl border border-red-500/30">
+                  <p className="font-bold text-red-400 mb-2 flex items-center gap-2 text-sm">
+                    <XCircle className="w-4 h-4" />
+                    {lesson.vagueLabel}
+                  </p>
+                  <p className="text-gray-300 italic text-base mb-2">{lesson.vagueExample}</p>
+                  <p className="text-xs text-gray-400">{lesson.vagueQuestion}</p>
+                </div>
 
-              <div className="bg-[#0D0D0D] p-3 rounded-xl border border-[#70BEFA]/30">
-                <p className="text-xs text-[#70BEFA] font-semibold mb-1">You (Correcting):</p>
-                <p className="text-gray-200 text-sm">"Not on the handle! Put it in the cooking area of the pan. Going forward, when I say 'add to the pan', I mean the cooking area."</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-            <p className="font-bold text-[#70BEFA] mb-2 text-sm">Correction tips:</p>
-            <div className="space-y-1.5">
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Point out the mistake clearly</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Explain what you actually meant</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Add context for future instructions</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Be specific about what needs to change</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'exercise3',
-      title: 'Exercise 3: Correct & Iterate',
-      type: 'exercise',
-      scenario: 'You asked AI to create a social media post for your business, but it came back too casual and used emojis. You need a professional tone.',
-      task: 'Write a correction prompt that fixes the mistake AND sets expectations for future posts.',
-      evaluationCriteria: 'correcting mistakes and setting future expectations',
-      mockBadResponse: "Hey guys! 🎉 So excited to announce our AMAZING new product line!!! 😍🔥 It's literally the BEST thing you'll see all day! Super affordable and totally worth it! 💯 DM us ASAP if you want one!!! Limited stock! 🚀✨",
-      hints: [
-        'Point out what went wrong specifically',
-        'Specify the correct tone',
-        'Add instructions for future requests'
-      ]
-    },
-    {
-      id: 'lesson4',
-      title: 'Lesson 4: Provide Examples',
-      type: 'lesson',
-      content: (
-        <div className="space-y-4">
-          <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-            <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
-              <Book className="w-4 h-4" />
-              Key Principle: Show, Don't Just Tell
-            </h3>
-            <p className="text-gray-300 text-sm">Instead of only describing what you want, provide examples. AI learns patterns from your examples and matches that style.</p>
-          </div>
-
-          <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-            <p className="font-bold text-white mb-3 text-sm">Ways to provide examples:</p>
-            <div className="space-y-2">
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Text samples:</span>
-                  <span className="text-gray-400 ml-2">"Write like this: [paste example]"</span>
+                <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
+                  <p className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4" />
+                    {lesson.specificLabel}
+                  </p>
+                  <p className="text-gray-300 italic text-base mb-2">{lesson.specificExample}</p>
+                  <p className="text-xs text-gray-400">{lesson.specificNote}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Links:</span>
-                  <span className="text-gray-400 ml-2">"Match the style of this article: [URL]"</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Format examples:</span>
-                  <span className="text-gray-400 ml-2">"Use this structure: [template]"</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Before/After:</span>
-                  <span className="text-gray-400 ml-2">"Transform this [input] to this [output]"</span>
+
+              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
+                <p className="font-bold text-white mb-3 text-sm">{lesson.specificsLabel}</p>
+                <div className="space-y-2">
+                  {lesson.specificTypes.map((item, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
+                      <div className="text-sm">
+                        <span className="font-semibold text-white">{item.type}</span>
+                        <span className="text-gray-400 ml-2">{item.example}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
+          )
+        };
+      }
+      
+      // Lesson 3 - Iterate & Correct
+      if (lesson.id === 'lesson3') {
+        return {
+          id: lesson.id,
+          title: lesson.title,
+          type: lesson.type,
+          content: (
+            <div className="space-y-4">
+              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
+                <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+                  <Zap className="w-4 h-4" />
+                  {lesson.keyPrincipleLabel}
+                </h3>
+                <p className="text-gray-300 text-sm">{lesson.keyPrincipleText}</p>
+              </div>
 
-          <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-            <p className="font-bold text-[#70BEFA] mb-2 text-sm">Why examples work:</p>
-            <div className="space-y-1.5">
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">AI sees exactly what you want</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Matches tone and style automatically</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Reduces back-and-forth clarifications</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Works better than lengthy descriptions</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'exercise4',
-      title: 'Exercise 4: Use Examples',
-      type: 'exercise',
-      scenario: 'You need to write blog posts for your tech company. You want AI to match the style of existing articles you like.',
-      task: 'Write a prompt that references example articles (you can include URLs) and asks AI to match that writing style for a new topic.',
-      evaluationCriteria: 'including reference examples (text or URLs) and asking AI to match the style',
-      mockBadResponse: undefined,
-      enableWebSearch: true,
-      hints: [
-        'You can reference URLs of example articles',
-        'Or paste example text directly in your prompt',
-        'Point out specific style elements (tone, structure, length)',
-        'Clearly state the new topic you want written',
-        'Ask AI to analyze and match the example style'
-      ]
-    },
-    {
-      id: 'lesson5',
-      title: 'Lesson 5: Working with Documents',
-      type: 'lesson',
-      content: (
-        <div className="space-y-4">
-          <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-            <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
-              <Book className="w-4 h-4" />
-              Key Principle: Guide AI Through Your Documents
-            </h3>
-            <p className="text-gray-300 text-sm">When working with uploaded documents, tell AI exactly what to look for and how to use the information.</p>
-          </div>
+              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
+                <p className="font-bold text-white mb-3 text-sm">{lesson.conversationLabel}</p>
+                <div className="space-y-2">
+                  <div className="bg-[#0D0D0D] p-3 rounded-xl border border-[#70BEFA]/30">
+                    <p className="text-xs text-[#70BEFA] font-semibold mb-1">{lesson.conversationExample.userLabel}</p>
+                    <p className="text-gray-200 text-sm">{lesson.conversationExample.userMessage}</p>
+                  </div>
 
-          <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-            <p className="font-bold text-white mb-3 text-sm">Best practices for document prompts:</p>
-            <div className="space-y-2">
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Reference the document:</span>
-                  <span className="text-gray-400 ml-2">"Based on the uploaded document..."</span>
+                  <div className="bg-[#0D0D0D] p-3 rounded-xl border border-gray-700">
+                    <p className="text-xs text-gray-400 font-semibold mb-1">{lesson.conversationExample.aiLabel}</p>
+                    <p className="text-gray-300 italic text-sm">{lesson.conversationExample.aiMessage}</p>
+                  </div>
+
+                  <div className="bg-[#0D0D0D] p-3 rounded-xl border border-[#70BEFA]/30">
+                    <p className="text-xs text-[#70BEFA] font-semibold mb-1">{lesson.conversationExample.correctionLabel}</p>
+                    <p className="text-gray-200 text-sm">{lesson.conversationExample.correctionMessage}</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Specify sections:</span>
-                  <span className="text-gray-400 ml-2">"Focus on the financial data in section 3"</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Define the task clearly:</span>
-                  <span className="text-gray-400 ml-2">"Summarize the key findings" or "Extract all dates"</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Specify output format:</span>
-                  <span className="text-gray-400 ml-2">"Create a bullet list" or "Make a table"</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
-                <div className="text-sm">
-                  <span className="font-semibold text-white">Ask questions:</span>
-                  <span className="text-gray-400 ml-2">"What are the main risks mentioned?"</span>
+
+              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
+                <p className="font-bold text-[#70BEFA] mb-2 text-sm">{lesson.correctionTipsLabel}</p>
+                <div className="space-y-1.5">
+                  {lesson.correctionTips.map((tip, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-300 text-sm">{tip}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
+          )
+        };
+      }
+      
+      // Lesson 4 - Provide Examples
+      if (lesson.id === 'lesson4') {
+        return {
+          id: lesson.id,
+          title: lesson.title,
+          type: lesson.type,
+          content: (
+            <div className="space-y-4">
+              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
+                <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+                  <Book className="w-4 h-4" />
+                  {lesson.keyPrincipleLabel}
+                </h3>
+                <p className="text-gray-300 text-sm">{lesson.keyPrincipleText}</p>
+              </div>
 
-          <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-            <p className="font-bold text-[#70BEFA] mb-2 text-sm">Common mistakes to avoid:</p>
-            <div className="space-y-1.5">
-              <div className="flex items-start gap-2">
-                <XCircle className="w-4 h-4 text-orange-400 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">"Analyze this" (too vague - analyze what aspect?)</span>
+              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
+                <p className="font-bold text-white mb-3 text-sm">{lesson.waysToProvideLabel}</p>
+                <div className="space-y-2">
+                  {lesson.exampleWays.map((way, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
+                      <div className="text-sm">
+                        <span className="font-semibold text-white">{way.type}</span>
+                        <span className="text-gray-400 ml-2">{way.example}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex items-start gap-2">
-                <XCircle className="w-4 h-4 text-orange-400 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">"Tell me about the document" (what specifically?)</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <XCircle className="w-4 h-4 text-orange-400 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">Not mentioning which document (if multiple uploaded)</span>
+
+              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
+                <p className="font-bold text-[#70BEFA] mb-2 text-sm">{lesson.whyExamplesWorkLabel}</p>
+                <div className="space-y-1.5">
+                  {lesson.benefits.map((benefit, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-300 text-sm">{benefit}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'exercise5',
-      title: 'Exercise 5: Document Analysis',
-      type: 'exercise',
-      scenario: 'Analyze meeting notes or business documents to extract key information and action items.',
-      task: 'Choose your difficulty: Easy mode shows meeting notes, Hard mode requires uploading a full business report.',
-      evaluationCriteria: 'referencing the document, specifying what to extract, and defining output format',
-      mockBadResponse: undefined,
-      hasDifficultyModes: true,
-      requiresDocumentUpload: true, // Only for hard mode
-      hints: [
-        'Acknowledge the document/notes explicitly',
-        'Specify which information to focus on',
-        'Define what information you need extracted',
-        'Specify how you want the output formatted (table, bullets, summary, etc.)'
-      ]
-    },
-    {
-      id: 'exercise6',
-      title: 'Final Challenge 1: Creative Writing',
-      type: 'exercise',
-      scenario: 'Review the marketing campaign brief and create compelling campaign content that resonates with the target audience.',
-      task: 'Load the campaign brief, then write a prompt to create email copy, social posts, or ad copy that aligns with campaign goals.',
-      evaluationCriteria: 'referencing campaign details, targeting audience, addressing goals, creative and specific output request',
-      requiresCampaignBrief: true,
-      hints: [
-        'Reference the specific product and target audience',
-        'Mention the campaign goals and key messages',
-        'Specify the type of content needed (email, social, ad)',
-        'Define tone, length, and format',
-        'Include competitor insights to differentiate'
-      ]
-    },
-    {
-      id: 'exercise7',
-      title: 'Final Challenge 2: Analytical Thinking',
-      type: 'exercise',
-      scenario: 'Analyze cross-departmental business data to identify insights, trends, and actionable recommendations for the leadership team.',
-      task: 'Load the business analytics dashboard, then write a prompt to extract insights across Sales, Marketing, Accounting, and Operations.',
-      evaluationCriteria: 'referencing multiple departments, specifying analysis type, defining output format, requesting actionable insights',
-      requiresAnalytics: true,
-      hints: [
-        'Reference specific departments and metrics',
-        'Ask for cross-department correlations and patterns',
-        'Specify what insights you need (opportunities, concerns, trends)',
-        'Define output format (executive summary, bullet points, recommendations)',
-        'Request prioritized, actionable recommendations'
-      ]
+          )
+        };
+      }
+      
+      // Lesson 5 - Working with Documents
+      if (lesson.id === 'lesson5') {
+        return {
+          id: lesson.id,
+          title: lesson.title,
+          type: lesson.type,
+          content: (
+            <div className="space-y-4">
+              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
+                <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+                  <Book className="w-4 h-4" />
+                  {lesson.keyPrincipleLabel}
+                </h3>
+                <p className="text-gray-300 text-sm">{lesson.keyPrincipleText}</p>
+              </div>
+
+              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
+                <p className="font-bold text-white mb-3 text-sm">{lesson.bestPracticesLabel}</p>
+                <div className="space-y-2">
+                  {lesson.bestPractices.map((practice, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
+                      <div className="text-sm">
+                        <span className="font-semibold text-white">{practice.type}</span>
+                        <span className="text-gray-400 ml-2">{practice.example}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
+                <p className="font-bold text-[#70BEFA] mb-2 text-sm">{lesson.mistakesToAvoidLabel}</p>
+                <div className="space-y-1.5">
+                  {lesson.commonMistakes.map((mistake, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <XCircle className="w-4 h-4 text-orange-400 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-300 text-sm">{mistake}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )
+        };
+      }
     }
-  ];
+    
+    // Handle exercise types
+    if (lesson.type === 'exercise') {
+      const exerciseObj: any = {
+        id: lesson.id,
+        title: lesson.title,
+        type: lesson.type,
+        scenario: lesson.scenario,
+        task: lesson.task,
+        evaluationCriteria: lesson.evaluationCriteria,
+        hints: lesson.hints
+      };
+
+      // Exercise 2 specific properties
+      if (lesson.id === 'exercise2') {
+        exerciseObj.requiresVisualization = true;
+        exerciseObj.salesData = [
+          { quarter: 'Q1 2024', sales: 45000, label: 'Q1' },
+          { quarter: 'Q2 2024', sales: 62000, label: 'Q2' },
+          { quarter: 'Q3 2024', sales: 58000, label: 'Q3' },
+          { quarter: 'Q4 2024', sales: 71000, label: 'Q4' }
+        ];
+      }
+
+      // Exercise 3 specific properties
+      if (lesson.id === 'exercise3') {
+        exerciseObj.mockBadResponse = lesson.mockBadResponse;
+      }
+
+      // Exercise 4 specific properties
+      if (lesson.id === 'exercise4') {
+        exerciseObj.mockBadResponse = undefined;
+        exerciseObj.enableWebSearch = true;
+      }
+
+      // Exercise 5 specific properties
+      if (lesson.id === 'exercise5') {
+        exerciseObj.mockBadResponse = undefined;
+        exerciseObj.hasDifficultyModes = true;
+        exerciseObj.requiresDocumentUpload = true;
+      }
+
+      // Exercise 6 specific properties
+      if (lesson.id === 'exercise6') {
+        exerciseObj.requiresCampaignBrief = true;
+      }
+
+      // Exercise 7 specific properties
+      if (lesson.id === 'exercise7') {
+        exerciseObj.requiresAnalytics = true;
+      }
+
+      return exerciseObj;
+    }
+
+    // Fallback for any unexpected lesson types
+    return {
+      id: lesson.id,
+      title: lesson.title,
+      type: lesson.type
+    };
+  });
 
   const generateAIResponse = async (userPrompt, lessonContext, enableWebSearch = false) => {
     try {
@@ -1533,6 +1342,7 @@ const PromptEngineeringGame = () => {
         },
         body: JSON.stringify({
           max_tokens: 800,
+          language: language,
           messages: [
             {
               role: "user",
@@ -1553,9 +1363,14 @@ Your job:
 
 5. DO NOT explain what's wrong with the prompt - just demonstrate it through your response.
 
+6. NEVER provide code examples or code snippets in your response. Users are learning to write prompts, not to read code.
+
+7. If the task involves creating a visualization or chart, simply describe what you would create based on the prompt, or acknowledge limitations if the prompt was vague.
+
 Examples:
 - Vague: "Write an email" → You might write an email but get the tone wrong, miss key details, or make assumptions
 - Good: "Write a professional email to my manager. Start with 'Dear [Manager Name]', explain that I'm requesting time off, specify dates June 1-5, and close formally." → Respond appropriately
+- Visualization: "Make a chart of sales" → Describe what chart you'd make or ask for clarification on missing details
 
 Generate a response now:`
             }
@@ -1601,6 +1416,7 @@ Generate a response now:`
         },
         body: JSON.stringify({
           max_tokens: 1000,
+          language: language,
           messages: [
             {
               role: "user",
@@ -1675,6 +1491,7 @@ Rules:
         },
         body: JSON.stringify({
           max_tokens: 1500,
+          language: language,
           messages: [
             {
               role: "user",
@@ -1990,7 +1807,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   : 'flex-1 bg-[#1A1A1A] border-gray-700 text-gray-300 hover:bg-[#252525] hover:border-[#70BEFA]/50'}
               >
                 <Globe className="w-4 h-4 mr-2" />
-                English
+                {t('ui.language.english')}
               </Button>
               <Button
                 onClick={() => setLanguage('fr')}
@@ -2000,7 +1817,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   : 'flex-1 bg-[#1A1A1A] border-gray-700 text-gray-300 hover:bg-[#252525] hover:border-[#70BEFA]/50'}
               >
                 <Globe className="w-4 h-4 mr-2" />
-                Français
+                {t('ui.language.french')}
               </Button>
             </div>
           </div>
@@ -2104,7 +1921,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   type="text"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
-                  placeholder="Your full name"
+                  placeholder={t('ui.placeholders.fullName')}
                   className="w-full p-4 bg-[#0D0D0D] border-2 border-[#70BEFA]/30 text-white rounded-xl focus:border-[#70BEFA] focus:outline-none mb-6"
                   autoFocus
                 />
@@ -2113,7 +1930,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     onClick={() => setShowNameInput(false)}
                     className="flex-1 px-6 py-3 border-2 border-gray-600 rounded-xl font-semibold text-gray-300 hover:bg-gray-700/50 transition-colors"
                   >
-                    Cancel
+                    {t('ui.buttons.cancel')}
                   </button>
                   <button
                     onClick={() => {
@@ -2124,7 +1941,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     disabled={!userName.trim()}
                     className="flex-1 px-6 py-3 bg-gradient-to-r from-[#70BEFA] to-[#5AAFED] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#70BEFA]/50 disabled:opacity-50 transition-all"
                   >
-                    Confirm
+                    {t('ui.buttons.confirm')}
                   </button>
                 </div>
               </div>
@@ -2330,7 +2147,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 className="flex items-center justify-center gap-2 bg-black text-white border-gray-800 hover:bg-[#70BEFA] hover:text-black hover:border-[#70BEFA] transition-colors"
               >
                 <Download className="w-4 h-4" />
-                <span className="text-sm">Download</span>
+                <span className="text-sm">{t('ui.buttons.download')}</span>
               </Button>
               <Button
                 onClick={shareToTwitter}
@@ -2338,7 +2155,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 className="flex items-center justify-center gap-2 bg-black text-white border-gray-800 hover:bg-[#70BEFA] hover:text-black hover:border-[#70BEFA] transition-colors"
               >
                 <Share2 className="w-4 h-4" />
-                <span className="text-sm">Twitter</span>
+                <span className="text-sm">{t('ui.buttons.twitter')}</span>
               </Button>
               <Button
                 onClick={shareToLinkedIn}
@@ -2346,7 +2163,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 className="flex items-center justify-center gap-2 bg-black text-white border-gray-800 hover:bg-[#70BEFA] hover:text-black hover:border-[#70BEFA] transition-colors"
               >
                 <Share2 className="w-4 h-4" />
-                <span className="text-sm">LinkedIn</span>
+                <span className="text-sm">{t('ui.buttons.linkedin')}</span>
               </Button>
               <Button
                 onClick={shareCertificate}
@@ -2354,7 +2171,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 className="flex items-center justify-center gap-2 bg-black text-white border-gray-800 hover:bg-[#70BEFA] hover:text-black hover:border-[#70BEFA] transition-colors"
               >
                 <Share2 className="w-4 h-4" />
-                <span className="text-sm">Share</span>
+                <span className="text-sm">{t('ui.buttons.share')}</span>
               </Button>
             </div>
           </div>
@@ -2365,7 +2182,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               size="lg"
               className="bg-black text-white border border-[#70BEFA]/30 hover:bg-[#70BEFA] hover:text-black transition-colors"
             >
-              Start Over
+              {t('ui.buttons.startOver')}
             </Button>
           </div>
         </div>
@@ -2383,19 +2200,19 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 bg-[#70BEFA] rounded-sm"></div>
             <span className="text-sm font-mono text-[#70BEFA] tracking-wider">
-              LESSON {currentLesson + 1}/{lessons.length}
+              {t('ui.navigation.lessonCounter').replace('{{current}}', String(currentLesson + 1)).replace('{{total}}', String(lessons.length))}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-gray-400 border-gray-700 font-mono text-xs">
-              {score} pts
+              {t('ui.navigation.pointsLabel').replace('{{score}}', String(score))}
             </Badge>
             <button
               onClick={resetProgress}
               className="text-xs text-gray-500 hover:text-[#70BEFA] font-mono transition-colors"
-              title="Reset all progress"
+              title={t('ui.navigation.resetTitle')}
             >
-              Reset
+              {t('ui.navigation.reset')}
             </button>
           </div>
         </div>
@@ -2403,8 +2220,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
         {/* Progress bar - enhanced with animation */}
         <div className="mb-12 space-y-2 relative">
           <div className="flex items-center justify-between text-xs text-gray-500 font-mono">
-            <span>{Math.round(progress)}% COMPLETE</span>
-            <span>{completedLessons.length}/{lessons.length} LESSONS</span>
+            <span>{t('ui.navigation.progress').replace('{{percent}}', String(Math.round(progress)))}</span>
+            <span>{t('ui.navigation.lessonsCompleted').replace('{{completed}}', String(completedLessons.length)).replace('{{total}}', String(lessons.length))}</span>
           </div>
           <motion.div
             initial={{ scaleX: 0 }}
@@ -2501,7 +2318,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 size="lg"
                 className="bg-black text-white border border-[#70BEFA]/30 hover:bg-[#70BEFA] hover:text-black transition-all duration-200 group"
               >
-                <span>Continue</span>
+                <span>{t('ui.buttons.continue')}</span>
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
@@ -2512,7 +2329,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-sm"></div>
-                    <span className="text-xs font-mono text-[#70BEFA] tracking-wider">SCENARIO</span>
+                    <span className="text-xs font-mono text-[#70BEFA] tracking-wider">{t('ui.labels.scenario')}</span>
                   </div>
                   <p className="text-gray-300 leading-relaxed">{currentLessonData.scenario}</p>
                   <div className="pt-2 border-t border-gray-800">
@@ -2523,7 +2340,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     <div className="mt-6 space-y-3">
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                        <span className="text-xs font-mono text-white tracking-wider">DATA</span>
+                        <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.data')}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         {currentLessonData.salesData.map((item, idx) => (
@@ -2667,7 +2484,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                        <span className="text-xs font-mono text-white tracking-wider">WRITE YOUR PROMPT</span>
+                        <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.yourPrompt')}</span>
                       </div>
                     </div>
                   )}
@@ -2742,7 +2559,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       {documentUploaded && (
                         <div className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                          <span className="text-xs font-mono text-white tracking-wider">STEP 2: WRITE YOUR PROMPT</span>
+                          <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.yourPrompt')}</span>
                         </div>
                       )}
                     </div>
@@ -3029,7 +2846,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
                         <label className="text-xs font-mono text-white tracking-wider">
-                          YOUR PROMPT
+                          {t('ui.labels.yourPrompt')}
                         </label>
                       </div>
 
@@ -3093,7 +2910,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
                     className="w-full bg-[#0D0D0D] border border-gray-800 text-white focus:border-[#70BEFA] focus:ring-0 min-h-[140px] placeholder-gray-600 rounded"
-                    placeholder="Write your prompt here..."
+                    placeholder={t('ui.placeholders.promptInput')}
                     disabled={isLoading}
                   />
                 </div>
@@ -3110,9 +2927,9 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   <CardContent className="p-6 space-y-3">
                     <div className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                      <span className="text-xs font-mono text-white tracking-wider">RESPONSE</span>
+                      <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.response')}</span>
                       {isStreaming && (
-                        <span className="text-xs text-[#70BEFA] animate-pulse">● Streaming...</span>
+                        <span className="text-xs text-[#70BEFA] animate-pulse">{t('ui.labels.streaming')}</span>
                       )}
                     </div>
                     <div className="prose prose-invert prose-sm max-w-none">
@@ -3244,14 +3061,12 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     {isLoading ? (
                       <>
                         <Loader className="w-5 h-5 animate-spin mr-2" />
-                        {currentLessonData.requiresVisualization
-                          ? 'Generating...'
-                          : 'Generating...'}
+                        {t('ui.buttons.generating')}
                       </>
                     ) : (
                       currentLessonData.requiresVisualization
-                        ? 'Generate Visualization'
-                        : 'Submit Prompt'
+                        ? t('ui.buttons.generateVisualization')
+                        : t('ui.buttons.submitPrompt')
                     )}
                   </Button>
                 ) : (
@@ -3262,7 +3077,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                         size="lg"
                         className="flex-1 bg-black text-white border border-orange-500 hover:bg-orange-500 hover:text-black transition-colors"
                       >
-                        Try Again
+                        {t('ui.buttons.tryAgain')}
                       </Button>
                     )}
                     <Button
@@ -3270,7 +3085,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       size="lg"
                       className="flex-1 bg-black text-white border border-[#70BEFA]/30 hover:bg-[#70BEFA] hover:text-black transition-colors group"
                     >
-                      <span>{evaluation.passed ? 'Continue' : 'Skip Lesson'}</span>
+                      <span>{evaluation.passed ? t('ui.buttons.continue') : t('ui.buttons.skipLesson')}</span>
                       <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </>
@@ -3288,7 +3103,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                    <span className="text-xs font-mono text-white tracking-wider">HINTS</span>
+                    <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.hints')}</span>
                   </div>
                   <ul className="space-y-3 text-sm text-gray-400">
                     {currentLessonData.hints.map((hint, idx) => (
@@ -3307,7 +3122,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                  <span className="text-xs font-mono text-white tracking-wider">LESSONS</span>
+                  <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.lessons')}</span>
                 </div>
                 <div className="space-y-2">
                   {lessons.map((lesson, idx) => (

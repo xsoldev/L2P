@@ -307,10 +307,23 @@
     }
   ],
   "ui": {
+    "language": {
+      "english": "Anglais",
+      "french": "Français"
+    },
+    "certificate": {
+      "enterName": "Entrez votre nom pour le certificat"
+    },
+    "completion": {
+      "title": "Vous l'avez fait.",
+      "subtitle": "Vous avez appris les fondamentaux du prompt engineering efficace",
+      "courseCompleted": "COURS TERMINÉ"
+    },
     "navigation": {
       "lessonCounter": "LEÇON {{current}}/{{total}}",
       "pointsLabel": "{{score}} pts",
       "reset": "Réinitialiser",
+      "resetTitle": "Réinitialiser toute la progression",
       "progress": "{{percent}}% TERMINÉ",
       "lessonsCompleted": "{{completed}}/{{total}} LEÇONS"
     },
@@ -323,7 +336,14 @@
       "generating": "Génération en cours...",
       "startOver": "Recommencer",
       "cancel": "Annuler",
-      "confirm": "Confirmer"
+      "confirm": "Confirmer",
+      "download": "Télécharger",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "share": "Partager",
+      "uploadBusinessReport": "Télécharger le rapport d'affaires",
+      "loadCampaignBrief": "Charger le brief de campagne",
+      "loadAnalyticsDashboard": "Charger le tableau de bord analytique"
     },
     "labels": {
       "scenario": "SCÉNARIO",
@@ -339,10 +359,60 @@
       "watchOut": "ATTENTION",
       "strengths": "FORCES",
       "improve": "À AMÉLIORER",
-      "nextStep": "PROCHAINE ÉTAPE"
+      "nextStep": "PROCHAINE ÉTAPE",
+      "share": "PARTAGER",
+      "aiPreviousResponse": "RÉPONSE PRÉCÉDENTE DE L'IA",
+      "needsCorrection": "Cette réponse nécessite une correction !",
+      "selectDifficulty": "SÉLECTIONNER LA DIFFICULTÉ",
+      "meetingNotes": "NOTES DE RÉUNION",
+      "attendeesCount": "{{count}} participants",
+      "attendees": "PARTICIPANTS",
+      "discussionPoints": "POINTS DE DISCUSSION",
+      "actionItems": "ACTIONS À FAIRE",
+      "writeYourPrompt": "RÉDIGEZ VOTRE PROMPT",
+      "step1UploadDocument": "ÉTAPE 1 : TÉLÉCHARGER LE DOCUMENT",
+      "uploadingDocument": "Téléchargement du document...",
+      "businessReportTitle": "{{company}} - Rapport d'affaires",
+      "uploadSuccess": "10 pages • Téléchargé avec succès",
+      "documentContents": "CONTENU DU DOCUMENT",
+      "company": "Entreprise :",
+      "industry": "Secteur :",
+      "employees": "Employés :",
+      "revenue": "Revenu :",
+      "growth": "Croissance :",
+      "keyProjects": "Projets clés :",
+      "quarterlySales": "Ventes trimestrielles :",
+      "marketing": "Marketing :",
+      "budget": "Budget :",
+      "leads": "Prospects :",
+      "conversion": "Conversion :",
+      "keyChallenges": "Défis clés :",
+      "step2WritePrompt": "ÉTAPE 2 : RÉDIGEZ VOTRE PROMPT",
+      "step1LoadCampaignBrief": "ÉTAPE 1 : CHARGER LE BRIEF DE CAMPAGNE",
+      "loadingCampaignBrief": "Chargement du brief de campagne...",
+      "step2WriteCreativePrompt": "ÉTAPE 2 : RÉDIGEZ VOTRE PROMPT CRÉATIF",
+      "step1LoadAnalytics": "ÉTAPE 1 : CHARGER LES ANALYSES D'AFFAIRES",
+      "loadingAnalyticsDashboard": "Chargement du tableau de bord analytique...",
+      "step2WriteAnalysisPrompt": "ÉTAPE 2 : RÉDIGEZ VOTRE PROMPT D'ANALYSE",
+      "easyModeOn": "Mode Facile : ACTIVÉ",
+      "easyModeOff": "Mode Facile : DÉSACTIVÉ",
+      "reducedPoints": "(1/10 pts)",
+      "suggestedPrompts": "PROMPTS SUGGÉRÉS",
+      "suggestionWarning": "Utiliser les suggestions réduit votre score à 1/10 des points normaux",
+      "pts": "PTS",
+      "courseCompleted": "COURS TERMINÉ"
     },
     "placeholders": {
-      "promptInput": "Écrivez votre prompt ici..."
+      "promptInput": "Écrivez votre prompt ici...",
+      "fullName": "Votre nom complet"
+    },
+    "difficulty": {
+      "easyMode": "Mode Facile",
+      "recommended": "Recommandé",
+      "easyDescription": "Analysez des notes de réunion simples avec des actions claires.",
+      "hardMode": "Mode Difficile",
+      "challenge": "Défi",
+      "hardDescription": "Téléchargez et analysez des rapports d'affaires complets."
     }
   },
   "difficulty": {
