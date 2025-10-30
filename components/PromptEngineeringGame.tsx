@@ -1871,8 +1871,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               <Card className="bg-[#70BEFA] border-0 sticky top-8">
                 <CardContent className="p-8">
                   <div className="mb-6">
-                    <div className="text-5xl font-bold text-black mb-2">{t('welcome.cta.points')}</div>
-                    <div className="text-black/70 text-sm">{t('welcome.cta.pointsLabel')}</div>
+                    <div className="text-5xl font-bold text-black mb-2">{t('welcome.pointsToEarn')}</div>
+                    <div className="text-black/70 text-sm">{t('welcome.pointsLabel')}</div>
                   </div>
                   <Separator className="my-6 bg-black/20" />
                   <Button
@@ -1893,7 +1893,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       {t('welcome.cta.reset')}
                     </Button>
                   )}
-                  <p className="text-black/60 text-xs mt-4 text-center">{t('welcome.cta.free')}</p>
+                  <p className="text-black/60 text-xs mt-4 text-center">{t('welcome.free')}</p>
                 </CardContent>
               </Card>
             </div>
