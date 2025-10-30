@@ -1,0 +1,580 @@
+{
+  "welcome": {
+    "badge": "INTERACTIVE COURSE",
+    "title": "Write prompts",
+    "titleHighlight": "that actually work",
+    "subtitle": "Most people write vague prompts and get vague results. This course teaches you the three principles that change everything.",
+    "principles": {
+      "heading": "THE THREE PRINCIPLES",
+      "breakItDown": {
+        "title": "Break it down",
+        "description": "One clear step beats ten vague instructions"
+      },
+      "beSpecific": {
+        "title": "Be specific",
+        "description": "Details eliminate guesswork and assumptions"
+      },
+      "iterateQuickly": {
+        "title": "Iterate quickly",
+        "description": "Fix mistakes immediately, don't wait"
+      }
+    },
+    "description": "You'll write real prompts and see actual AI responses. When you mess up (and you will), you'll learn exactly why it happened and how to fix it.",
+    "stats": {
+      "lessons": "3 lessons",
+      "exercises": "4 exercises",
+      "duration": "~30 min"
+    },
+    "pointsToEarn": "210",
+    "pointsLabel": "points to earn",
+    "cta": {
+      "start": "Start course",
+      "continue": "Continue course",
+      "reset": "Reset Progress"
+    },
+    "free": "Free • No signup required"
+  },
+  "lessons": [
+    {
+      "id": "intro",
+      "title": "The Problem with Vague Prompts",
+      "type": "lesson",
+      "vaguePromptLabel": "Vague Prompt",
+      "vaguePromptExample": "\"Make a sandwich\"",
+      "whatAiMightDoLabel": "What the AI might do:",
+      "aiProblems": [
+        "Put ingredients on the counter instead of bread",
+        "Use ingredients you don't want",
+        "Skip steps entirely",
+        "Misunderstand what \"sandwich\" means to you"
+      ],
+      "solutionLabel": "The Solution",
+      "solutionText": "Break down your request into clear, specific steps. Guide the AI like you're teaching someone who's never made a sandwich before!"
+    },
+    {
+      "id": "lesson1",
+      "title": "Lesson 1: Break It Down",
+      "type": "lesson",
+      "keyPrincipleLabel": "Key Principle: One Step at a Time",
+      "keyPrincipleText": "Instead of asking for a complete result, break your task into small, clear steps.",
+      "exampleLabel": "Example: Making eggs",
+      "exampleSteps": [
+        "Turn on the stove",
+        "Put the pan on the stove",
+        "Add butter to the pan",
+        "Increase temperature to 60°C",
+        "Break two eggs in the cooking area"
+      ],
+      "whyWorksLabel": "Why this works:",
+      "benefits": [
+        "Each step is simple and clear",
+        "You maintain control",
+        "Catch mistakes early",
+        "AI knows what to do next"
+      ]
+    },
+    {
+      "id": "exercise1",
+      "title": "Exercise 1: Break Down a Task",
+      "type": "exercise",
+      "scenario": "You want AI to write a professional email to your manager requesting time off for a vacation.",
+      "task": "Write a prompt that breaks this task down into clear steps. See how the AI responds!",
+      "evaluationCriteria": "breaking the task into steps",
+      "hints": [
+        "Think about the email structure: greeting, explanation, request, closing",
+        "What specific information needs to be included?",
+        "How should the tone be?"
+      ]
+    },
+    {
+      "id": "lesson2",
+      "title": "Lesson 2: Be Specific",
+      "type": "lesson",
+      "keyPrincipleLabel": "Key Principle: Details Matter",
+      "keyPrincipleText": "Vague instructions lead to unexpected results. Add specific details about what, where, and how.",
+      "vagueLabel": "Vague",
+      "vagueExample": "\"Add butter\"",
+      "vagueQuestion": "Where? How much? What temperature?",
+      "specificLabel": "Specific",
+      "specificExample": "\"Add 1 tablespoon of butter to the center of the pan\"",
+      "specificNote": "Clear location and amount!",
+      "specificsLabel": "Types of specificity to include:",
+      "specificTypes": [
+        {
+          "type": "Location:",
+          "example": "\"in the pan\" not just \"add butter\""
+        },
+        {
+          "type": "Amount:",
+          "example": "\"two eggs\" not just \"add eggs\""
+        },
+        {
+          "type": "Units:",
+          "example": "\"60 degrees Celsius\" not just \"60 degrees\""
+        },
+        {
+          "type": "Position:",
+          "example": "\"on the second shelf to your left\""
+        },
+        {
+          "type": "Context:",
+          "example": "\"for a professional audience\""
+        }
+      ]
+    },
+    {
+      "id": "exercise2",
+      "title": "Exercise 2: Add Specificity",
+      "type": "exercise",
+      "scenario": "You need a data visualization showing your company's quarterly sales performance for 2024.",
+      "task": "Write a specific prompt to create a chart from this data. Watch as AI generates the actual visualization based on your instructions!",
+      "evaluationCriteria": "being specific with details (chart type, labels, colors, title, axis labels)",
+      "dataLabel": "DATA",
+      "hints": [
+        "What type of chart? (bar, line, pie, area?)",
+        "What colors should be used?",
+        "What should the title say?",
+        "Should there be axis labels? What should they say?",
+        "Any specific formatting? (show values, grid lines, legend?)"
+      ]
+    },
+    {
+      "id": "lesson3",
+      "title": "Lesson 3: Iterate & Correct",
+      "type": "lesson",
+      "keyPrincipleLabel": "Key Principle: Fix Misunderstandings Immediately",
+      "keyPrincipleText": "AI will sometimes misunderstand. That's okay! Correct it right away and give context for future steps.",
+      "conversationLabel": "Example conversation:",
+      "conversationExample": {
+        "userLabel": "You:",
+        "userMessage": "\"Add butter to the pan\"",
+        "aiLabel": "AI:",
+        "aiMessage": "*Places butter on the pan handle*",
+        "correctionLabel": "You (Correcting):",
+        "correctionMessage": "\"Not on the handle! Put it in the cooking area of the pan. Going forward, when I say 'add to the pan', I mean the cooking area.\""
+      },
+      "correctionTipsLabel": "Correction tips:",
+      "correctionTips": [
+        "Point out the mistake clearly",
+        "Explain what you actually meant",
+        "Add context for future instructions",
+        "Be specific about what needs to change"
+      ]
+    },
+    {
+      "id": "exercise3",
+      "title": "Exercise 3: Correct & Iterate",
+      "type": "exercise",
+      "scenario": "You asked AI to create a social media post for your business, but it came back too casual and used emojis. You need a professional tone.",
+      "task": "Write a correction prompt that fixes the mistake AND sets expectations for future posts.",
+      "evaluationCriteria": "correcting mistakes and setting future expectations",
+      "previousResponseLabel": "AI'S PREVIOUS RESPONSE",
+      "mockBadResponse": "Hey guys! 🎉 So excited to announce our AMAZING new product line!!! 😍🔥 It's literally the BEST thing you'll see all day! Super affordable and totally worth it! 💯 DM us ASAP if you want one!!! Limited stock! 🚀✨",
+      "responseNote": "This response needs correction!",
+      "hints": [
+        "Point out what went wrong specifically",
+        "Specify the correct tone",
+        "Add instructions for future requests"
+      ]
+    },
+    {
+      "id": "lesson4",
+      "title": "Lesson 4: Provide Examples",
+      "type": "lesson",
+      "keyPrincipleLabel": "Key Principle: Show, Don't Just Tell",
+      "keyPrincipleText": "Instead of only describing what you want, provide examples. AI learns patterns from your examples and matches that style.",
+      "waysToProvideLabel": "Ways to provide examples:",
+      "exampleWays": [
+        {
+          "type": "Text samples:",
+          "example": "\"Write like this: [paste example]\""
+        },
+        {
+          "type": "Links:",
+          "example": "\"Match the style of this article: [URL]\""
+        },
+        {
+          "type": "Format examples:",
+          "example": "\"Use this structure: [template]\""
+        },
+        {
+          "type": "Before/After:",
+          "example": "\"Transform this [input] to this [output]\""
+        }
+      ],
+      "whyExamplesWorkLabel": "Why examples work:",
+      "benefits": [
+        "AI sees exactly what you want",
+        "Matches tone and style automatically",
+        "Reduces back-and-forth clarifications",
+        "Works better than lengthy descriptions"
+      ]
+    },
+    {
+      "id": "exercise4",
+      "title": "Exercise 4: Use Examples",
+      "type": "exercise",
+      "scenario": "You need to write blog posts for your tech company. You want AI to match the style of existing articles you like.",
+      "task": "Write a prompt that references example articles (you can include URLs) and asks AI to match that writing style for a new topic.",
+      "evaluationCriteria": "including reference examples (text or URLs) and asking AI to match the style",
+      "hints": [
+        "You can reference URLs of example articles",
+        "Or paste example text directly in your prompt",
+        "Point out specific style elements (tone, structure, length)",
+        "Clearly state the new topic you want written",
+        "Ask AI to analyze and match the example style"
+      ]
+    },
+    {
+      "id": "lesson5",
+      "title": "Lesson 5: Working with Documents",
+      "type": "lesson",
+      "keyPrincipleLabel": "Key Principle: Guide AI Through Your Documents",
+      "keyPrincipleText": "When working with uploaded documents, tell AI exactly what to look for and how to use the information.",
+      "bestPracticesLabel": "Best practices for document prompts:",
+      "bestPractices": [
+        {
+          "type": "Reference the document:",
+          "example": "\"Based on the uploaded document...\""
+        },
+        {
+          "type": "Specify sections:",
+          "example": "\"Focus on the financial data in section 3\""
+        },
+        {
+          "type": "Define the task clearly:",
+          "example": "\"Summarize the key findings\" or \"Extract all dates\""
+        },
+        {
+          "type": "Specify output format:",
+          "example": "\"Create a bullet list\" or \"Make a table\""
+        },
+        {
+          "type": "Ask questions:",
+          "example": "\"What are the main risks mentioned?\""
+        }
+      ],
+      "mistakesToAvoidLabel": "Common mistakes to avoid:",
+      "commonMistakes": [
+        "\"Analyze this\" (too vague - analyze what aspect?)",
+        "\"Tell me about the document\" (what specifically?)",
+        "Not mentioning which document (if multiple uploaded)"
+      ]
+    },
+    {
+      "id": "exercise5",
+      "title": "Exercise 5: Document Analysis",
+      "type": "exercise",
+      "scenario": "Analyze meeting notes or business documents to extract key information and action items.",
+      "task": "Choose your difficulty: Easy mode shows meeting notes, Hard mode requires uploading a full business report.",
+      "evaluationCriteria": "referencing the document, specifying what to extract, and defining output format",
+      "hints": [
+        "Acknowledge the document/notes explicitly",
+        "Specify which information to focus on",
+        "Define what information you need extracted",
+        "Specify how you want the output formatted (table, bullets, summary, etc.)"
+      ]
+    },
+    {
+      "id": "exercise6",
+      "title": "Final Challenge 1: Creative Writing",
+      "type": "exercise",
+      "scenario": "Review the marketing campaign brief and create compelling campaign content that resonates with the target audience.",
+      "task": "Load the campaign brief, then write a prompt to create email copy, social posts, or ad copy that aligns with campaign goals.",
+      "evaluationCriteria": "referencing campaign details, targeting audience, addressing goals, creative and specific output request",
+      "hints": [
+        "Reference the specific product and target audience",
+        "Mention the campaign goals and key messages",
+        "Specify the type of content needed (email, social, ad)",
+        "Define tone, length, and format",
+        "Include competitor insights to differentiate"
+      ]
+    },
+    {
+      "id": "exercise7",
+      "title": "Final Challenge 2: Analytical Thinking",
+      "type": "exercise",
+      "scenario": "Analyze cross-departmental business data to identify insights, trends, and actionable recommendations for the leadership team.",
+      "task": "Load the business analytics dashboard, then write a prompt to extract insights across Sales, Marketing, Accounting, and Operations.",
+      "evaluationCriteria": "referencing multiple departments, specifying analysis type, defining output format, requesting actionable insights",
+      "hints": [
+        "Reference specific departments and metrics",
+        "Ask for cross-department correlations and patterns",
+        "Specify what insights you need (opportunities, concerns, trends)",
+        "Define output format (executive summary, bullet points, recommendations)",
+        "Request prioritized, actionable recommendations"
+      ]
+    }
+  ],
+  "ui": {
+    "navigation": {
+      "lessonCounter": "LESSON {{current}}/{{total}}",
+      "pointsLabel": "{{score}} pts",
+      "reset": "Reset",
+      "progress": "{{percent}}% COMPLETE",
+      "lessonsCompleted": "{{completed}}/{{total}} LESSONS"
+    },
+    "buttons": {
+      "continue": "Continue",
+      "tryAgain": "Try Again",
+      "skipLesson": "Skip Lesson",
+      "submitPrompt": "Submit Prompt",
+      "generateVisualization": "Generate Visualization",
+      "generating": "Generating...",
+      "startOver": "Start Over",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "labels": {
+      "scenario": "SCENARIO",
+      "data": "DATA",
+      "yourPrompt": "YOUR PROMPT",
+      "response": "RESPONSE",
+      "streaming": "● Streaming...",
+      "hints": "HINTS",
+      "lessons": "LESSONS",
+      "passed": "PASSED",
+      "needsWork": "NEEDS WORK",
+      "highlights": "HIGHLIGHTS",
+      "watchOut": "WATCH OUT",
+      "strengths": "STRENGTHS",
+      "improve": "IMPROVE",
+      "nextStep": "NEXT STEP"
+    },
+    "placeholders": {
+      "promptInput": "Write your prompt here..."
+    }
+  },
+  "difficulty": {
+    "selectDifficulty": "SELECT DIFFICULTY",
+    "easy": {
+      "title": "Easy Mode",
+      "badge": "Recommended",
+      "description": "Analyze simple meeting notes with clear action items."
+    },
+    "hard": {
+      "title": "Hard Mode",
+      "badge": "Challenge",
+      "description": "Upload and analyze comprehensive business reports."
+    }
+  },
+  "easyMode": {
+    "toggle": {
+      "on": "Easy Mode: ON",
+      "off": "Easy Mode: OFF",
+      "penalty": "(1/10 pts)"
+    },
+    "suggestedPrompts": "SUGGESTED PROMPTS",
+    "warning": "Using suggestions reduces your score to 1/10 of normal points",
+    "meetingNotes": "MEETING NOTES",
+    "attendees": "ATTENDEES",
+    "discussionPoints": "DISCUSSION POINTS",
+    "actionItems": "ACTION ITEMS",
+    "writePrompt": "WRITE YOUR PROMPT"
+  },
+  "exercise5": {
+    "step1Upload": "STEP 1: UPLOAD DOCUMENT",
+    "step2Prompt": "STEP 2: WRITE YOUR PROMPT",
+    "uploadButton": "Upload Business Report",
+    "uploading": "Uploading document...",
+    "uploadedSuccess": "Uploaded successfully",
+    "documentContents": "DOCUMENT CONTENTS",
+    "fields": {
+      "company": "Company:",
+      "industry": "Industry:",
+      "employees": "Employees:",
+      "revenue": "Revenue:",
+      "keyProjects": "Key Projects:",
+      "quarterlySales": "Quarterly Sales:",
+      "marketing": "Marketing:",
+      "keyChallenges": "Key Challenges:"
+    }
+  },
+  "exercise6": {
+    "step1LoadBrief": "STEP 1: LOAD CAMPAIGN BRIEF",
+    "step2WritePrompt": "STEP 2: WRITE YOUR CREATIVE PROMPT",
+    "loadButton": "Load Campaign Brief",
+    "loading": "Loading campaign brief...",
+    "briefFrom": "New Campaign Brief from {{name}}",
+    "productLaunch": "Product Launch: ",
+    "targetAudience": "TARGET AUDIENCE",
+    "budget": "BUDGET",
+    "timeline": "TIMELINE",
+    "campaignGoals": "CAMPAIGN GOALS",
+    "keyMessages": "KEY MESSAGES",
+    "channels": "CHANNELS",
+    "competitiveEdge": "COMPETITIVE EDGE"
+  },
+  "exercise7": {
+    "step1LoadAnalytics": "STEP 1: LOAD BUSINESS ANALYTICS",
+    "step2WritePrompt": "STEP 2: WRITE YOUR ANALYSIS PROMPT",
+    "loadButton": "Load Analytics Dashboard",
+    "loading": "Loading analytics dashboard...",
+    "dashboardSubtitle": "Cross-Department Performance Dashboard",
+    "departments": {
+      "sales": "SALES",
+      "marketing": "MARKETING",
+      "accounting": "ACCOUNTING",
+      "operations": "OPERATIONS"
+    },
+    "fields": {
+      "top": "Top:",
+      "reps": "reps",
+      "avgDeals": "avg deals",
+      "of": "of",
+      "bestROI": "Best ROI:",
+      "revenue": "Revenue",
+      "profit": "Profit",
+      "margin": "Margin",
+      "outstanding": "Outstanding:",
+      "employees": "employees",
+      "satisfaction": "Satisfaction:"
+    },
+    "keyInsights": "KEY INSIGHTS",
+    "concerns": "CONCERNS"
+  },
+  "completion": {
+    "badge": "COURSE COMPLETED",
+    "title": "You did it.",
+    "subtitle": "You've learned the fundamentals of effective AI prompting",
+    "certificateTitle": "Course Complete!",
+    "stats": {
+      "pts": "PTS",
+      "lessons": "LESSONS",
+      "completion": "100%"
+    },
+    "badges": {
+      "iterationMaster": "ITERATION MASTER",
+      "specificityExpert": "SPECIFICITY EXPERT",
+      "clarityChampion": "CLARITY CHAMPION"
+    },
+    "branding": {
+      "company": "Novagen Labs",
+      "course": "AI PROMPT ENGINEERING"
+    },
+    "cta": {
+      "tryYourself": "Try it yourself:",
+      "website": "learn2prompt.xyz",
+      "challenge": "Beat my score! 🎯"
+    },
+    "share": {
+      "heading": "SHARE",
+      "download": "Download",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "share": "Share"
+    },
+    "shareText": "I just completed the AI Prompt Engineering course and scored {{score}} points! 🎓✨ Master the art of communicating with AI effectively.",
+    "shareTextTwitter": "I just completed the AI Prompt Engineering course and scored {{score}} points! 🎓✨",
+    "nameInput": {
+      "title": "Enter Your Name for Certificate",
+      "placeholder": "Your full name",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    }
+  },
+  "milestone": {
+    "halfwayTitle": "Halfway There! 🎯",
+    "halfwayMessage": "You're mastering prompt engineering! Your prompts are getting more specific and effective.",
+    "halfwayBadge": "50% Complete"
+  },
+  "chart": {
+    "unknownType": "Unknown chart type",
+    "aiInterpretation": "AI's interpretation: ",
+    "errorGenerating": "Error generating chart. Using default configuration."
+  },
+  "shapes": {
+    "circles": {
+      "azureOrb": "Azure Orb",
+      "violetSphere": "Violet Sphere",
+      "emeraldGlobe": "Emerald Globe",
+      "goldenOrb": "Golden Orb"
+    },
+    "squares": {
+      "cyanCrystal": "Cyan Crystal",
+      "roseDiamond": "Rose Diamond",
+      "amberBlock": "Amber Block",
+      "indigoGem": "Indigo Gem"
+    },
+    "triangles": {
+      "rubyPrism": "Ruby Prism",
+      "tealPyramid": "Teal Pyramid",
+      "sunburstTriangle": "Sunburst Triangle",
+      "limeShard": "Lime Shard"
+    }
+  },
+  "alerts": {
+    "resetConfirm": "Are you sure you want to reset all your progress? This cannot be undone.",
+    "resetSuccess": "Progress has been reset successfully!",
+    "shareCopied": "Share text copied to clipboard!",
+    "shareFailed": "Failed to copy. Please try again.",
+    "certificateFailed": "Failed to download certificate. Please try again."
+  },
+  "errors": {
+    "evaluationError": "There was an error evaluating your prompt. Please try again.",
+    "tryResubmit": "Try resubmitting your answer.",
+    "responseError": "Error generating response. Please try again."
+  },
+  "mockData": {
+    "easyModeDocument": {
+      "type": "Meeting Notes",
+      "title": "Q4 Marketing Strategy Meeting",
+      "date": "October 15, 2024",
+      "attendees": [
+        "Sarah (Marketing Lead)",
+        "Mike (Sales Director)",
+        "Alex (Product Manager)"
+      ],
+      "content": [
+        "Discussed launching new product line in Q1 2025",
+        "Target audience: Small business owners, ages 30-50",
+        "Budget approved: $45,000 for initial campaign",
+        "Main channels: LinkedIn, Email, Industry events",
+        "Key message: 'Save 20 hours/week with automation'",
+        "Sales goal: 200 demos booked in first 60 days"
+      ],
+      "actionItems": [
+        "Sarah to create campaign timeline by Oct 22",
+        "Mike to prepare sales deck for demos",
+        "Alex to finalize product messaging"
+      ]
+    }
+  },
+  "promptSuggestions": {
+    "exercise1": [
+      "Write a professional vacation request email. Start with a polite greeting, explain the dates (MM/DD to MM/DD), provide context about planned coverage, and close professionally.",
+      "Create a vacation time-off email to my manager. Include: 1) Greeting 2) Request dates 3) Work coverage plan 4) Express willingness to discuss",
+      "Draft an email requesting vacation approval. Structure: greeting → state dates → explain handover plans → thank manager for consideration"
+    ],
+    "exercise2": [
+      "Create a bar chart showing quarterly sales for Q1-Q4 2024. X-axis: quarters, Y-axis: revenue in dollars. Include grid lines and a title 'Quarterly Sales Performance 2024'.",
+      "Generate a visualization with: Type: bar chart, Data: Q1 $450K, Q2 $520K, Q3 $610K, Q4 $580K, Labels on both axes, Legend showing sales data",
+      "Make a sales chart. Specifics: bar graph format, four quarters as categories, sales figures as values, clear axis labels, professional color scheme"
+    ],
+    "exercise3": [
+      "The previous post was too casual. Rewrite it with: professional tone, no emojis, focus on value proposition, suitable for LinkedIn, 2-3 sentences maximum.",
+      "Please revise the social media post. Changes needed: remove all emojis, use business-appropriate language, maintain key message but elevate tone, keep under 280 characters.",
+      "Correction: the tone needs to be more professional. Rewrite with: formal business language, no slang or emojis, clear value statement, appropriate for corporate audience"
+    ],
+    "exercise4": [
+      "Write a tech blog post about [topic]. Match this style: [paste example]. Use similar: sentence structure, technical depth, tone, paragraph length, and opening hooks.",
+      "Create a blog article following this example: [example text]. Key elements to mirror: casual yet professional tone, use of analogies, paragraph formatting, conclusion style.",
+      "Generate a blog post in the style of: [example]. Replicate: writing voice, technical level, use of examples, paragraph structure, and engaging introductions."
+    ],
+    "exercise5": [
+      "Analyze this meeting note document. Extract: 1) Key decisions made 2) Action items with owners 3) Deadlines mentioned 4) Follow-up topics. Format as bulleted lists.",
+      "Review the uploaded document and provide: summary of main topics, list of action items (who/what/when), any risks or blockers mentioned, next steps required.",
+      "Parse this business document. Output: executive summary (3 sentences), action items table (owner, task, deadline), key metrics or numbers, outstanding questions."
+    ],
+    "exercise6": [
+      "Based on the campaign brief: create 3 headline options, 2 body copy variations, and 1 call-to-action. Match the target audience tone and address their pain points mentioned in the brief.",
+      "Using the marketing brief provided: develop campaign content including hook/headline, value proposition paragraph, social proof element, and clear CTA. Align with audience demographics.",
+      "Review the campaign brief and generate: attention-grabbing headline, persuasive body copy (150 words), emotional appeal relevant to target audience, strong closing CTA"
+    ],
+    "exercise7": [
+      "Analyze the business analytics dashboard. Identify: 3 key growth opportunities, 2 concerning trends, cross-department patterns, and provide 3 actionable recommendations with rationale.",
+      "Review the analytics data across all departments. Create an executive summary with: highlights from each dept, inter-departmental insights, top 3 priorities, recommended actions.",
+      "Examine the business data provided. Deliver: performance highlights, areas needing attention, patterns across departments, strategic recommendations for leadership team with supporting data."
+    ]
+  }
+}

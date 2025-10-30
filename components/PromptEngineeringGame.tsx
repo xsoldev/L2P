@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { CheckCircle, XCircle, ArrowRight, Star, Book, Zap, Target, Loader, AlertCircle, Download, Share2, Trophy, Sparkles, Upload, FileText, Mail, BarChart2, TrendingUp, DollarSign, Users } from 'lucide-react';
+import { CheckCircle, XCircle, ArrowRight, Star, Book, Zap, Target, Loader, AlertCircle, Download, Share2, Trophy, Sparkles, Upload, FileText, Mail, BarChart2, TrendingUp, DollarSign, Users, Globe } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { createTranslator, type Language } from '@/lib/i18n';
 
 const PromptEngineeringGame = () => {
   const [currentScreen, setCurrentScreen] = useState('welcome');
@@ -48,6 +49,10 @@ const PromptEngineeringGame = () => {
   const [easyModeEnabled, setEasyModeEnabled] = useState(false);
   const [usedSuggestion, setUsedSuggestion] = useState(false);
   const [isLoadingProgress, setIsLoadingProgress] = useState(true);
+  const [language, setLanguage] = useState<Language>('en');
+
+  // Create translator function based on current language
+  const t = createTranslator(language);
 
   // Load progress from localStorage on mount
   useEffect(() => {
@@ -62,6 +67,7 @@ const PromptEngineeringGame = () => {
         setUserName(progress.userName || '');
         setUserShape(progress.userShape || null);
         setExerciseDifficulty(progress.exerciseDifficulty || 'easy');
+        setLanguage(progress.language || 'en');
       } catch (error) {
         console.error('Error loading progress:', error);
       }
@@ -82,10 +88,11 @@ const PromptEngineeringGame = () => {
       userName,
       userShape,
       exerciseDifficulty,
+      language,
       lastSaved: new Date().toISOString(),
     };
     localStorage.setItem('learn2prompt-progress', JSON.stringify(progress));
-  }, [currentScreen, currentLesson, score, completedLessons, userName, userShape, exerciseDifficulty, isLoadingProgress]);
+  }, [currentScreen, currentLesson, score, completedLessons, userName, userShape, exerciseDifficulty, language, isLoadingProgress]);
 
   // Scroll to top whenever lesson changes to fix mobile scroll issue
   useEffect(() => {
@@ -1958,18 +1965,44 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             <div className="inline-block mb-6">
               <div className="flex items-center gap-2 text-[#70BEFA] text-sm font-mono tracking-wider">
                 <div className="w-2 h-2 bg-[#70BEFA] rounded-sm"></div>
-                INTERACTIVE COURSE
+                {t('welcome.badge')}
               </div>
             </div>
 
             <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-[1.1] tracking-tight">
-              Write prompts
+              {t('welcome.title')}
               <br />
-              <span className="text-[#70BEFA]">that actually work</span>
+              <span className="text-[#70BEFA]">{t('welcome.titleHighlight')}</span>
             </h1>
             <p className="text-xl text-gray-400 leading-relaxed">
-              Most people write vague prompts and get vague results. This course teaches you the three principles that change everything.
+              {t('welcome.subtitle')}
             </p>
+          </div>
+
+          {/* Language Selector */}
+          <div className="mb-12">
+            <div className="flex gap-3 max-w-md">
+              <Button
+                onClick={() => setLanguage('en')}
+                variant={language === 'en' ? 'default' : 'outline'}
+                className={language === 'en'
+                  ? 'flex-1 bg-[#70BEFA] text-black hover:bg-[#5AAFED] border-0'
+                  : 'flex-1 bg-[#1A1A1A] border-gray-700 text-gray-300 hover:bg-[#252525] hover:border-[#70BEFA]/50'}
+              >
+                <Globe className="w-4 h-4 mr-2" />
+                English
+              </Button>
+              <Button
+                onClick={() => setLanguage('fr')}
+                variant={language === 'fr' ? 'default' : 'outline'}
+                className={language === 'fr'
+                  ? 'flex-1 bg-[#70BEFA] text-black hover:bg-[#5AAFED] border-0'
+                  : 'flex-1 bg-[#1A1A1A] border-gray-700 text-gray-300 hover:bg-[#252525] hover:border-[#70BEFA]/50'}
+              >
+                <Globe className="w-4 h-4 mr-2" />
+                Français
+              </Button>
+            </div>
           </div>
 
           {/* Asymmetric grid layout */}
@@ -1978,19 +2011,19 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             <div className="md:col-span-7 space-y-6">
               <Card className="bg-[#1A1A1A] border-l-4 border-l-[#70BEFA] border-r-0 border-t-0 border-b-0 rounded-none rounded-r-lg">
                 <CardContent className="p-6">
-                  <h3 className="text-sm font-mono text-[#70BEFA] mb-4 tracking-wider">THE THREE PRINCIPLES</h3>
+                  <h3 className="text-sm font-mono text-[#70BEFA] mb-4 tracking-wider">{t('welcome.principles.heading')}</h3>
                   <div className="space-y-4">
                     <div className="border-l-2 border-gray-700 pl-4 hover:border-[#70BEFA] transition-colors">
-                      <h4 className="text-white font-semibold mb-1">Break it down</h4>
-                      <p className="text-gray-400 text-sm">One clear step beats ten vague instructions</p>
+                      <h4 className="text-white font-semibold mb-1">{t('welcome.principles.breakItDown.title')}</h4>
+                      <p className="text-gray-400 text-sm">{t('welcome.principles.breakItDown.description')}</p>
                     </div>
                     <div className="border-l-2 border-gray-700 pl-4 hover:border-[#70BEFA] transition-colors">
-                      <h4 className="text-white font-semibold mb-1">Be specific</h4>
-                      <p className="text-gray-400 text-sm">Details eliminate guesswork and assumptions</p>
+                      <h4 className="text-white font-semibold mb-1">{t('welcome.principles.beSpecific.title')}</h4>
+                      <p className="text-gray-400 text-sm">{t('welcome.principles.beSpecific.description')}</p>
                     </div>
                     <div className="border-l-2 border-gray-700 pl-4 hover:border-[#70BEFA] transition-colors">
-                      <h4 className="text-white font-semibold mb-1">Iterate quickly</h4>
-                      <p className="text-gray-400 text-sm">Fix mistakes immediately, don't wait</p>
+                      <h4 className="text-white font-semibold mb-1">{t('welcome.principles.iterateQuickly.title')}</h4>
+                      <p className="text-gray-400 text-sm">{t('welcome.principles.iterateQuickly.description')}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -1999,17 +2032,17 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               <Card className="bg-[#1A1A1A] border-[#70BEFA]/20">
                 <CardContent className="p-6">
                   <p className="text-gray-300 leading-relaxed mb-4">
-                    You'll write real prompts and see actual AI responses. When you mess up (and you will), you'll learn exactly why it happened and how to fix it.
+                    {t('welcome.description')}
                   </p>
                   <div className="flex items-center gap-4 text-sm text-gray-500">
                     <span className="flex items-center gap-1">
-                      <Book className="w-4 h-4" />3 lessons
+                      <Book className="w-4 h-4" />{t('welcome.stats.lessons')}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Target className="w-4 h-4" />4 exercises
+                      <Target className="w-4 h-4" />{t('welcome.stats.exercises')}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Zap className="w-4 h-4" />~30 min
+                      <Zap className="w-4 h-4" />{t('welcome.stats.duration')}
                     </span>
                   </div>
                 </CardContent>
@@ -2021,8 +2054,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               <Card className="bg-[#70BEFA] border-0 sticky top-8">
                 <CardContent className="p-8">
                   <div className="mb-6">
-                    <div className="text-5xl font-bold text-black mb-2">210</div>
-                    <div className="text-black/70 text-sm">points to earn</div>
+                    <div className="text-5xl font-bold text-black mb-2">{t('welcome.cta.points')}</div>
+                    <div className="text-black/70 text-sm">{t('welcome.cta.pointsLabel')}</div>
                   </div>
                   <Separator className="my-6 bg-black/20" />
                   <Button
@@ -2030,7 +2063,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     size="lg"
                     className="w-full bg-black text-white hover:bg-black/90 font-semibold py-6 group"
                   >
-                    {completedLessons.length > 0 ? 'Continue course' : 'Start course'}
+                    {completedLessons.length > 0 ? t('welcome.cta.continue') : t('welcome.cta.start')}
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                   {completedLessons.length > 0 && (
@@ -2040,10 +2073,10 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       size="sm"
                       className="w-full mt-3 border-black/20 text-black/60 hover:bg-black/5 text-xs"
                     >
-                      Reset Progress
+                      {t('welcome.cta.reset')}
                     </Button>
                   )}
-                  <p className="text-black/60 text-xs mt-4 text-center">Free • No signup required</p>
+                  <p className="text-black/60 text-xs mt-4 text-center">{t('welcome.cta.free')}</p>
                 </CardContent>
               </Card>
             </div>
