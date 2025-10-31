@@ -1704,21 +1704,29 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
   const downloadCertificate = async () => {
     try {
       const html2canvas = (await import('html2canvas')).default;
-      
+
       const certificate = certificateRef.current;
+      if (!certificate) {
+        alert('Certificate not found. Please try again.');
+        return;
+      }
+
       const canvas = await html2canvas(certificate, {
         scale: 2,
-        backgroundColor: '#ffffff',
+        backgroundColor: null,
         logging: false,
+        useCORS: true,
+        allowTaint: true,
+        removeContainer: true,
       });
-      
+
       const link = document.createElement('a');
-      link.download = `prompt-engineering-certificate-${Date.now()}.png`;
+      link.download = `prompt-engineering-certificate-${fullName.replace(/\s+/g, '-')}-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (error) {
       console.error('Error generating certificate:', error);
-      alert('Failed to download certificate. Please try again.');
+      alert(`Failed to download certificate: ${error.message}`);
     }
   };
 
