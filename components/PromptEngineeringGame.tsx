@@ -1273,11 +1273,12 @@ const PromptEngineeringGame = () => {
       // Exercise 2 specific properties
       if (lesson.id === 'exercise2') {
         exerciseObj.requiresVisualization = true;
+        const quarterPrefix = language === 'fr' ? 'T' : 'Q';
         exerciseObj.salesData = [
-          { quarter: 'Q1 2024', sales: 45000, label: 'Q1' },
-          { quarter: 'Q2 2024', sales: 62000, label: 'Q2' },
-          { quarter: 'Q3 2024', sales: 58000, label: 'Q3' },
-          { quarter: 'Q4 2024', sales: 71000, label: 'Q4' }
+          { quarter: `${quarterPrefix}1 2024`, sales: 45000, label: `${quarterPrefix}1` },
+          { quarter: `${quarterPrefix}2 2024`, sales: 62000, label: `${quarterPrefix}2` },
+          { quarter: `${quarterPrefix}3 2024`, sales: 58000, label: `${quarterPrefix}3` },
+          { quarter: `${quarterPrefix}4 2024`, sales: 71000, label: `${quarterPrefix}4` }
         ];
       }
 
