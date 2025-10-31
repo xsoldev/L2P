@@ -8,6 +8,17 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
@@ -29,6 +40,7 @@ const PromptEngineeringGame = () => {
   const [userName, setUserName] = useState('');
   const [showNameInput, setShowNameInput] = useState(false);
   const [generatedChart, setGeneratedChart] = useState(null);
+  const [showResetDialog, setShowResetDialog] = useState(false);
   const certificateRef = useRef(null);
   const [documentUploaded, setDocumentUploaded] = useState(false);
   const [uploadingDocument, setUploadingDocument] = useState(false);
@@ -104,6 +116,13 @@ const PromptEngineeringGame = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [currentLesson, currentScreen]);
+
+  // Show name input when reaching certificate screen if name not yet provided
+  useEffect(() => {
+    if (currentScreen === 'certificate' && !userName.trim()) {
+      setShowNameInput(true);
+    }
+  }, [currentScreen, userName]);
 
   // Dynamic Chart Component
   const DynamicChart = ({ config, data }: { config: any; data: any }) => {
@@ -1703,36 +1722,58 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
   const downloadCertificate = async () => {
     try {
-      const html2canvas = (await import('html2canvas')).default;
-
       const certificate = certificateRef.current;
       if (!certificate) {
-        alert('Certificate not found. Please try again.');
+        toast.error(language === 'fr' ? 'Certificat introuvable. Veuillez réessayer.' : 'Certificate not found. Please try again.');
         return;
       }
 
-      const canvas = await html2canvas(certificate, {
-        scale: 2,
-        backgroundColor: null,
-        logging: false,
-        useCORS: true,
-        allowTaint: true,
-        removeContainer: true,
+      // Use dom-to-image to convert certificate to PNG
+      const domtoimage = (await import('dom-to-image-more')).default;
+
+      // Convert to blob with filter to remove decorative borders
+      const blob = await domtoimage.toBlob(certificate, {
+        width: certificate.offsetWidth * 2,
+        height: certificate.offsetHeight * 2,
+        style: {
+          transform: 'scale(2)',
+          transformOrigin: 'top left',
+          width: certificate.offsetWidth + 'px',
+          height: certificate.offsetHeight + 'px',
+          border: 'none',
+          boxShadow: 'none'
+        },
+        filter: (node) => {
+          // Remove corner accent decorations
+          if (node.classList && node.classList.contains('absolute')) {
+            const style = window.getComputedStyle(node);
+            if (style.border && style.border !== 'none') {
+              return false;
+            }
+          }
+          return true;
+        }
       });
 
+      // Create download link
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.download = `prompt-engineering-certificate-${fullName.replace(/\s+/g, '-')}-${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png');
+      const nameForFile = userName ? userName.replace(/\s+/g, '-') : 'certificate';
+      link.download = `prompt-engineering-certificate-${nameForFile}-${Date.now()}.png`;
+      link.href = url;
       link.click();
+
+      // Clean up
+      URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error generating certificate:', error);
-      alert(`Failed to download certificate: ${error.message}`);
+      toast.error(language === 'fr' ? `Échec du téléchargement : ${error.message}` : `Failed to download certificate: ${error.message}`);
     }
   };
 
   const shareCertificate = async () => {
-    const shareText = `I just completed the AI Prompt Engineering course and scored ${score} points! 🎓✨ Master the art of communicating with AI effectively.`;
-    const shareUrl = window.location.href;
+    const shareText = `I just completed the AI Prompt Engineering course and scored ${score} points! 🎓✨\n\nLearn prompt engineering for free at learn2prompt.xyz`;
+    const shareUrl = 'https://learn2prompt.xyz';
 
     if (navigator.share) {
       try {
@@ -1743,49 +1784,52 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
         });
       } catch (error) {
         if (error.name !== 'AbortError') {
-          copyToClipboard(shareText);
+          copyToClipboard(shareText + '\n' + shareUrl);
         }
       }
     } else {
-      copyToClipboard(shareText);
+      copyToClipboard(shareText + '\n' + shareUrl);
     }
   };
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
-      alert('Share text copied to clipboard!');
+      toast.success(language === 'fr' ? 'Texte copié dans le presse-papier !' : 'Share text copied to clipboard!');
     }).catch(() => {
-      alert('Failed to copy. Please try again.');
+      toast.error(language === 'fr' ? 'Échec de la copie. Veuillez réessayer.' : 'Failed to copy. Please try again.');
     });
   };
 
   const shareToTwitter = () => {
-    const text = `I just completed the AI Prompt Engineering course and scored ${score} points! 🎓✨`;
+    const text = `I just completed the AI Prompt Engineering course and scored ${score} points! 🎓✨\n\nTry it yourself at learn2prompt.xyz`;
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'width=600,height=400');
   };
 
   const shareToLinkedIn = () => {
-    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://learn2prompt.xyz')}`;
     window.open(url, '_blank', 'width=600,height=400');
   };
 
   const resetProgress = () => {
-    if (window.confirm('Are you sure you want to reset all your progress? This cannot be undone.')) {
-      localStorage.removeItem('learn2prompt-progress');
-      setCurrentScreen('welcome');
-      setCurrentLesson(0);
-      setScore(0);
-      setCompletedLessons([]);
-      setUserName('');
-      setUserShape(null);
-      setExerciseDifficulty('easy');
-      setUserInput('');
-      setAiResponse(null);
-      setEvaluation(null);
-      setExerciseAttempts(0);
-      alert('Progress has been reset successfully!');
-    }
+    setShowResetDialog(true);
+  };
+
+  const confirmReset = () => {
+    localStorage.removeItem('learn2prompt-progress');
+    setCurrentScreen('welcome');
+    setCurrentLesson(0);
+    setScore(0);
+    setCompletedLessons([]);
+    setUserName('');
+    setUserShape(null);
+    setExerciseDifficulty('easy');
+    setUserInput('');
+    setAiResponse(null);
+    setEvaluation(null);
+    setExerciseAttempts(0);
+    setShowResetDialog(false);
+    toast.success(language === 'fr' ? 'Progression réinitialisée avec succès !' : 'Progress has been reset successfully!');
   };
 
   const progress = ((currentLesson + 1) / lessons.length) * 100;
@@ -1933,7 +1977,14 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           {showNameInput && (
             <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
               <div className="bg-[#1A1A1A] rounded-2xl p-8 max-w-md w-full shadow-2xl border border-[#70BEFA]/30">
-                <h3 className="text-2xl font-bold text-white mb-4">Enter Your Name for Certificate</h3>
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  {language === 'fr' ? 'Entrez votre nom' : 'Enter Your Name'}
+                </h3>
+                <p className="text-gray-400 text-sm mb-6">
+                  {language === 'fr'
+                    ? 'Votre nom apparaîtra sur votre certificat'
+                    : 'Your name will appear on your certificate'}
+                </p>
                 <input
                   type="text"
                   value={userName}
@@ -1941,6 +1992,11 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   placeholder={t('ui.placeholders.fullName')}
                   className="w-full p-4 bg-[#0D0D0D] border-2 border-[#70BEFA]/30 text-white rounded-xl focus:border-[#70BEFA] focus:outline-none mb-6"
                   autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && userName.trim()) {
+                      setShowNameInput(false);
+                    }
+                  }}
                 />
                 <div className="flex gap-3">
                   <button
@@ -2157,15 +2213,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
               <span className="text-xs font-mono text-white tracking-wider">SHARE</span>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Button
-                onClick={downloadCertificate}
-                variant="outline"
-                className="flex items-center justify-center gap-2 bg-black text-white border-gray-800 hover:bg-[#70BEFA] hover:text-black hover:border-[#70BEFA] transition-colors"
-              >
-                <Download className="w-4 h-4" />
-                <span className="text-sm">{t('ui.buttons.download')}</span>
-              </Button>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <Button
                 onClick={shareToTwitter}
                 variant="outline"
@@ -2195,7 +2243,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
           <div className="text-center">
             <Button
-              onClick={resetProgress}
+              onClick={confirmReset}
               size="lg"
               className="bg-black text-white border border-[#70BEFA]/30 hover:bg-[#70BEFA] hover:text-black transition-colors"
             >
@@ -3216,6 +3264,33 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Reset Progress Confirmation Dialog */}
+      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <AlertDialogContent className="bg-[#1A1A1A] border-gray-800">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">
+              {language === 'fr' ? 'Réinitialiser la progression ?' : 'Reset Progress?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
+              {language === 'fr'
+                ? 'Êtes-vous sûr de vouloir réinitialiser toute votre progression ? Cette action ne peut pas être annulée.'
+                : 'Are you sure you want to reset all your progress? This action cannot be undone.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-gray-800 text-white border-gray-700 hover:bg-gray-700">
+              {language === 'fr' ? 'Annuler' : 'Cancel'}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmReset}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              {language === 'fr' ? 'Réinitialiser' : 'Reset'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
