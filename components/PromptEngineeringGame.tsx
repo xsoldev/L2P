@@ -1567,8 +1567,9 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
     const lesson = lessons[currentLesson];
 
+    let chartConfig = null;
     if (lesson.requiresVisualization && lesson.salesData) {
-      const chartConfig = await generateVisualization(userInput, lesson.salesData);
+      chartConfig = await generateVisualization(userInput, lesson.salesData);
       setGeneratedChart(chartConfig);
     }
 
@@ -1599,7 +1600,14 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
       contextWithDocument += `\n\nBusiness Analytics Dashboard - ${mockAnalyticsData.companyName} (${mockAnalyticsData.period}):\n\nSALES: Revenue ${sales.revenue} (${sales.growth}), Top Products: ${sales.topProducts.map(p => `${p.name} (${p.sales})`).join(', ')}\n\nMARKETING: Budget ${marketing.budget}, Spent ${marketing.spent}, Top Campaign: ${marketing.campaigns[0].name} (${marketing.campaigns[0].roi} ROI)\n\nACCOUNTING: Revenue ${accounting.revenue}, Expenses ${accounting.expenses}, Profit ${accounting.profit} (${accounting.profitMargin} margin), Outstanding Invoices: ${outstandingInvoicesStr}\n\nOPERATIONS: Efficiency ${operations.productivity}, Team: ${operations.team.employees} employees (${operations.team.satisfaction} satisfaction)\n\nKey Insights: ${mockAnalyticsData.keyInsights.join('; ')}\n\nConcerns: ${mockAnalyticsData.concerns.join('; ')}`;
     }
 
-    const response = await generateAIResponse(userInput, contextWithDocument, lesson.enableWebSearch);
+    // For visualization exercises, use the chart interpretation as the response
+    // For other exercises, generate a text response
+    let response;
+    if (chartConfig && chartConfig.interpretation) {
+      response = chartConfig.interpretation;
+    } else {
+      response = await generateAIResponse(userInput, contextWithDocument, lesson.enableWebSearch);
+    }
     setAiResponse(response);
 
     const evaluationResult = await evaluatePrompt(userInput, response, lesson.evaluationCriteria, contextWithDocument);
@@ -2899,7 +2907,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                         <div className="flex items-center gap-2 px-3 py-2 bg-amber-950/20 border border-amber-500/30 rounded-lg">
                           <AlertCircle className="w-3 h-3 text-amber-400" />
                           <span className="text-xs text-amber-400 font-mono">
-                            Using suggestions reduces your score to 1/10 of normal points
+                            {t('ui.labels.suggestionWarning')}
                           </span>
                         </div>
                       )}
