@@ -499,12 +499,13 @@ const ANALYTICS_SCENARIOS = [
 export async function GET(request: NextRequest) {
   try {
     // Select a random scenario from the 21 available
-    const randomScenario = ANALYTICS_SCENARIOS[Math.floor(Math.random() * ANALYTICS_SCENARIOS.length)];
+    const randomIndex = Math.floor(Math.random() * ANALYTICS_SCENARIOS.length);
+    const randomScenario = ANALYTICS_SCENARIOS[randomIndex];
 
     return NextResponse.json({
       data: randomScenario,
       cached: false,
-      scenario: ANALYTICS_SCENARIOS.indexOf(randomScenario) + 1
+      scenario: randomIndex + 1
     });
 
   } catch (error) {

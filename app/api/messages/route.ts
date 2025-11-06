@@ -1,12 +1,37 @@
 import { streamText } from 'ai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 
+interface Message {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+interface RequestBody {
+  messages: Message[];
+  system?: string;
+  language?: 'en' | 'fr';
+  max_tokens?: number;
+}
+
 export async function POST(request: Request) {
   try {
-    const { messages, system, language } = await request.json();
+    const { messages, system, language } = await request.json() as RequestBody;
+
+    // Validate API key exists
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      console.error('ANTHROPIC_API_KEY is not configured');
+      return new Response(
+        JSON.stringify({ error: 'API configuration error' }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
 
     const anthropic = createAnthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
+      apiKey: apiKey,
     });
 
     // Add language instruction to system prompt if language is provided
@@ -19,7 +44,7 @@ export async function POST(request: Request) {
     const result = streamText({
       model: anthropic('claude-sonnet-4-5-20250929'),
       system: finalSystemPrompt,
-      messages: messages.map((msg: any) => ({
+      messages: messages.map((msg: Message) => ({
         role: msg.role,
         content: msg.content
       })),

@@ -42,6 +42,8 @@ const PromptEngineeringGame = () => {
   const [generatedChart, setGeneratedChart] = useState(null);
   const [showResetDialog, setShowResetDialog] = useState(false);
   const certificateRef = useRef(null);
+  const isMountedRef = useRef(true);
+  const timeoutIdsRef = useRef<NodeJS.Timeout[]>([]);
   const [documentUploaded, setDocumentUploaded] = useState(false);
   const [uploadingDocument, setUploadingDocument] = useState(false);
   const [mockCompanyData, setMockCompanyData] = useState(null);
@@ -70,6 +72,16 @@ const PromptEngineeringGame = () => {
   const translations = getTranslations(language);
   const translatedLessons = translations.lessons;
 
+  // Cleanup effect for mounted state and timeouts
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      // Clear all pending timeouts
+      timeoutIdsRef.current.forEach(clearTimeout);
+    };
+  }, []);
+
   // Load progress from localStorage on mount
   useEffect(() => {
     const savedProgress = localStorage.getItem('learn2prompt-progress');
@@ -89,7 +101,10 @@ const PromptEngineeringGame = () => {
       }
     }
     // Mark loading as complete after a brief delay to ensure state is updated
-    setTimeout(() => setIsLoadingProgress(false), 100);
+    const timerId = setTimeout(() => {
+      if (isMountedRef.current) setIsLoadingProgress(false);
+    }, 100);
+    timeoutIdsRef.current.push(timerId);
   }, []);
 
   // Save progress to localStorage whenever key state changes (but not on initial mount)
@@ -701,11 +716,14 @@ const PromptEngineeringGame = () => {
     setUploadingDocument(true);
     const company = generateMockCompany();
 
-    setTimeout(() => {
-      setMockCompanyData(company);
-      setDocumentUploaded(true);
-      setUploadingDocument(false);
+    const timerId = setTimeout(() => {
+      if (isMountedRef.current) {
+        setMockCompanyData(company);
+        setDocumentUploaded(true);
+        setUploadingDocument(false);
+      }
     }, 2000);
+    timeoutIdsRef.current.push(timerId);
   };
 
   // Handle campaign brief loading
@@ -713,11 +731,14 @@ const PromptEngineeringGame = () => {
     setLoadingCampaignBrief(true);
     const campaign = generateMarketingCampaign();
 
-    setTimeout(() => {
-      setMockCampaignData(campaign);
-      setCampaignBriefLoaded(true);
-      setLoadingCampaignBrief(false);
+    const timerId = setTimeout(() => {
+      if (isMountedRef.current) {
+        setMockCampaignData(campaign);
+        setCampaignBriefLoaded(true);
+        setLoadingCampaignBrief(false);
+      }
     }, 1500);
+    timeoutIdsRef.current.push(timerId);
   };
 
   // Handle analytics data loading
@@ -726,14 +747,22 @@ const PromptEngineeringGame = () => {
 
     try {
       const response = await fetch('/api/generate-analytics');
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const result = await response.json();
 
       if (result.data) {
-        setTimeout(() => {
-          setMockAnalyticsData(result.data);
-          setAnalyticsLoaded(true);
-          setLoadingAnalytics(false);
+        const timerId = setTimeout(() => {
+          if (isMountedRef.current) {
+            setMockAnalyticsData(result.data);
+            setAnalyticsLoaded(true);
+            setLoadingAnalytics(false);
+          }
         }, 1800);
+        timeoutIdsRef.current.push(timerId);
       } else {
         throw new Error('No data received');
       }
@@ -741,11 +770,14 @@ const PromptEngineeringGame = () => {
       console.error('Error loading analytics:', error);
       // Fallback to local generation if API fails
       const analytics = generateBusinessAnalytics();
-      setTimeout(() => {
-        setMockAnalyticsData(analytics);
-        setAnalyticsLoaded(true);
-        setLoadingAnalytics(false);
+      const timerId = setTimeout(() => {
+        if (isMountedRef.current) {
+          setMockAnalyticsData(analytics);
+          setAnalyticsLoaded(true);
+          setLoadingAnalytics(false);
+        }
       }, 1800);
+      timeoutIdsRef.current.push(timerId);
     }
   };
 
@@ -1471,6 +1503,10 @@ Rules:
         })
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       // Read the full text stream
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
@@ -1483,9 +1519,9 @@ Rules:
           responseText += decoder.decode(value, { stream: true });
         }
       }
-      
+
       responseText = responseText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      
+
       const evaluationData = JSON.parse(responseText);
       return evaluationData;
     } catch (error) {
@@ -1544,6 +1580,10 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
         })
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       // Read the full text stream
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
@@ -1556,9 +1596,9 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           responseText += decoder.decode(value, { stream: true });
         }
       }
-      
+
       responseText = responseText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      
+
       const chartConfig = JSON.parse(responseText);
       return chartConfig;
     } catch (error) {
@@ -1665,9 +1705,12 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
     // Trigger progress celebration
     setShowProgressCelebration(true);
 
-    setTimeout(() => {
-      setShowProgressCelebration(false);
+    const celebrationTimerId = setTimeout(() => {
+      if (isMountedRef.current) {
+        setShowProgressCelebration(false);
+      }
     }, 1500);
+    timeoutIdsRef.current.push(celebrationTimerId);
 
     // Check if this is a milestone (50% completion)
     if (milestones[currentLessonId]) {
@@ -1675,12 +1718,20 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
       setShowMilestone(true);
 
       // Auto-dismiss milestone after 2.5 seconds
-      setTimeout(() => {
-        setShowMilestone(false);
-        setTimeout(() => {
-          setMilestoneData(null);
-        }, 500);
+      const milestoneTimerId = setTimeout(() => {
+        if (isMountedRef.current) {
+          setShowMilestone(false);
+        }
       }, 2500);
+      timeoutIdsRef.current.push(milestoneTimerId);
+
+      // Clear milestone data after animation
+      const clearMilestoneTimerId = setTimeout(() => {
+        if (isMountedRef.current) {
+          setMilestoneData(null);
+        }
+      }, 3000); // 2500 + 500
+      timeoutIdsRef.current.push(clearMilestoneTimerId);
     }
 
     // Proceed to next lesson
