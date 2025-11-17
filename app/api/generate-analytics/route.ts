@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Force static export for Capacitor
+export const dynamic = 'force-static';
+
 // 21 diverse, realistic business analytics scenarios
 const ANALYTICS_SCENARIOS = [
   {

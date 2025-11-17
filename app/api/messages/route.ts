@@ -1,6 +1,9 @@
 import { streamText } from 'ai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 
+// Force static export for Capacitor (note: this API won't work in static mode)
+export const dynamic = 'force-static';
+
 export async function POST(request: Request) {
   try {
     const { messages, system, language } = await request.json();
