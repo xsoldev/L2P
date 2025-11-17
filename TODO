@@ -1,0 +1,33 @@
+
+first add feedback checkpoints between the lessons, encouraging users, as they advance in the game. 
+"you're doing a great job" "you're getting better at this" "you are a star" etc
+
+course complete form still looks ugly, add ui elements, read documentation here and see if you could come up with creative ways to make the completion card look more modern and nicer
+
+Add a paywall before the advanced lessons like scanning documents and working with documents
+ask for access code before showing the rest of the course, if no acess code, course should just congratulate user for completing. To get access code, users must subscribe to our news letter 
+
+make a french version with the switcher at the top to toggle between languages. We don't translate to french instead we communicate the same ideas in french. 
+
+The page is not meant to be translated literally 1:1, instead we're supposed to communicate
+the same ideas and concept but to a french west african audience. Consider
+many factors like AI not primarily trained in french
+
+Make it elderly people friendly, allow people to select their age so we determine how AI teaches them. Age ranges is from 18+. 
+
+We'll make a prompt course for kids with lots of visual feedback and teaching style ideal for kids
+
+
+
+Course should continue to advanced and specialize courses where we further train 
+staff department specific prompting techniques 
+
+SAVE USER ACCOUNT in DB, progress and build out full platform for businesess
+
+
+ADD A safety page before completion that teaches the user how to use ai safely. how to watch out for hallucinations, how to verify the ai is telling the truth. How you should not give it sensitive data but instead make your request vague.
+How to have the right mindset when using ai, its not your master its your slave.
+
+Talk about why English is better for AI. Come up with an AI for french users that converts french to english first ai responds in english -> we communicate idea in french.
+
+store users last message even after they click try again so they don't have top start typing from scratch 
