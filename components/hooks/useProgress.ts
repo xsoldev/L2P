@@ -1,6 +1,7 @@
-// Hook for managing game progress persistence in localStorage
+// Hook for managing game progress persistence with cross-platform storage
 
 import { useState, useEffect } from 'react';
+import { saveProgress, loadProgress, clearProgress } from '@/lib/capacitor/storage';
 import type { GameScreen, ExerciseDifficulty } from '@/lib/game/types';
 import type { Language } from '@/lib/i18n';
 
@@ -37,43 +38,55 @@ export function useProgress() {
   const [exerciseDifficulty, setExerciseDifficulty] = useState<ExerciseDifficulty>('easy');
   const [language, setLanguage] = useState<Language>('en');
 
-  // Load progress from localStorage on mount
+  // Load progress from storage on mount
   useEffect(() => {
-    const savedProgress = localStorage.getItem('learn2prompt-progress');
-    if (savedProgress) {
+    const loadSavedProgress = async () => {
       try {
-        const progress: GameProgress = JSON.parse(savedProgress);
-        setCurrentScreen(progress.currentScreen || 'welcome');
-        setCurrentLesson(progress.currentLesson || 0);
-        setScore(progress.score || 0);
-        setCompletedLessons(progress.completedLessons || []);
-        setUserName(progress.userName || '');
-        setUserShape(progress.userShape || null);
-        setExerciseDifficulty(progress.exerciseDifficulty || 'easy');
-        setLanguage(progress.language || 'en');
+        const progress = await loadProgress();
+        if (progress) {
+          setCurrentScreen(progress.currentScreen || 'welcome');
+          setCurrentLesson(progress.currentLesson || 0);
+          setScore(progress.score || 0);
+          setCompletedLessons(progress.completedLessons || []);
+          setUserName(progress.userName || '');
+          setUserShape(progress.userShape as string | null || null);
+          setExerciseDifficulty(progress.exerciseDifficulty || 'easy');
+          setLanguage(progress.language || 'en');
+        }
       } catch (error) {
         console.error('Error loading progress:', error);
+      } finally {
+        // Mark loading as complete
+        setTimeout(() => setIsLoadingProgress(false), 100);
       }
-    }
-    // Mark loading as complete after a brief delay to ensure state is updated
-    setTimeout(() => setIsLoadingProgress(false), 100);
+    };
+
+    loadSavedProgress();
   }, []);
 
-  // Save progress to localStorage whenever key state changes (but not on initial mount)
+  // Save progress to storage whenever key state changes (but not on initial mount)
   useEffect(() => {
     if (isLoadingProgress) return; // Don't save during initial load
 
-    const progress: GameProgress = {
-      currentScreen,
-      currentLesson,
-      score,
-      completedLessons,
-      userName,
-      userShape,
-      exerciseDifficulty,
-      language,
+    const saveProgressAsync = async () => {
+      try {
+        await saveProgress({
+          currentScreen,
+          currentLesson,
+          score,
+          completedLessons,
+          userName,
+          userShape: userShape as any, // Storage expects any type for userShape
+          exerciseDifficulty,
+          language,
+          lastSaved: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error('Error saving progress:', error);
+      }
     };
-    localStorage.setItem('learn2prompt-progress', JSON.stringify(progress));
+
+    saveProgressAsync();
   }, [
     currentScreen,
     currentLesson,
@@ -89,7 +102,7 @@ export function useProgress() {
   /**
    * Reset all progress to defaults
    */
-  const resetProgress = () => {
+  const resetProgress = async () => {
     setCurrentScreen('welcome');
     setCurrentLesson(0);
     setScore(0);
@@ -98,7 +111,11 @@ export function useProgress() {
     setUserShape(null);
     setExerciseDifficulty('easy');
     // Don't reset language
-    localStorage.removeItem('learn2prompt-progress');
+    try {
+      await clearProgress();
+    } catch (error) {
+      console.error('Error clearing progress:', error);
+    }
   };
 
   return {
