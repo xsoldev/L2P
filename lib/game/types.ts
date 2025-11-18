@@ -28,6 +28,7 @@ export interface SalesData {
   label: string;
   sales: number;
   quarter?: string;
+  [key: string]: any; // Index signature for recharts compatibility
 }
 
 export interface MockCompanyData {

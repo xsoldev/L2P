@@ -26,21 +26,45 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { createTranslator, getTranslations, type Language } from '@/lib/i18n';
+import { useProgress, useGameState } from '@/components/hooks';
+import { SHAPE_LIBRARY, getAllShapes, getRandomShape, findShapeById } from '@/lib/game/shape-library';
+import { downloadCertificate as downloadCert, shareCertificate as shareCert } from '@/lib/game/certificate-actions';
+import { generateMockCompany, generateMarketingCampaign, generateBusinessAnalytics, EASY_MODE_DOCUMENT } from '@/lib/game/data-generators';
+import { evaluatePrompt as evaluatePromptAPI, generateAIResponse as generateAIResponseAPI, generateVisualization as generateVisualizationAPI } from '@/lib/game/evaluation';
 
 const PromptEngineeringGame = () => {
-  const [currentScreen, setCurrentScreen] = useState('welcome');
-  const [currentLesson, setCurrentLesson] = useState(0);
-  const [score, setScore] = useState(0);
+  // Use custom hooks for state management
+  const {
+    currentScreen, setCurrentScreen,
+    currentLesson, setCurrentLesson,
+    score, setScore,
+    completedLessons, setCompletedLessons,
+    userName, setUserName,
+    userShape, setUserShape,
+    exerciseDifficulty, setExerciseDifficulty,
+    language, setLanguage,
+    isLoadingProgress,
+    resetProgress
+  } = useProgress();
+
+  const {
+    showNameInput, setShowNameInput,
+    showResetDialog, setShowResetDialog,
+    showProgressCelebration,
+    showMilestone,
+    milestoneData,
+    easyModeEnabled, setEasyModeEnabled,
+    checkMilestone,
+    celebrateProgress
+  } = useGameState();
+
+  // Local component state (not persisted)
   const [userInput, setUserInput] = useState('');
   const [aiResponse, setAiResponse] = useState(null);
   const [evaluation, setEvaluation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [exerciseAttempts, setExerciseAttempts] = useState(0);
-  const [completedLessons, setCompletedLessons] = useState([]);
-  const [userName, setUserName] = useState('');
-  const [showNameInput, setShowNameInput] = useState(false);
   const [generatedChart, setGeneratedChart] = useState(null);
-  const [showResetDialog, setShowResetDialog] = useState(false);
   const certificateRef = useRef(null);
   const [documentUploaded, setDocumentUploaded] = useState(false);
   const [uploadingDocument, setUploadingDocument] = useState(false);
@@ -51,17 +75,12 @@ const PromptEngineeringGame = () => {
   const [analyticsLoaded, setAnalyticsLoaded] = useState(false);
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
   const [mockAnalyticsData, setMockAnalyticsData] = useState(null);
-  const [exerciseDifficulty, setExerciseDifficulty] = useState('easy'); // 'easy' or 'hard'
-  const [showProgressCelebration, setShowProgressCelebration] = useState(false);
-  const [showMilestone, setShowMilestone] = useState(false);
-  const [milestoneData, setMilestoneData] = useState(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingText, setStreamingText] = useState('');
-  const [userShape, setUserShape] = useState(null);
-  const [easyModeEnabled, setEasyModeEnabled] = useState(false);
   const [usedSuggestion, setUsedSuggestion] = useState(false);
-  const [isLoadingProgress, setIsLoadingProgress] = useState(true);
-  const [language, setLanguage] = useState<Language>('en');
+
+  // Get the shape object from userShape ID
+  const userShapeObj = userShape ? findShapeById(userShape) : null;
 
   // Create translator function based on current language
   const t = createTranslator(language);
@@ -69,46 +88,6 @@ const PromptEngineeringGame = () => {
   // Get translations object and lessons array
   const translations = getTranslations(language);
   const translatedLessons = translations.lessons;
-
-  // Load progress from localStorage on mount
-  useEffect(() => {
-    const savedProgress = localStorage.getItem('learn2prompt-progress');
-    if (savedProgress) {
-      try {
-        const progress = JSON.parse(savedProgress);
-        setCurrentScreen(progress.currentScreen || 'welcome');
-        setCurrentLesson(progress.currentLesson || 0);
-        setScore(progress.score || 0);
-        setCompletedLessons(progress.completedLessons || []);
-        setUserName(progress.userName || '');
-        setUserShape(progress.userShape || null);
-        setExerciseDifficulty(progress.exerciseDifficulty || 'easy');
-        setLanguage(progress.language || 'en');
-      } catch (error) {
-        console.error('Error loading progress:', error);
-      }
-    }
-    // Mark loading as complete after a brief delay to ensure state is updated
-    setTimeout(() => setIsLoadingProgress(false), 100);
-  }, []);
-
-  // Save progress to localStorage whenever key state changes (but not on initial mount)
-  useEffect(() => {
-    if (isLoadingProgress) return; // Don't save during initial load
-
-    const progress = {
-      currentScreen,
-      currentLesson,
-      score,
-      completedLessons,
-      userName,
-      userShape,
-      exerciseDifficulty,
-      language,
-      lastSaved: new Date().toISOString(),
-    };
-    localStorage.setItem('learn2prompt-progress', JSON.stringify(progress));
-  }, [currentScreen, currentLesson, score, completedLessons, userName, userShape, exerciseDifficulty, language, isLoadingProgress]);
 
   // Scroll to top whenever lesson changes to fix mobile scroll issue
   useEffect(() => {
@@ -236,151 +215,6 @@ const PromptEngineeringGame = () => {
   };
 
   // Certificate Shape Library - Multiple geometric variations with different colors
-  const SHAPE_LIBRARY = {
-    circles: [
-      {
-        id: 'circle-blue',
-        type: 'circle',
-        name: 'Azure Orb',
-        colors: {
-          primary: '#70BEFA',
-          secondary: '#5AAFED',
-          glow: 'rgba(112,190,250,0.8)'
-        }
-      },
-      {
-        id: 'circle-purple',
-        type: 'circle',
-        name: 'Violet Sphere',
-        colors: {
-          primary: '#A78BFA',
-          secondary: '#8B5CF6',
-          glow: 'rgba(167,139,250,0.8)'
-        }
-      },
-      {
-        id: 'circle-green',
-        type: 'circle',
-        name: 'Emerald Globe',
-        colors: {
-          primary: '#34D399',
-          secondary: '#10B981',
-          glow: 'rgba(52,211,153,0.8)'
-        }
-      },
-      {
-        id: 'circle-gold',
-        type: 'circle',
-        name: 'Golden Orb',
-        colors: {
-          primary: '#FBBF24',
-          secondary: '#F59E0B',
-          glow: 'rgba(251,191,36,0.8)'
-        }
-      }
-    ],
-    squares: [
-      {
-        id: 'square-cyan',
-        type: 'square',
-        name: 'Cyan Crystal',
-        rotation: 0,
-        colors: {
-          primary: '#06B6D4',
-          secondary: '#0891B2',
-          glow: 'rgba(6,182,212,0.8)'
-        }
-      },
-      {
-        id: 'square-pink',
-        type: 'square',
-        name: 'Rose Diamond',
-        rotation: 45,
-        colors: {
-          primary: '#EC4899',
-          secondary: '#DB2777',
-          glow: 'rgba(236,72,153,0.8)'
-        }
-      },
-      {
-        id: 'square-orange',
-        type: 'square',
-        name: 'Amber Block',
-        rotation: 0,
-        colors: {
-          primary: '#F97316',
-          secondary: '#EA580C',
-          glow: 'rgba(249,115,22,0.8)'
-        }
-      },
-      {
-        id: 'square-indigo',
-        type: 'square',
-        name: 'Indigo Gem',
-        rotation: 45,
-        colors: {
-          primary: '#6366F1',
-          secondary: '#4F46E5',
-          glow: 'rgba(99,102,241,0.8)'
-        }
-      }
-    ],
-    triangles: [
-      {
-        id: 'triangle-red',
-        type: 'triangle',
-        name: 'Ruby Prism',
-        orientation: 'up',
-        colors: {
-          primary: '#EF4444',
-          secondary: '#DC2626',
-          glow: 'rgba(239,68,68,0.8)'
-        }
-      },
-      {
-        id: 'triangle-teal',
-        type: 'triangle',
-        name: 'Teal Pyramid',
-        orientation: 'down',
-        colors: {
-          primary: '#14B8A6',
-          secondary: '#0D9488',
-          glow: 'rgba(20,184,166,0.8)'
-        }
-      },
-      {
-        id: 'triangle-yellow',
-        type: 'triangle',
-        name: 'Sunburst Triangle',
-        orientation: 'up',
-        colors: {
-          primary: '#EAB308',
-          secondary: '#CA8A04',
-          glow: 'rgba(234,179,8,0.8)'
-        }
-      },
-      {
-        id: 'triangle-lime',
-        type: 'triangle',
-        name: 'Lime Shard',
-        orientation: 'down',
-        colors: {
-          primary: '#84CC16',
-          secondary: '#65A30D',
-          glow: 'rgba(132,204,22,0.8)'
-        }
-      }
-    ]
-  };
-
-  // Get all shapes in a flat array
-  const getAllShapes = () => {
-    return [
-      ...SHAPE_LIBRARY.circles,
-      ...SHAPE_LIBRARY.squares,
-      ...SHAPE_LIBRARY.triangles
-    ];
-  };
 
   // Prompt suggestions for Easy Mode - get from translations
   const PROMPT_SUGGESTIONS = translations.promptSuggestions;
@@ -568,133 +402,8 @@ const PromptEngineeringGame = () => {
     return null;
   };
 
-  // Mock Company Data Generator
-  const generateMockCompany = () => {
-    const companies = [
-      {
-        name: "TechFlow Solutions",
-        industry: "Software Development",
-        employees: 45,
-        founded: 2019,
-        revenue: "$2.4M",
-        quarterlyGrowth: "+18%",
-        keyProjects: [
-          "Cloud Migration Platform - Q1 2025, Budget: $180K, Status: In Progress",
-          "Mobile App Redesign - Q4 2024, Budget: $95K, Status: Completed",
-          "AI Analytics Dashboard - Q2 2025, Budget: $220K, Status: Planning"
-        ],
-        salesData: {
-          q1: "$580K",
-          q2: "$620K",
-          q3: "$710K",
-          q4: "$490K"
-        },
-        marketing: {
-          budget: "$45K/month",
-          channels: "LinkedIn Ads (40%), Content Marketing (30%), Events (20%), SEO (10%)",
-          leads: "~250/month",
-          conversionRate: "12%"
-        },
-        challenges: [
-          "High customer acquisition costs",
-          "Scaling development team",
-          "Competition from established players"
-        ]
-      },
-      {
-        name: "GreenLeaf Organics",
-        industry: "Sustainable Food & Beverage",
-        employees: 28,
-        founded: 2020,
-        revenue: "$1.8M",
-        quarterlyGrowth: "+24%",
-        keyProjects: [
-          "Product Line Expansion - Q2 2025, Budget: $120K, Status: In Progress",
-          "Distribution Network - Q1 2025, Budget: $85K, Status: Completed",
-          "Packaging Redesign - Q3 2025, Budget: $55K, Status: Planning"
-        ],
-        salesData: {
-          q1: "$380K",
-          q2: "$450K",
-          q3: "$520K",
-          q4: "$450K"
-        },
-        marketing: {
-          budget: "$28K/month",
-          channels: "Instagram (45%), Farmers Markets (25%), Email (20%), Influencers (10%)",
-          leads: "~180/month",
-          conversionRate: "18%"
-        },
-        challenges: [
-          "Supply chain sustainability",
-          "Seasonal demand fluctuations",
-          "Brand awareness in new markets"
-        ]
-      },
-      {
-        name: "UrbanFit Wellness",
-        industry: "Health & Fitness",
-        employees: 32,
-        founded: 2021,
-        revenue: "$1.2M",
-        quarterlyGrowth: "+15%",
-        keyProjects: [
-          "Mobile App Development - Q1 2025, Budget: $145K, Status: In Progress",
-          "New Studio Locations - Q4 2024, Budget: $200K, Status: Completed",
-          "Virtual Training Platform - Q2 2025, Budget: $95K, Status: Planning"
-        ],
-        salesData: {
-          q1: "$280K",
-          q2: "$310K",
-          q3: "$340K",
-          q4: "$270K"
-        },
-        marketing: {
-          budget: "$22K/month",
-          channels: "Instagram (35%), Referrals (30%), Local Events (20%), Google Ads (15%)",
-          leads: "~320/month",
-          conversionRate: "22%"
-        },
-        challenges: [
-          "Member retention rates",
-          "Competition from online platforms",
-          "Expanding to new locations"
-        ]
-      }
-    ];
-
-    return companies[Math.floor(Math.random() * companies.length)];
-  };
-
-  // Milestone celebrations - only for meaningful achievements
-  const milestones = {
-    'exercise4': {
-      title: "Halfway There! 🎯",
-      message: "You're mastering prompt engineering! Your prompts are getting more specific and effective.",
-      badge: "50% Complete"
-    }
-  };
-
-  // Easy mode document data
-  const easyModeDocument = {
-    type: "Meeting Notes",
-    title: "Q4 Marketing Strategy Meeting",
-    date: "October 15, 2024",
-    attendees: ["Sarah (Marketing Lead)", "Mike (Sales Director)", "Alex (Product Manager)"],
-    content: [
-      "Discussed launching new product line in Q1 2025",
-      "Target audience: Small business owners, ages 30-50",
-      "Budget approved: $45,000 for initial campaign",
-      "Main channels: LinkedIn, Email, Industry events",
-      "Key message: 'Save 20 hours/week with automation'",
-      "Sales goal: 200 demos booked in first 60 days"
-    ],
-    actionItems: [
-      "Sarah to create campaign timeline by Oct 22",
-      "Mike to prepare sales deck for demos",
-      "Alex to finalize product messaging"
-    ]
-  };
+  // Easy mode document data - imported from data-generators
+  const easyModeDocument = EASY_MODE_DOCUMENT;
 
   // Handle document upload simulation
   const handleDocumentUpload = () => {
@@ -747,245 +456,6 @@ const PromptEngineeringGame = () => {
         setLoadingAnalytics(false);
       }, 1800);
     }
-  };
-
-  // Mock Marketing Campaign Generator
-  const generateMarketingCampaign = () => {
-    const campaigns = [
-      {
-        clientName: "Sarah Chen",
-        clientRole: "Marketing Director",
-        companyName: "EcoHome Solutions",
-        productLaunch: "Smart Home Energy Monitor",
-        targetAudience: {
-          primary: "Environmentally conscious homeowners, ages 30-55",
-          secondary: "Tech-savvy millennials interested in cost savings",
-          demographics: "Middle to upper-middle income, suburban areas"
-        },
-        campaignGoals: [
-          "Generate 500 pre-orders in 30 days",
-          "Build email list of 5,000+ interested prospects",
-          "Achieve 15% click-through rate on ads"
-        ],
-        budget: "$25,000",
-        channels: ["Email", "Instagram", "LinkedIn", "Google Ads"],
-        timeline: "Launch in 3 weeks",
-        keyMessages: [
-          "Save 30% on energy bills",
-          "Real-time monitoring via mobile app",
-          "Eco-friendly technology"
-        ],
-        competitorInsight: "Main competitor focuses on tech specs, but users care more about cost savings"
-      },
-      {
-        clientName: "Marcus Johnson",
-        clientRole: "Head of Growth",
-        companyName: "FitLife Coaching",
-        productLaunch: "Corporate Wellness Program",
-        targetAudience: {
-          primary: "HR managers and wellness coordinators at mid-size companies",
-          secondary: "C-suite executives interested in employee retention",
-          demographics: "Companies with 50-500 employees"
-        },
-        campaignGoals: [
-          "Book 20 demo calls with qualified leads",
-          "Establish thought leadership in corporate wellness",
-          "Generate 2,000 website visits"
-        ],
-        budget: "$18,000",
-        channels: ["LinkedIn", "Email", "Webinars", "Industry Publications"],
-        timeline: "Q1 campaign starting in 2 weeks",
-        keyMessages: [
-          "Reduce employee burnout by 40%",
-          "Flexible programs that fit any schedule",
-          "Proven ROI with measurable results"
-        ],
-        competitorInsight: "Competitors are corporate and boring - opportunity to be more human and relatable"
-      },
-      {
-        clientName: "Emily Rodriguez",
-        clientRole: "VP of Marketing",
-        companyName: "CloudSync Pro",
-        productLaunch: "Team Collaboration Platform for Remote Teams",
-        targetAudience: {
-          primary: "Project managers and team leads at distributed companies",
-          secondary: "CTOs and IT decision-makers",
-          demographics: "Tech companies with 20-200 employees, fully remote"
-        },
-        campaignGoals: [
-          "Acquire 100 free trial signups",
-          "Convert 20% to paid plans",
-          "Build community of 1,000+ Slack/Discord members"
-        ],
-        budget: "$30,000",
-        channels: ["Twitter", "Product Hunt", "Tech Podcasts", "Developer Communities"],
-        timeline: "6-week campaign starting immediately",
-        keyMessages: [
-          "Built by remote teams, for remote teams",
-          "Integrates with tools you already use",
-          "10x faster than switching between apps"
-        ],
-        competitorInsight: "Market is saturated, need to stand out with personality and community-first approach"
-      }
-    ];
-
-    return campaigns[Math.floor(Math.random() * campaigns.length)];
-  };
-
-  // Mock Business Analytics Data Generator
-  const generateBusinessAnalytics = () => {
-    const scenarios = [
-      {
-        companyName: "Stellar Retail Co.",
-        period: "Q3 2024",
-        departments: {
-          sales: {
-            revenue: "$1.2M",
-            growth: "+18% YoY",
-            topProducts: [
-              { name: "Premium Wireless Headphones", sales: "$340K", units: 1200 },
-              { name: "Smart Fitness Tracker", sales: "$280K", units: 1850 },
-              { name: "Portable Power Bank", sales: "$190K", units: 2100 }
-            ],
-            regionalPerformance: [
-              { region: "Northeast", revenue: "$420K", growth: "+25%" },
-              { region: "Southeast", revenue: "$380K", growth: "+15%" },
-              { region: "West", revenue: "$400K", growth: "+12%" }
-            ],
-            salesTeam: { reps: 12, avgDealsPerRep: 28, topPerformer: "Lisa Wong (42 deals)" }
-          },
-          marketing: {
-            budget: "$95K",
-            spent: "$89K",
-            campaigns: [
-              { name: "Summer Sale", spend: "$35K", leads: 2400, conversions: 340, roi: "2.8x" },
-              { name: "Product Launch", spend: "$28K", leads: 1800, conversions: 220, roi: "3.1x" },
-              { name: "Retargeting", spend: "$26K", leads: 1200, conversions: 180, roi: "2.4x" }
-            ],
-            channels: [
-              { channel: "Social Media", spend: "$38K", impressions: "1.2M", ctr: "2.4%" },
-              { channel: "Email", spend: "$15K", opens: "45%", clicks: "12%" },
-              { channel: "PPC", spend: "$36K", impressions: "890K", ctr: "3.1%" }
-            ]
-          },
-          accounting: {
-            revenue: "$1.2M",
-            expenses: "$840K",
-            profit: "$360K",
-            profitMargin: "30%",
-            breakdown: [
-              { category: "Cost of Goods", amount: "$480K", percentage: "57%" },
-              { category: "Payroll", amount: "$220K", percentage: "26%" },
-              { category: "Marketing", amount: "$89K", percentage: "11%" },
-              { category: "Operations", amount: "$51K", percentage: "6%" }
-            ],
-            cashFlow: "+$145K vs last quarter",
-            outstandingInvoices: "$82K (avg 28 days)"
-          },
-          operations: {
-            productivity: "92% efficiency rating",
-            fulfillment: [
-              { metric: "Order Processing Time", value: "2.1 hours", target: "< 3 hours" },
-              { metric: "Shipping Accuracy", value: "98.5%", target: "> 98%" },
-              { metric: "Customer Support Response", value: "4.2 hours", target: "< 6 hours" }
-            ],
-            inventory: [
-              { status: "In Stock", items: 1240, value: "$340K" },
-              { status: "Low Stock (< 20 units)", items: 85, value: "$18K" },
-              { status: "Out of Stock", items: 12, value: "$4K" }
-            ],
-            team: { employees: 28, avgTenure: "2.3 years", satisfaction: "8.1/10" }
-          }
-        },
-        keyInsights: [
-          "Northeast region outperforming others - opportunity to replicate strategy",
-          "Email marketing has best ROI but lowest budget allocation",
-          "High inventory on slow-moving items - consider promotion",
-          "Customer support response time improving but still room for optimization"
-        ],
-        concerns: [
-          "12 products out of stock causing lost sales",
-          "$82K in outstanding invoices affecting cash flow",
-          "Marketing budget underutilized by $6K"
-        ]
-      },
-      {
-        companyName: "Zenith B2B Services",
-        period: "Q2 2024",
-        departments: {
-          sales: {
-            revenue: "$2.8M",
-            growth: "+22% YoY",
-            topProducts: [
-              { name: "Enterprise Software License", sales: "$1.2M", units: 45 },
-              { name: "Professional Services", sales: "$980K", units: 120 },
-              { name: "Training & Support", sales: "$620K", units: 85 }
-            ],
-            regionalPerformance: [
-              { region: "East Coast", revenue: "$1.1M", growth: "+28%" },
-              { region: "Midwest", revenue: "$940K", growth: "+18%" },
-              { region: "West Coast", revenue: "$760K", growth: "+20%" }
-            ],
-            salesTeam: { reps: 18, avgDealsPerRep: 15, topPerformer: "David Park (32 deals)" }
-          },
-          marketing: {
-            budget: "$145K",
-            spent: "$138K",
-            campaigns: [
-              { name: "Webinar Series", spend: "$42K", leads: 850, conversions: 68, roi: "4.2x" },
-              { name: "Content Marketing", spend: "$38K", leads: 1200, conversions: 52, roi: "3.8x" },
-              { name: "Trade Shows", spend: "$58K", leads: 420, conversions: 48, roi: "2.9x" }
-            ],
-            channels: [
-              { channel: "LinkedIn", spend: "$62K", impressions: "2.4M", ctr: "3.8%" },
-              { channel: "Email", spend: "$28K", opens: "52%", clicks: "18%" },
-              { channel: "Events", spend: "$48K", impressions: "85K", ctr: "N/A" }
-            ]
-          },
-          accounting: {
-            revenue: "$2.8M",
-            expenses: "$1.9M",
-            profit: "$900K",
-            profitMargin: "32%",
-            breakdown: [
-              { category: "Payroll", amount: "$1.1M", percentage: "58%" },
-              { category: "Technology", amount: "$380K", percentage: "20%" },
-              { category: "Marketing", amount: "$138K", percentage: "7%" },
-              { category: "Operations", amount: "$282K", percentage: "15%" }
-            ],
-            cashFlow: "+$320K vs last quarter",
-            outstandingInvoices: "$420K (avg 42 days)"
-          },
-          operations: {
-            productivity: "89% efficiency rating",
-            fulfillment: [
-              { metric: "Project Delivery Time", value: "8.5 days", target: "< 10 days" },
-              { metric: "Client Satisfaction", value: "94%", target: "> 90%" },
-              { metric: "Support Ticket Resolution", value: "18 hours", target: "< 24 hours" }
-            ],
-            inventory: [
-              { status: "Active Projects", items: 38, value: "$2.1M" },
-              { status: "In Pipeline", items: 52, value: "$3.8M" },
-              { status: "Completed This Quarter", items: 67, value: "$2.4M" }
-            ],
-            team: { employees: 45, avgTenure: "3.1 years", satisfaction: "8.6/10" }
-          }
-        },
-        keyInsights: [
-          "East Coast sales team significantly outperforming - investigate best practices",
-          "Webinar series has highest ROI - consider doubling investment",
-          "Outstanding invoices at 42 days - implement stricter payment terms",
-          "Client satisfaction high but team efficiency could improve"
-        ],
-        concerns: [
-          "$420K in outstanding invoices putting pressure on cash reserves",
-          "Technology costs growing faster than revenue",
-          "Pipeline strong but resource constraints may limit growth"
-        ]
-      }
-    ];
-
-    return scenarios[Math.floor(Math.random() * scenarios.length)];
   };
 
   const lessons = translatedLessons.map((lesson) => {
@@ -1663,25 +1133,10 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Trigger progress celebration
-    setShowProgressCelebration(true);
-
-    setTimeout(() => {
-      setShowProgressCelebration(false);
-    }, 1500);
+    celebrateProgress();
 
     // Check if this is a milestone (50% completion)
-    if (milestones[currentLessonId]) {
-      setMilestoneData(milestones[currentLessonId]);
-      setShowMilestone(true);
-
-      // Auto-dismiss milestone after 2.5 seconds
-      setTimeout(() => {
-        setShowMilestone(false);
-        setTimeout(() => {
-          setMilestoneData(null);
-        }, 500);
-      }, 2500);
-    }
+    checkMilestone(currentLessonId);
 
     // Proceed to next lesson
     if (currentLesson < lessons.length - 1) {
@@ -1707,7 +1162,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
       if (!userShape) {
         const allShapes = getAllShapes();
         const randomShape = allShapes[Math.floor(Math.random() * allShapes.length)];
-        setUserShape(randomShape);
+        setUserShape(randomShape.id);
       }
       setCurrentScreen('complete');
     }
@@ -1721,83 +1176,13 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
   };
 
   const downloadCertificate = async () => {
-    try {
-      const certificate = certificateRef.current;
-      if (!certificate) {
-        toast.error(language === 'fr' ? 'Certificat introuvable. Veuillez réessayer.' : 'Certificate not found. Please try again.');
-        return;
-      }
-
-      // Use dom-to-image to convert certificate to PNG
-      const domtoimage = (await import('dom-to-image-more')).default;
-
-      // Convert to blob with filter to remove decorative borders
-      const blob = await domtoimage.toBlob(certificate, {
-        width: certificate.offsetWidth * 2,
-        height: certificate.offsetHeight * 2,
-        style: {
-          transform: 'scale(2)',
-          transformOrigin: 'top left',
-          width: certificate.offsetWidth + 'px',
-          height: certificate.offsetHeight + 'px',
-          border: 'none',
-          boxShadow: 'none'
-        },
-        filter: (node) => {
-          // Remove corner accent decorations
-          if (node.classList && node.classList.contains('absolute')) {
-            const style = window.getComputedStyle(node);
-            if (style.border && style.border !== 'none') {
-              return false;
-            }
-          }
-          return true;
-        }
-      });
-
-      // Create download link
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      const nameForFile = userName ? userName.replace(/\s+/g, '-') : 'certificate';
-      link.download = `prompt-engineering-certificate-${nameForFile}-${Date.now()}.png`;
-      link.href = url;
-      link.click();
-
-      // Clean up
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error generating certificate:', error);
-      toast.error(language === 'fr' ? `Échec du téléchargement : ${error.message}` : `Failed to download certificate: ${error.message}`);
+    if (certificateRef.current) {
+      await downloadCert(certificateRef.current, userName, language);
     }
   };
 
   const shareCertificate = async () => {
-    const shareText = `I just completed the AI Prompt Engineering course and scored ${score} points! 🎓✨\n\nLearn prompt engineering for free at learn2prompt.xyz`;
-    const shareUrl = 'https://learn2prompt.xyz';
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'AI Prompt Engineering Certificate',
-          text: shareText,
-          url: shareUrl,
-        });
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          copyToClipboard(shareText + '\n' + shareUrl);
-        }
-      }
-    } else {
-      copyToClipboard(shareText + '\n' + shareUrl);
-    }
-  };
-
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text).then(() => {
-      toast.success(language === 'fr' ? 'Texte copié dans le presse-papier !' : 'Share text copied to clipboard!');
-    }).catch(() => {
-      toast.error(language === 'fr' ? 'Échec de la copie. Veuillez réessayer.' : 'Failed to copy. Please try again.');
-    });
+    await shareCert(score, language);
   };
 
   const shareToTwitter = () => {
@@ -1811,19 +1196,12 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
     window.open(url, '_blank', 'width=600,height=400');
   };
 
-  const resetProgress = () => {
+  const handleResetProgress = () => {
     setShowResetDialog(true);
   };
 
-  const confirmReset = () => {
-    localStorage.removeItem('learn2prompt-progress');
-    setCurrentScreen('welcome');
-    setCurrentLesson(0);
-    setScore(0);
-    setCompletedLessons([]);
-    setUserName('');
-    setUserShape(null);
-    setExerciseDifficulty('easy');
+  const confirmReset = async () => {
+    await resetProgress();
     setUserInput('');
     setAiResponse(null);
     setEvaluation(null);
@@ -1946,7 +1324,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   </Button>
                   {completedLessons.length > 0 && (
                     <Button
-                      onClick={resetProgress}
+                      onClick={handleResetProgress}
                       variant="outline"
                       size="sm"
                       className="w-full mt-3 border-black/20 text-black/60 hover:bg-black/5 text-xs"
@@ -2106,7 +1484,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             <div
               className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-96 rounded-full opacity-40 blur-3xl"
               style={{
-                background: `radial-gradient(circle, ${userShape?.colors.primary || '#70BEFA'}90 0%, transparent 70%)`
+                background: `radial-gradient(circle, ${userShapeObj?.colors.primary || '#70BEFA'}90 0%, transparent 70%)`
               }}
             ></div>
 
@@ -2122,14 +1500,14 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             <div className="relative z-10 bg-gradient-to-b from-black/50 via-black/30 to-transparent flex flex-col items-center justify-center gap-4 pt-12 pb-10">
               {/* Large Prominent Orb */}
               <div className="flex-shrink-0">
-                <CertificateShape shapeConfig={userShape} size="large" />
+                <CertificateShape shapeConfig={userShapeObj} size="large" />
               </div>
 
               {/* Shape Name Badge */}
-              {userShape && (
+              {userShapeObj && (
                 <div className="px-5 py-2 bg-gradient-to-r from-[#0D0D0D]/90 to-[#1A1A1A]/90 border border-[#70BEFA]/50 rounded-full backdrop-blur-md shadow-lg shadow-[#70BEFA]/20">
                   <p className="text-sm font-mono text-[#70BEFA] tracking-[0.2em] font-bold">
-                    {userShape.name.toUpperCase()}
+                    {userShapeObj.name.toUpperCase()}
                   </p>
                 </div>
               )}
@@ -2273,7 +1651,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               {t('ui.navigation.pointsLabel').replace('{{score}}', String(score))}
             </Badge>
             <button
-              onClick={resetProgress}
+              onClick={handleResetProgress}
               className="text-xs text-gray-500 hover:text-[#70BEFA] font-mono transition-colors"
               title={t('ui.navigation.resetTitle')}
             >

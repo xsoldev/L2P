@@ -147,7 +147,7 @@ export async function setMultiple<T = any>(items: Record<string, T>): Promise<vo
  * Storage helper for typed progress data
  */
 export interface ProgressData {
-  currentScreen: 'welcome' | 'lesson' | 'certificate';
+  currentScreen: 'welcome' | 'lesson' | 'certificate' | 'complete';
   currentLesson: number;
   score: number;
   completedLessons: string[];
