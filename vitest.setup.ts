@@ -6,13 +6,3 @@ import { cleanup } from '@testing-library/react';
 afterEach(() => {
   cleanup();
 });
-
-// Mock Capacitor for testing
-global.Capacitor = {
-  isNativePlatform: () => false,
-  getPlatform: () => 'web',
-  isPluginAvailable: () => false,
-  convertFileSrc: (filePath: string) => filePath,
-  Plugins: {},
-  platform: 'web',
-};

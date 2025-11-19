@@ -6,8 +6,6 @@
  * (using direct Anthropic SDK).
  */
 
-import { Capacitor } from '@capacitor/core';
-
 export interface Message {
   role: 'user' | 'assistant' | 'system';
   content: string;
@@ -29,7 +27,7 @@ export interface AIClientConfig {
  * Check if running on native platform
  */
 export function isNativePlatform(): boolean {
-  return Capacitor.isNativePlatform();
+  return false;
 }
 
 /**
@@ -46,13 +44,8 @@ export async function streamAIResponse(
   options: StreamOptions = {},
   config: AIClientConfig = {}
 ): Promise<string> {
-  if (isNativePlatform()) {
-    // Use direct Anthropic SDK for native mobile
-    return streamNativeAI(messages, systemPrompt, options, config);
-  } else {
-    // Use Next.js API route for web
-    return streamWebAI(messages, systemPrompt, options, config);
-  }
+  // Use Next.js API route for web
+  return streamWebAI(messages, systemPrompt, options, config);
 }
 
 /**
@@ -65,9 +58,9 @@ async function streamWebAI(
   config: AIClientConfig
 ): Promise<string> {
   const {
- onChunk = () => {},
-    onComplete = () => {},
-    onError = () => {},
+    onChunk = () => { },
+    onComplete = () => { },
+    onError = () => { },
   } = options;
 
   try {
@@ -116,70 +109,6 @@ async function streamWebAI(
   }
 }
 
-/**
- * Native implementation using Anthropic SDK directly
- *
- * NOTE: This requires ANTHROPIC_API_KEY to be available in the app
- * For security, consider using a proxy server or secure key storage
- */
-async function streamNativeAI(
-  messages: Message[],
-  systemPrompt: string,
-  options: StreamOptions,
-  config: AIClientConfig
-): Promise<string> {
-  const {
-    onChunk = () => {},
-    onComplete = () => {},
-    onError = () => {},
-  } = options;
-
-  try {
-    // Import Anthropic SDK dynamically (only on native)
-    const { Anthropic } = await import('@anthropic-ai/sdk');
-
-    // Get API key from environment or secure storage
-    // TODO: Replace with secure key management
-    const apiKey = process.env.ANTHROPIC_API_KEY || '';
-
-    if (!apiKey) {
-      throw new Error('ANTHROPIC_API_KEY not configured for native platform');
-    }
-
-    const anthropic = new Anthropic({ apiKey });
-
-    const stream = await anthropic.messages.stream({
-      model: config.model || 'claude-sonnet-4-5-20250929',
-      max_tokens: config.maxTokens || 8096,
-      temperature: config.temperature,
-      system: systemPrompt,
-      messages: messages.map((msg) => ({
-        role: msg.role === 'system' ? 'user' : msg.role,
-        content: msg.content,
-      })),
-    });
-
-    let fullText = '';
-
-    for await (const chunk of stream) {
-      if (
-        chunk.type === 'content_block_delta' &&
-        chunk.delta.type === 'text_delta'
-      ) {
-        const text = chunk.delta.text;
-        fullText += text;
-        onChunk(text);
-      }
-    }
-
-    onComplete(fullText);
-    return fullText;
-  } catch (error) {
-    const err = error instanceof Error ? error : new Error(String(error));
-    onError(err);
-    throw err;
-  }
-}
 
 /**
  * Generate a single AI response (non-streaming)

@@ -1,7 +1,7 @@
 // Hook for managing game progress persistence with cross-platform storage
 
 import { useState, useEffect } from 'react';
-import { saveProgress, loadProgress, clearProgress } from '@/lib/capacitor/storage';
+import { saveProgress, loadProgress, clearProgress } from '@/lib/storage';
 import type { GameScreen, ExerciseDifficulty } from '@/lib/game/types';
 import type { Language } from '@/lib/i18n';
 

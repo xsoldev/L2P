@@ -120,3 +120,109 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mobile optimizations */
+@layer utilities {
+  /* Touch target minimum size (44x44px) */
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Mobile-friendly typography scaling */
+  @media (max-width: 768px) {
+    html {
+      font-size: 16px; /* Prevent zoom on input focus */
+    }
+
+    h1 {
+      font-size: 1.875rem; /* 30px */
+      line-height: 2.25rem;
+    }
+
+    h2 {
+      font-size: 1.5rem; /* 24px */
+      line-height: 2rem;
+    }
+
+    h3 {
+      font-size: 1.25rem; /* 20px */
+      line-height: 1.75rem;
+    }
+
+    p {
+      font-size: 1rem; /* 16px */
+      line-height: 1.625rem;
+    }
+
+    /* Larger touch targets for buttons */
+    button {
+      min-height: 44px;
+      padding: 0.75rem 1rem;
+    }
+
+    /* Improved textarea sizing */
+    textarea {
+      min-height: 120px;
+      font-size: 16px; /* Prevent zoom */
+    }
+
+    /* Input fields */
+    input[type="text"],
+    input[type="email"],
+    input[type="search"] {
+      font-size: 16px; /* Prevent zoom */
+      min-height: 44px;
+    }
+  }
+
+  /* Safe area insets for notched devices */
+  @supports (padding: max(0px)) {
+    .safe-top {
+      padding-top: max(1rem, env(safe-area-inset-top));
+    }
+
+    .safe-bottom {
+      padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .safe-left {
+      padding-left: max(1rem, env(safe-area-inset-left));
+    }
+
+    .safe-right {
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .safe-all {
+      padding: max(1rem, env(safe-area-inset-top))
+               max(1rem, env(safe-area-inset-right))
+               max(1rem, env(safe-area-inset-bottom))
+               max(1rem, env(safe-area-inset-left));
+    }
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent text selection on buttons */
+  button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Improve scrolling performance on mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Better focus states for accessibility */
+  *:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
