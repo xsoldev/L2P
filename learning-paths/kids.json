@@ -1,0 +1,147 @@
+{
+  "pathType": "kids",
+  "name": "Kids Path",
+  "description": "Fun and simple AI learning for young explorers (ages 8-14)",
+  "icon": "🎮",
+  "targetAudience": "Kids ages 8-14",
+  "difficulty": "easy",
+  "estimatedDuration": "25 min",
+  "lessons": [
+    {
+      "id": "kids_intro",
+      "title": "Welcome, Young AI Trainer! 🌟",
+      "type": "lesson",
+      "content": "Hey there! 👋 Did you know that AI is like having a super smart robot friend? But here's the secret: you need to give it REALLY good instructions, or it might get confused! This game will teach you how to be an awesome AI trainer!",
+      "keyPoints": [
+        "AI needs clear instructions, just like following a recipe",
+        "More details = better results",
+        "It's okay to try again if it doesn't work the first time!"
+      ]
+    },
+    {
+      "id": "kids_exercise1",
+      "title": "Mission 1: Create Your Dream Pet! 🐾",
+      "type": "exercise",
+      "scenario": "Imagine you could design any pet you want - real or imaginary! Maybe a purple cat? A tiny elephant? A dragon that loves pizza?",
+      "task": "Tell the AI about your dream pet! Describe what it looks like, what it likes to do, and its special powers.",
+      "evaluationCriteria": "describing appearance, personality, and special abilities",
+      "hints": [
+        "What color is your pet?",
+        "How big is it? (tiny like a mouse? huge like a car?)",
+        "What does it like to eat?",
+        "What's its special power or trick?",
+        "What's its name?"
+      ],
+      "difficulty": "easy",
+      "points": 20,
+      "reward": "🏆 Pet Designer Badge!"
+    },
+    {
+      "id": "kids_lesson2",
+      "title": "The Magic of Details ✨",
+      "type": "lesson",
+      "content": "Here's a cool trick: The more details you give, the better the AI understands! It's like the difference between saying 'draw a house' and 'draw a yellow house with a red door, two windows, and a garden full of sunflowers.'",
+      "examples": [
+        {
+          "vague": "Make a sandwich",
+          "specific": "Make a peanut butter and jelly sandwich with grape jelly on white bread, cut diagonally"
+        }
+      ]
+    },
+    {
+      "id": "kids_exercise2",
+      "title": "Mission 2: Write a Birthday Party Plan! 🎉",
+      "type": "exercise",
+      "scenario": "Your best friend's birthday is coming up! You want to throw them the COOLEST party ever!",
+      "task": "Ask AI to help plan the party! Tell it about your friend (what they like), what kind of party you want, and all the fun stuff you want to include.",
+      "evaluationCriteria": "including friend's interests, party theme, activities, food, decorations",
+      "hints": [
+        "What does your friend love? (dinosaurs? unicorns? video games?)",
+        "Where's the party? (backyard? park? inside?)",
+        "What games or activities?",
+        "What food and snacks?",
+        "What decorations?"
+      ],
+      "difficulty": "easy",
+      "points": 20,
+      "reward": "🎈 Party Planner Badge!"
+    },
+    {
+      "id": "kids_exercise3",
+      "title": "Mission 3: Invent a New Game! 🎲",
+      "type": "exercise",
+      "scenario": "You're going to invent a brand new game that no one has ever played before!",
+      "task": "Describe your game to AI so clearly that someone else could play it just by reading your description.",
+      "evaluationCriteria": "explaining how to play, what you need, how to win, rules",
+      "hints": [
+        "What's the name of your game?",
+        "How many players?",
+        "What do you need to play? (cards? dice? chalk?)",
+        "How do you play? (explain step by step)",
+        "How do you win?"
+      ],
+      "difficulty": "medium",
+      "points": 25,
+      "reward": "🎮 Game Inventor Badge!"
+    },
+    {
+      "id": "kids_exercise4",
+      "title": "Mission 4: Create a Superhero! 🦸",
+      "type": "exercise",
+      "scenario": "Time to create your own superhero! Give them awesome powers, a cool costume, and a secret identity!",
+      "task": "Describe your superhero in so much detail that AI could draw them or write a story about them!",
+      "evaluationCriteria": "superhero powers, costume design, secret identity, personality, catchphrase",
+      "hints": [
+        "What's their superhero name?",
+        "What superpowers do they have?",
+        "Describe their costume (colors, mask, cape, symbol)",
+        "What's their secret identity?",
+        "What's their catchphrase?",
+        "What's their biggest weakness?"
+      ],
+      "difficulty": "medium",
+      "points": 25,
+      "reward": "💥 Superhero Creator Badge!"
+    },
+    {
+      "id": "kids_exercise5",
+      "title": "Mission 5: Write a Silly Story! 📖",
+      "type": "exercise",
+      "scenario": "Create the silliest story ever! It should have funny characters, a weird problem, and a surprising ending!",
+      "task": "Give AI instructions to write your silly story. Include all the important details!",
+      "evaluationCriteria": "story characters, setting, problem, solution, funny elements",
+      "hints": [
+        "Who are the main characters?",
+        "Where does it happen?",
+        "What's the silly problem?",
+        "What unexpected things happen?",
+        "How does it end?",
+        "Should it rhyme or be a regular story?"
+      ],
+      "difficulty": "medium",
+      "points": 30,
+      "reward": "📚 Story Master Badge!"
+    },
+    {
+      "id": "kids_final",
+      "title": "MEGA MISSION: Design Your Dream Treehouse! 🏡",
+      "type": "exercise",
+      "scenario": "You get to design the most AMAZING treehouse in the world! It can have anything you want - secret rooms, slides, rope bridges, you name it!",
+      "task": "Describe your dream treehouse in SUPER detail so AI can understand your amazing vision!",
+      "evaluationCriteria": "structure details, special features, rooms, access methods, decorations, secret elements",
+      "hints": [
+        "What tree is it in? How high up?",
+        "How do you get up? (ladder? stairs? rope? elevator?)",
+        "What rooms does it have?",
+        "What cool features? (telescope? slide? trapdoor?)",
+        "What's inside each room?",
+        "Any secret passages or hidden areas?",
+        "What color is it painted?",
+        "What makes it special and different?"
+      ],
+      "difficulty": "hard",
+      "points": 40,
+      "reward": "🏆 ULTIMATE BUILDER CHAMPION BADGE! 🏆"
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "pathType": "analytical",
+  "name": "Analytical Path",
+  "description": "Designed for engineers, data scientists, analysts, and technical professionals",
+  "icon": "🔬",
+  "targetAudience": "Engineers, Data Scientists, Analysts, Researchers",
+  "difficulty": "hard",
+  "estimatedDuration": "40 min",
+  "lessons": [
+    {
+      "id": "analytical_intro",
+      "title": "Welcome to Analytical Prompting",
+      "type": "lesson",
+      "content": "Precision is everything. In analytical work, vague prompts lead to unreliable outputs. This course teaches you to craft prompts with the same rigor you apply to your code and analysis.",
+      "keyPoints": [
+        "Treat prompts like function specifications",
+        "Define inputs, outputs, and constraints explicitly",
+        "Test and iterate systematically"
+      ]
+    },
+    {
+      "id": "analytical_exercise1",
+      "title": "Exercise 1: SQL Query Generation",
+      "type": "exercise",
+      "scenario": "You have a database with tables: users (id, email, signup_date), orders (id, user_id, amount, order_date), and products (id, name, category). You need complex queries for analysis.",
+      "task": "Write a prompt that generates a SQL query to find the top 10 customers by total spend in Q4 2024, including their signup dates and order counts.",
+      "evaluationCriteria": "schema reference, explicit column names, date range specification, aggregation logic, result format",
+      "hints": [
+        "Reference the exact table and column names",
+        "Specify date range format (YYYY-MM-DD)",
+        "Define what 'top 10' means (by total spend)",
+        "List all columns needed in output",
+        "Specify ORDER BY and LIMIT clauses"
+      ],
+      "difficulty": "medium",
+      "points": 30
+    },
+    {
+      "id": "analytical_lesson2",
+      "title": "Lesson 2: Constraints & Edge Cases",
+      "type": "lesson",
+      "content": "Analytical work requires thinking about edge cases. Your prompts should define boundaries, handle nulls, and specify what to do with outliers.",
+      "examples": [
+        {
+          "poor": "Analyze this dataset",
+          "better": "Analyze this dataset: calculate mean and median. Handle null values by excluding them. Flag outliers >3 standard deviations. Return results in JSON format with 2 decimal precision."
+        }
+      ]
+    },
+    {
+      "id": "analytical_exercise2",
+      "title": "Exercise 2: Data Cleaning Specification",
+      "type": "exercise",
+      "scenario": "You have a messy CSV with customer data: inconsistent date formats, mixed case names, phone numbers in various formats, duplicate emails, and null values.",
+      "task": "Write a prompt that specifies exactly how to clean this data, handling each issue with explicit rules.",
+      "evaluationCriteria": "explicit handling of each data quality issue, edge case coverage, output format specification, validation rules",
+      "hints": [
+        "List every data quality issue explicitly",
+        "Define handling rules for each (standardize, remove, flag?)",
+        "Specify output format for each field",
+        "Define validation rules",
+        "Explain how to handle edge cases (e.g., duplicate emails with different names)"
+      ],
+      "difficulty": "hard",
+      "points": 40
+    },
+    {
+      "id": "analytical_exercise3",
+      "title": "Exercise 3: Statistical Analysis",
+      "type": "exercise",
+      "scenario": "You have A/B test results: Variant A (5,000 users, 250 conversions) vs Variant B (5,000 users, 290 conversions). Determine statistical significance and provide business recommendation.",
+      "task": "Write a prompt that requests proper statistical analysis with specific tests, confidence levels, and interpretation.",
+      "evaluationCriteria": "correct test specification, confidence level, p-value interpretation, practical significance, business recommendation format",
+      "hints": [
+        "Specify the statistical test (two-proportion z-test)",
+        "Request confidence level (95%, 99%?)",
+        "Ask for p-value AND effect size",
+        "Define minimum detectable effect that matters to business",
+        "Request both statistical AND practical significance",
+        "Specify output format for recommendation"
+      ],
+      "difficulty": "hard",
+      "points": 40
+    },
+    {
+      "id": "analytical_lesson3",
+      "title": "Lesson 3: Structured Output",
+      "type": "lesson",
+      "content": "Analytical outputs need structure. Always specify the exact format you need: JSON schema, table structure, or report template.",
+      "examples": [
+        {
+          "unstructured": "Give me insights from this data",
+          "structured": "Analyze this data and return JSON: {\"summary\": {\"total_records\": int, \"date_range\": str}, \"top_insights\": [{\"category\": str, \"metric\": str, \"value\": float, \"change_pct\": float}], \"anomalies\": [{\"date\": str, \"issue\": str, \"severity\": str}]}"
+        }
+      ]
+    },
+    {
+      "id": "analytical_exercise4",
+      "title": "Exercise 4: API Documentation",
+      "type": "exercise",
+      "scenario": "You need to document a REST API endpoint that creates user accounts. The endpoint has complex validation rules, error responses, and rate limiting.",
+      "task": "Write a prompt that generates comprehensive API documentation with all technical details, examples, and edge cases.",
+      "evaluationCriteria": "completeness of technical details, example requests/responses, error documentation, edge case coverage",
+      "hints": [
+        "Specify documentation structure (endpoint, method, parameters, responses)",
+        "Request example curl commands",
+        "List all possible error codes and meanings",
+        "Include rate limiting details",
+        "Request parameter validation rules with types",
+        "Ask for edge case examples"
+      ],
+      "difficulty": "hard",
+      "points": 40
+    },
+    {
+      "id": "analytical_exercise5",
+      "title": "Exercise 5: Algorithm Explanation",
+      "type": "exercise",
+      "scenario": "Explain how the PageRank algorithm works to different audiences: 1) junior developers, 2) non-technical stakeholders, 3) technical interview setting.",
+      "task": "Write a prompt that generates three different explanations of the same algorithm, each tailored to audience technical level and context.",
+      "evaluationCriteria": "technical accuracy, audience-appropriate language, completeness for each context, example usage",
+      "hints": [
+        "Specify exactly what each audience needs to know",
+        "Define technical depth for each (formula? pseudocode? analogy?)",
+        "Request different examples for each audience",
+        "Specify length constraints for each version",
+        "Ask for diagrams or visual aid descriptions"
+      ],
+      "difficulty": "hard",
+      "points": 40
+    },
+    {
+      "id": "analytical_final",
+      "title": "Final Challenge: Full Data Analysis Report",
+      "type": "exercise",
+      "scenario": "Analyze e-commerce data to identify why conversion rates dropped 15% last quarter. Data includes: user behavior (5M records), product catalog (10K SKUs), marketing spend by channel, competitor pricing, site performance metrics.",
+      "task": "Write a comprehensive prompt that specifies a complete analytical investigation including data exploration, hypothesis testing, root cause analysis, and actionable recommendations.",
+      "evaluationCriteria": "analytical rigor, hypothesis structure, data requirements specification, statistical methods, output format, actionability",
+      "hints": [
+        "Define the analytical framework (what questions to answer)",
+        "Specify which datasets to analyze and how",
+        "Request specific statistical tests for each hypothesis",
+        "Define output structure (executive summary, methodology, findings, recommendations)",
+        "Specify visualization requirements",
+        "Request confidence levels for all claims",
+        "Ask for sensitivity analysis",
+        "Define how to prioritize recommendations"
+      ],
+      "difficulty": "expert",
+      "points": 60
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+// Prisma Schema for Learn2Prompt Personalization
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?   @map("password_hash")
+  avatarUrl     String?   @map("avatar_url")
+  learningPath  LearningPath @default(CREATIVE) @map("learning_path")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  preferences   UserPreferences?
+  progress      UserProgress[]
+  achievements  Achievement[]
+  customExercises CustomExercise[]
+  sessions      UserSession[]
+  oauthAccounts OAuthAccount[]
+
+  @@map("users")
+}
+
+enum LearningPath {
+  CREATIVE
+  ANALYTICAL
+  KIDS
+  SENIOR
+}
+
+model OAuthAccount {
+  id                String   @id @default(uuid())
+  userId            String   @map("user_id")
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  accessToken       String?  @map("access_token")
+  refreshToken      String?  @map("refresh_token")
+  expiresAt         DateTime? @map("expires_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("oauth_accounts")
+}
+
+// ============================================
+// USER PREFERENCES
+// ============================================
+
+model UserPreferences {
+  userId          String   @id @map("user_id")
+  language        String   @default("en")
+  theme           String   @default("dark")
+  difficulty      Difficulty @default(MEDIUM)
+  fontSize        FontSize @default(NORMAL) @map("font_size")
+  highContrast    Boolean  @default(false) @map("high_contrast")
+  showHints       Boolean  @default(true) @map("show_hints")
+  enableAnimations Boolean @default(true) @map("enable_animations")
+  aiPersonality   AIPersonality @default(BALANCED) @map("ai_personality")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum FontSize {
+  SMALL
+  NORMAL
+  LARGE
+  XLARGE
+}
+
+enum AIPersonality {
+  ENCOURAGING
+  BALANCED
+  DIRECT
+}
+
+// ============================================
+// PROGRESS TRACKING
+// ============================================
+
+model UserProgress {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  lessonId    String    @map("lesson_id")
+  completed   Boolean   @default(false)
+  score       Int       @default(0)
+  attempts    Int       @default(0)
+  bestScore   Int       @default(0) @map("best_score")
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@map("user_progress")
+}
+
+// ============================================
+// ACHIEVEMENTS & BADGES
+// ============================================
+
+model Achievement {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  achievementType String   @map("achievement_type")
+  achievementName String   @map("achievement_name")
+  earnedAt        DateTime @default(now()) @map("earned_at")
+  metadata        Json?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("achievements")
+}
+
+// ============================================
+// CUSTOM EXERCISES
+// ============================================
+
+model CustomExercise {
+  id                  String   @id @default(uuid())
+  userId              String   @map("user_id")
+  title               String
+  description         String?
+  scenario            String
+  evaluationCriteria  String   @map("evaluation_criteria")
+  difficulty          Difficulty
+  isPublic            Boolean  @default(false) @map("is_public")
+  usageCount          Int      @default(0) @map("usage_count")
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isPublic])
+  @@map("custom_exercises")
+}
+
+// ============================================
+// SESSION TRACKING
+// ============================================
+
+model UserSession {
+  id               String    @id @default(uuid())
+  userId           String    @map("user_id")
+  startedAt        DateTime  @default(now()) @map("started_at")
+  endedAt          DateTime? @map("ended_at")
+  lessonsCompleted Int       @default(0) @map("lessons_completed")
+  totalScore       Int       @default(0) @map("total_score")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_sessions")
+}

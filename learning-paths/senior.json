@@ -1,0 +1,145 @@
+{
+  "pathType": "senior",
+  "name": "Senior Path",
+  "description": "Practical AI assistance for everyday tasks (ages 60+)",
+  "icon": "👴",
+  "targetAudience": "Adults 60+",
+  "difficulty": "easy",
+  "estimatedDuration": "30 min",
+  "lessons": [
+    {
+      "id": "senior_intro",
+      "title": "Welcome to Practical AI",
+      "type": "lesson",
+      "content": "AI can be a helpful assistant for everyday tasks - like having a knowledgeable friend who's always available to help. The key is learning to ask clearly for what you need. This course will show you how to get useful results.",
+      "keyPoints": [
+        "AI can help with emails, letters, and organizing information",
+        "Clear instructions lead to better results",
+        "You can always try again and improve your request"
+      ]
+    },
+    {
+      "id": "senior_exercise1",
+      "title": "Exercise 1: Email to Family",
+      "type": "exercise",
+      "scenario": "You want to write an email to your family about an upcoming gathering at your home.",
+      "task": "Ask AI to help write the email. Include all the important details: date, time, what you're planning, and what guests should bring.",
+      "evaluationCriteria": "clear date and time, location details, event description, what to bring, warm tone",
+      "hints": [
+        "What day and time is it?",
+        "Where will it be held?",
+        "What occasion is it? (birthday, holiday, just because)",
+        "What are you planning? (meal, activities)",
+        "Should guests bring anything?",
+        "How should they RSVP?"
+      ],
+      "difficulty": "easy",
+      "points": 20
+    },
+    {
+      "id": "senior_lesson2",
+      "title": "Lesson 2: Being Specific Helps",
+      "type": "lesson",
+      "content": "The more details you provide, the more helpful AI can be. Instead of saying 'write a letter,' say 'write a formal letter to my insurance company about a billing question, including my policy number.'",
+      "examples": [
+        {
+          "vague": "Help me with a doctor appointment",
+          "specific": "Write a list of questions to ask my doctor about my blood pressure medication, including questions about side effects and interactions with other medications"
+        }
+      ]
+    },
+    {
+      "id": "senior_exercise2",
+      "title": "Exercise 2: Organized Shopping List",
+      "type": "exercise",
+      "scenario": "You're planning meals for the week and need a detailed shopping list organized by store sections.",
+      "task": "Ask AI to create a shopping list based on your meal plan. Be specific about quantities, preferences (low sodium, whole grain, etc.), and how you want it organized.",
+      "evaluationCriteria": "specific items and quantities, dietary preferences, organized by category, clear format",
+      "hints": [
+        "What meals are you planning?",
+        "How many people?",
+        "Any dietary needs? (low sodium, diabetic-friendly)",
+        "Any ingredients you already have?",
+        "How should it be organized? (by aisle? by meal?)",
+        "Specific brands or generic?"
+      ],
+      "difficulty": "easy",
+      "points": 25
+    },
+    {
+      "id": "senior_exercise3",
+      "title": "Exercise 3: Letter to Business",
+      "type": "exercise",
+      "scenario": "You received an incorrect charge on your credit card bill and need to write a letter to dispute it.",
+      "task": "Request AI to write a formal letter explaining the situation clearly, including all necessary details like dates, amounts, and your account information.",
+      "evaluationCriteria": "professional tone, clear problem description, specific dates and amounts, account details, requested action",
+      "hints": [
+        "What is the incorrect charge for?",
+        "What amount was charged? What should it be?",
+        "When did it happen?",
+        "What's your account/policy number?",
+        "What action do you want them to take?",
+        "Include your contact information"
+      ],
+      "difficulty": "medium",
+      "points": 30
+    },
+    {
+      "id": "senior_exercise4",
+      "title": "Exercise 4: Medical Questions List",
+      "type": "exercise",
+      "scenario": "You have an upcoming doctor's appointment and want to make sure you remember to ask about everything important.",
+      "task": "Ask AI to help create an organized list of questions for your doctor about your health concerns, current medications, and any symptoms.",
+      "evaluationCriteria": "organized by topic, specific symptoms with details, medication questions, clear priority",
+      "hints": [
+        "What are your main concerns?",
+        "Any new symptoms? When did they start?",
+        "What medications are you taking?",
+        "Questions about dosage or interactions?",
+        "Any tests or screenings needed?",
+        "Which questions are most important?"
+      ],
+      "difficulty": "medium",
+      "points": 30
+    },
+    {
+      "id": "senior_exercise5",
+      "title": "Exercise 5: Travel Itinerary",
+      "type": "exercise",
+      "scenario": "You're planning a trip to visit your grandchildren in another state. You want to organize all the details in one place.",
+      "task": "Ask AI to create a detailed travel itinerary including flights, accommodations, activities, and important phone numbers.",
+      "evaluationCriteria": "complete travel details, organized by day, contact information, backup plans, readable format",
+      "hints": [
+        "Travel dates and times?",
+        "Flight or transportation details?",
+        "Where are you staying? Address and phone?",
+        "What activities are planned each day?",
+        "Important contact numbers?",
+        "What information do you need easy access to?",
+        "Any medical needs or restrictions to note?"
+      ],
+      "difficulty": "medium",
+      "points": 35
+    },
+    {
+      "id": "senior_final",
+      "title": "Final Exercise: Recipe Organization",
+      "type": "exercise",
+      "scenario": "You have favorite family recipes you want to organize and share with your children and grandchildren. You want them formatted clearly with helpful notes.",
+      "task": "Ask AI to help format your recipes professionally, including ingredient lists, step-by-step instructions, serving sizes, and your personal tips.",
+      "evaluationCriteria": "clear ingredient list with measurements, step-by-step instructions, serving size, cooking time, personal notes section, easy-to-read format",
+      "hints": [
+        "Which recipes do you want to include?",
+        "Exact measurements for ingredients?",
+        "Step-by-step cooking instructions?",
+        "Cooking temperature and time?",
+        "How many servings?",
+        "Any family stories or special tips?",
+        "Dietary information (vegetarian, gluten-free)?",
+        "How should it be formatted for easy reading?"
+      ],
+      "difficulty": "medium",
+      "points": 40
+    }
+  ]
+}

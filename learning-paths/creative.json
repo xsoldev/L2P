@@ -1,0 +1,145 @@
+{
+  "pathType": "creative",
+  "name": "Creative Path",
+  "description": "Perfect for writers, marketers, artists, and content creators",
+  "icon": "🎨",
+  "targetAudience": "Writers, Marketers, Artists, Content Creators",
+  "difficulty": "medium",
+  "estimatedDuration": "35 min",
+  "lessons": [
+    {
+      "id": "creative_intro",
+      "title": "Welcome to Creative Prompting",
+      "type": "lesson",
+      "content": "As a creative, you know the power of words. AI is your new creative partner—but only if you can communicate your vision clearly. This course will teach you to craft prompts that bring your ideas to life.",
+      "keyPoints": [
+        "Think of prompts as creative briefs",
+        "Specificity doesn't kill creativity—it enables it",
+        "Iteration is part of the creative process"
+      ]
+    },
+    {
+      "id": "creative_exercise1",
+      "title": "Exercise 1: Character Creation",
+      "type": "exercise",
+      "scenario": "You're writing a novel and need to develop a compelling protagonist. Create a character that feels real and multi-dimensional.",
+      "task": "Write a prompt that generates a detailed character profile including personality, backstory, motivations, and unique quirks.",
+      "evaluationCriteria": "specificity of character details, emotional depth, unique traits",
+      "hints": [
+        "Include physical appearance AND personality",
+        "Add backstory elements that explain motivations",
+        "Request specific quirks or mannerisms",
+        "Define the character's core conflict or desire"
+      ],
+      "difficulty": "medium",
+      "points": 30
+    },
+    {
+      "id": "creative_lesson2",
+      "title": "Lesson 2: Tone & Voice",
+      "type": "lesson",
+      "content": "The most important creative decision is voice. AI can match any tone—playful, serious, poetic, conversational—but you need to be specific about what you want.",
+      "examples": [
+        {
+          "vague": "Write about a sunset",
+          "specific": "Write a poetic description of a sunset using metaphors related to music. Tone: melancholic but hopeful. 2-3 sentences."
+        }
+      ]
+    },
+    {
+      "id": "creative_exercise2",
+      "title": "Exercise 2: Product Story",
+      "type": "exercise",
+      "scenario": "You're a copywriter for a sustainable fashion brand launching recycled ocean plastic sneakers. Create compelling product copy that tells a story.",
+      "task": "Write a prompt that generates product copy connecting the customer emotionally to the environmental mission while highlighting the product benefits.",
+      "evaluationCriteria": "emotional appeal, storytelling, brand voice consistency, call-to-action",
+      "hints": [
+        "Define the target audience (eco-conscious millennials?)",
+        "Specify tone (inspiring, urgent, hopeful?)",
+        "Request story elements (ocean journey, transformation)",
+        "Include product benefits naturally"
+      ],
+      "difficulty": "medium",
+      "points": 30
+    },
+    {
+      "id": "creative_exercise3",
+      "title": "Exercise 3: Social Media Voice",
+      "type": "exercise",
+      "scenario": "A health food startup wants a unique social media voice that stands out. They want to be informative but fun, not preachy.",
+      "task": "Write a prompt that creates 3 Instagram captions for a new superfood smoothie bowl, each with a different angle but consistent brand voice.",
+      "evaluationCriteria": "consistency of voice, variety of angles, engagement hooks, brand personality",
+      "hints": [
+        "Define the brand personality (witty, warm, knowledgeable?)",
+        "Request different content angles (health benefit, lifestyle, taste)",
+        "Include hashtag strategy",
+        "Specify length and format"
+      ],
+      "difficulty": "medium",
+      "points": 30
+    },
+    {
+      "id": "creative_lesson3",
+      "title": "Lesson 3: Show Don't Tell",
+      "type": "lesson",
+      "content": "The golden rule of creative writing applies to prompts too. Instead of saying 'make it exciting,' describe what exciting looks like. Use examples, references, and sensory details.",
+      "examples": [
+        {
+          "telling": "Write an exciting opening line",
+          "showing": "Write an opening line like Gillian Flynn's 'Gone Girl'—immediate tension, unreliable narrator hint, conversational but unsettling. Reference: 'When I think of my wife, I always think of her head.'"
+        }
+      ]
+    },
+    {
+      "id": "creative_exercise4",
+      "title": "Exercise 4: Email Campaign Series",
+      "type": "exercise",
+      "scenario": "Create a 3-email welcome sequence for new subscribers to a creative writing course. The emails should build anticipation and establish the instructor's voice.",
+      "task": "Write a prompt that generates all 3 emails with consistent voice, progressive information reveal, and strong CTAs.",
+      "evaluationCriteria": "email sequence logic, voice consistency, progressive engagement, clear CTAs",
+      "hints": [
+        "Define the instructor's voice and teaching style",
+        "Outline what each email should accomplish",
+        "Request specific subject lines",
+        "Include timing/spacing recommendations",
+        "Specify the transformation story (where they are → where they'll be)"
+      ],
+      "difficulty": "hard",
+      "points": 40
+    },
+    {
+      "id": "creative_exercise5",
+      "title": "Exercise 5: Blog Post with Style",
+      "type": "exercise",
+      "scenario": "Write a blog post about productivity tips for creative professionals. You want it to sound like Austin Kleon's 'Steal Like an Artist'—practical, visual, inspiring, and slightly rebellious.",
+      "task": "Write a prompt that captures a specific author's style and applies it to your topic.",
+      "evaluationCriteria": "style matching, reference usage, topic relevance, practical value",
+      "hints": [
+        "Reference specific stylistic elements (short chapters, visual metaphors, rule-breaking)",
+        "Include the author's philosophy",
+        "Specify structure (list? narrative? hybrid?)",
+        "Request specific examples within the content"
+      ],
+      "difficulty": "hard",
+      "points": 40
+    },
+    {
+      "id": "creative_final",
+      "title": "Final Challenge: Full Campaign",
+      "type": "exercise",
+      "scenario": "A plant-based protein bar company needs a full content marketing campaign for their new 'Adventure Series' targeting outdoor enthusiasts. Create cohesive content across multiple channels.",
+      "task": "Write a comprehensive prompt that generates: 1 blog post, 3 social captions, 1 email, and 2 ad variations—all with consistent brand voice and campaign messaging.",
+      "evaluationCriteria": "cross-channel consistency, target audience understanding, campaign cohesion, creative differentiation",
+      "hints": [
+        "Define the campaign's core message/theme",
+        "Specify brand voice and personality",
+        "Detail target audience psychographics",
+        "Request specific formats for each piece",
+        "Include tone variations for different channels",
+        "Add competitive differentiation points"
+      ],
+      "difficulty": "hard",
+      "points": 50
+    }
+  ]
+}
