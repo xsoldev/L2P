@@ -31,6 +31,7 @@ import { SHAPE_LIBRARY, getAllShapes, getRandomShape, findShapeById } from '@/li
 import { downloadCertificate as downloadCert, shareCertificate as shareCert } from '@/lib/game/certificate-actions';
 import { generateMockCompany, generateMarketingCampaign, generateBusinessAnalytics, EASY_MODE_DOCUMENT } from '@/lib/game/data-generators';
 import { evaluatePrompt as evaluatePromptAPI, generateAIResponse as generateAIResponseAPI, generateVisualization as generateVisualizationAPI } from '@/lib/game/evaluation';
+import { AuthButton } from '@/components/features/auth/AuthButton';
 
 const PromptEngineeringGame = () => {
   // Use custom hooks for state management
@@ -78,6 +79,7 @@ const PromptEngineeringGame = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingText, setStreamingText] = useState('');
   const [usedSuggestion, setUsedSuggestion] = useState(false);
+  const [pendingPoints, setPendingPoints] = useState(0); // Points earned but not yet added to score
 
   // Get the shape object from userShape ID
   const userShapeObj = userShape ? findShapeById(userShape) : null;
@@ -107,38 +109,39 @@ const PromptEngineeringGame = () => {
   const DynamicChart = ({ config, data }: { config: any; data: any }) => {
     if (!config) return null;
 
-    const colors = config.colors || ['#70BEFA', '#5AAFED', '#8CCFFD', '#4A9FE0'];
+    // Apple-esque chart colors
+    const colors = config.colors || ['#007AFF', '#34C759', '#FF9500', '#AF52DE'];
 
     const renderChart = () => {
       switch (config.chartType) {
         case 'bar':
           return (
             <BarChart data={data}>
-              {config.showGrid && <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />}
-              <XAxis dataKey="label" label={{ value: config.xAxisLabel, position: 'insideBottom', offset: -5 }} stroke="#9CA3AF" />
-              <YAxis label={{ value: config.yAxisLabel, angle: -90, position: 'insideLeft' }} stroke="#9CA3AF" />
-              <Tooltip contentStyle={{ backgroundColor: '#1A1A1A', border: '1px solid #70BEFA', borderRadius: '8px', color: '#F9FAFB' }} />
+              {config.showGrid && <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />}
+              <XAxis dataKey="label" label={{ value: config.xAxisLabel, position: 'insideBottom', offset: -5 }} stroke="var(--muted-foreground)" />
+              <YAxis label={{ value: config.yAxisLabel, angle: -90, position: 'insideLeft' }} stroke="var(--muted-foreground)" />
+              <Tooltip contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', color: 'var(--foreground)' }} />
               {config.showLegend && <Legend />}
-              <Bar dataKey="sales" fill={colors[0]} radius={[8, 8, 0, 0]} label={config.showValues ? { position: 'top', fill: '#E5E7EB' } : false} />
+              <Bar dataKey="sales" fill={colors[0]} radius={[8, 8, 0, 0]} label={config.showValues ? { position: 'top', fill: 'var(--foreground)' } : false} />
             </BarChart>
           );
         
         case 'line':
           return (
             <LineChart data={data}>
-              {config.showGrid && <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />}
-              <XAxis dataKey="label" label={{ value: config.xAxisLabel, position: 'insideBottom', offset: -5 }} stroke="#9CA3AF" />
-              <YAxis label={{ value: config.yAxisLabel, angle: -90, position: 'insideLeft' }} stroke="#9CA3AF" />
-              <Tooltip contentStyle={{ backgroundColor: '#1A1A1A', border: '1px solid #70BEFA', borderRadius: '8px', color: '#F9FAFB' }} />
+              {config.showGrid && <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />}
+              <XAxis dataKey="label" label={{ value: config.xAxisLabel, position: 'insideBottom', offset: -5 }} stroke="var(--muted-foreground)" />
+              <YAxis label={{ value: config.yAxisLabel, angle: -90, position: 'insideLeft' }} stroke="var(--muted-foreground)" />
+              <Tooltip contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', color: 'var(--foreground)' }} />
               {config.showLegend && <Legend />}
               <Line 
                 type="monotone" 
                 dataKey="sales" 
                 stroke={colors[0]} 
                 strokeWidth={3}
-                dot={{ fill: colors[0], r: 5, strokeWidth: 2, stroke: '#1A1A1A' }}
+                dot={{ fill: colors[0], r: 5, strokeWidth: 2, stroke: 'var(--background)' }}
                 activeDot={{ r: 7 }}
-                label={config.showValues ? { position: 'top', fill: '#E5E7EB' } : false}
+                label={config.showValues ? { position: 'top', fill: 'var(--foreground)' } : false}
               />
             </LineChart>
           );
@@ -146,10 +149,10 @@ const PromptEngineeringGame = () => {
         case 'area':
           return (
             <AreaChart data={data}>
-              {config.showGrid && <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />}
-              <XAxis dataKey="label" label={{ value: config.xAxisLabel, position: 'insideBottom', offset: -5 }} stroke="#9CA3AF" />
-              <YAxis label={{ value: config.yAxisLabel, angle: -90, position: 'insideLeft' }} stroke="#9CA3AF" />
-              <Tooltip contentStyle={{ backgroundColor: '#1A1A1A', border: '1px solid #70BEFA', borderRadius: '8px', color: '#F9FAFB' }} />
+              {config.showGrid && <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />}
+              <XAxis dataKey="label" label={{ value: config.xAxisLabel, position: 'insideBottom', offset: -5 }} stroke="var(--muted-foreground)" />
+              <YAxis label={{ value: config.yAxisLabel, angle: -90, position: 'insideLeft' }} stroke="var(--muted-foreground)" />
+              <Tooltip contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', color: 'var(--foreground)' }} />
               {config.showLegend && <Legend />}
               <defs>
                 <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
@@ -163,7 +166,7 @@ const PromptEngineeringGame = () => {
                 stroke={colors[0]} 
                 fill="url(#colorSales)"
                 strokeWidth={2}
-                label={config.showValues ? { position: 'top', fill: '#E5E7EB' } : false}
+                label={config.showValues ? { position: 'top', fill: 'var(--foreground)' } : false}
               />
             </AreaChart>
           );
@@ -180,32 +183,32 @@ const PromptEngineeringGame = () => {
                 outerRadius={100}
                 label={config.showValues}
                 strokeWidth={2}
-                stroke="#1A1A1A"
+                stroke="var(--background)"
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ backgroundColor: '#1A1A1A', border: '1px solid #70BEFA', borderRadius: '8px', color: '#F9FAFB' }} />
+              <Tooltip contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)', borderRadius: '12px', color: 'var(--foreground)' }} />
               {config.showLegend && <Legend />}
             </PieChart>
           );
         
         default:
-          return <p className="text-gray-400">Unknown chart type</p>;
+          return <p className="text-muted-foreground">Unknown chart type</p>;
       }
     };
 
     return (
-      <div className="bg-[#1A1A1A] border border-[#70BEFA]/30 rounded-2xl p-6 mb-6 shadow-lg shadow-[#70BEFA]/10">
-        <h3 className="text-xl font-bold text-white mb-6 text-center">{config.title}</h3>
+      <div className="bg-secondary border border-primary/30 rounded-2xl p-6 mb-6 shadow-lg shadow-primary/10">
+        <h3 className="text-xl font-bold text-foreground mb-6 text-center">{config.title}</h3>
         <ResponsiveContainer width="100%" height={300}>
           {renderChart()}
         </ResponsiveContainer>
         {config.interpretation && (
-          <div className="mt-6 bg-[#0D0D0D] border border-[#70BEFA]/30 p-4 rounded-xl">
-            <p className="text-sm text-gray-300">
-              <span className="font-semibold text-[#70BEFA]">AI's interpretation: </span>
+          <div className="mt-6 bg-background border border-primary/30 p-4 rounded-xl">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-primary">AI's interpretation: </span>
               {config.interpretation}
             </p>
           </div>
@@ -474,27 +477,27 @@ const PromptEngineeringGame = () => {
                   <XCircle className="w-4 h-4" />
                   {lesson.vaguePromptLabel}
                 </p>
-                <p className="text-gray-300 text-base italic font-medium">{lesson.vaguePromptExample}</p>
+                <p className="text-muted-foreground text-base italic font-medium">{lesson.vaguePromptExample}</p>
               </div>
 
               <div className="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30">
                 <p className="font-bold text-amber-400 mb-2 text-sm">{lesson.whatAiMightDoLabel}</p>
-                <ul className="space-y-1.5 text-gray-300 text-sm">
+                <ul className="space-y-1.5 text-muted-foreground text-sm">
                   {lesson.aiProblems.map((problem, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <span className="text-[#70BEFA] mt-0.5">—</span>
+                      <span className="text-primary mt-0.5">—</span>
                       <span>{problem}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-                <p className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+              <div className="bg-secondary/80 p-4 rounded-xl border border-primary/30">
+                <p className="font-bold text-primary mb-2 flex items-center gap-2 text-sm">
                   <Sparkles className="w-4 h-4" />
                   {lesson.solutionLabel}
                 </p>
-                <p className="text-gray-300 text-sm">{lesson.solutionText}</p>
+                <p className="text-muted-foreground text-sm">{lesson.solutionText}</p>
               </div>
             </div>
           )
@@ -509,19 +512,19 @@ const PromptEngineeringGame = () => {
           type: lesson.type,
           content: (
             <div className="space-y-4">
-              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-                <h3 className="font-bold text-[#70BEFA] mb-3 flex items-center gap-2 text-sm">
+              <div className="bg-secondary/80 p-4 rounded-xl border border-primary/30">
+                <h3 className="font-bold text-primary mb-3 flex items-center gap-2 text-sm">
                   <Book className="w-4 h-4" />
                   {lesson.keyPrincipleLabel}
                 </h3>
-                <p className="text-gray-300 mb-4 text-sm">{lesson.keyPrincipleText}</p>
+                <p className="text-muted-foreground mb-4 text-sm">{lesson.keyPrincipleText}</p>
 
-                <div className="bg-[#1A1A1A] p-3 rounded-xl border border-[#70BEFA]/30">
-                  <p className="font-semibold text-white mb-2 text-sm">{lesson.exampleLabel}</p>
-                  <ol className="space-y-1.5 text-gray-300 text-sm">
+                <div className="bg-secondary p-3 rounded-xl border border-primary/30">
+                  <p className="font-semibold text-foreground mb-2 text-sm">{lesson.exampleLabel}</p>
+                  <ol className="space-y-1.5 text-muted-foreground text-sm">
                     {lesson.exampleSteps.map((step, index) => (
                       <li key={index} className="flex items-start gap-2">
-                        <span className="font-bold text-[#70BEFA] min-w-[16px]">{index + 1}.</span>
+                        <span className="font-bold text-primary min-w-[16px]">{index + 1}.</span>
                         <span>{step}</span>
                       </li>
                     ))}
@@ -529,13 +532,13 @@ const PromptEngineeringGame = () => {
                 </div>
               </div>
 
-              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-                <p className="font-bold text-[#70BEFA] mb-3 text-sm">{lesson.whyWorksLabel}</p>
+              <div className="bg-secondary p-4 rounded-xl border border-primary/30">
+                <p className="font-bold text-primary mb-3 text-sm">{lesson.whyWorksLabel}</p>
                 <div className="grid md:grid-cols-2 gap-2">
                   {lesson.benefits.map((benefit, index) => (
                     <div key={index} className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-300 text-sm">{benefit}</span>
+                      <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-muted-foreground text-sm">{benefit}</span>
                     </div>
                   ))}
                 </div>
@@ -553,12 +556,12 @@ const PromptEngineeringGame = () => {
           type: lesson.type,
           content: (
             <div className="space-y-4">
-              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-                <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+              <div className="bg-secondary/80 p-4 rounded-xl border border-primary/30">
+                <h3 className="font-bold text-primary mb-2 flex items-center gap-2 text-sm">
                   <Target className="w-4 h-4" />
                   {lesson.keyPrincipleLabel}
                 </h3>
-                <p className="text-gray-300 text-sm">{lesson.keyPrincipleText}</p>
+                <p className="text-muted-foreground text-sm">{lesson.keyPrincipleText}</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-3">
@@ -567,29 +570,29 @@ const PromptEngineeringGame = () => {
                     <XCircle className="w-4 h-4" />
                     {lesson.vagueLabel}
                   </p>
-                  <p className="text-gray-300 italic text-base mb-2">{lesson.vagueExample}</p>
-                  <p className="text-xs text-gray-400">{lesson.vagueQuestion}</p>
+                  <p className="text-muted-foreground italic text-base mb-2">{lesson.vagueExample}</p>
+                  <p className="text-xs text-muted-foreground">{lesson.vagueQuestion}</p>
                 </div>
 
-                <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-                  <p className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+                <div className="bg-secondary/80 p-4 rounded-xl border border-primary/30">
+                  <p className="font-bold text-primary mb-2 flex items-center gap-2 text-sm">
                     <CheckCircle className="w-4 h-4" />
                     {lesson.specificLabel}
                   </p>
-                  <p className="text-gray-300 italic text-base mb-2">{lesson.specificExample}</p>
-                  <p className="text-xs text-gray-400">{lesson.specificNote}</p>
+                  <p className="text-muted-foreground italic text-base mb-2">{lesson.specificExample}</p>
+                  <p className="text-xs text-muted-foreground">{lesson.specificNote}</p>
                 </div>
               </div>
 
-              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-                <p className="font-bold text-white mb-3 text-sm">{lesson.specificsLabel}</p>
+              <div className="bg-secondary p-4 rounded-xl border border-primary/30">
+                <p className="font-bold text-foreground mb-3 text-sm">{lesson.specificsLabel}</p>
                 <div className="space-y-2">
                   {lesson.specificTypes.map((item, index) => (
                     <div key={index} className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5"></div>
                       <div className="text-sm">
-                        <span className="font-semibold text-white">{item.type}</span>
-                        <span className="text-gray-400 ml-2">{item.example}</span>
+                        <span className="font-semibold text-foreground">{item.type}</span>
+                        <span className="text-muted-foreground ml-2">{item.example}</span>
                       </div>
                     </div>
                   ))}
@@ -608,41 +611,41 @@ const PromptEngineeringGame = () => {
           type: lesson.type,
           content: (
             <div className="space-y-4">
-              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-                <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+              <div className="bg-secondary/80 p-4 rounded-xl border border-primary/30">
+                <h3 className="font-bold text-primary mb-2 flex items-center gap-2 text-sm">
                   <Zap className="w-4 h-4" />
                   {lesson.keyPrincipleLabel}
                 </h3>
-                <p className="text-gray-300 text-sm">{lesson.keyPrincipleText}</p>
+                <p className="text-muted-foreground text-sm">{lesson.keyPrincipleText}</p>
               </div>
 
-              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-                <p className="font-bold text-white mb-3 text-sm">{lesson.conversationLabel}</p>
+              <div className="bg-secondary p-4 rounded-xl border border-primary/30">
+                <p className="font-bold text-foreground mb-3 text-sm">{lesson.conversationLabel}</p>
                 <div className="space-y-2">
-                  <div className="bg-[#0D0D0D] p-3 rounded-xl border border-[#70BEFA]/30">
-                    <p className="text-xs text-[#70BEFA] font-semibold mb-1">{lesson.conversationExample.userLabel}</p>
-                    <p className="text-gray-200 text-sm">{lesson.conversationExample.userMessage}</p>
+                  <div className="bg-background p-3 rounded-xl border border-primary/30">
+                    <p className="text-xs text-primary font-semibold mb-1">{lesson.conversationExample.userLabel}</p>
+                    <p className="text-foreground text-sm">{lesson.conversationExample.userMessage}</p>
                   </div>
 
-                  <div className="bg-[#0D0D0D] p-3 rounded-xl border border-gray-700">
-                    <p className="text-xs text-gray-400 font-semibold mb-1">{lesson.conversationExample.aiLabel}</p>
-                    <p className="text-gray-300 italic text-sm">{lesson.conversationExample.aiMessage}</p>
+                  <div className="bg-background p-3 rounded-xl border border-border">
+                    <p className="text-xs text-muted-foreground font-semibold mb-1">{lesson.conversationExample.aiLabel}</p>
+                    <p className="text-muted-foreground italic text-sm">{lesson.conversationExample.aiMessage}</p>
                   </div>
 
-                  <div className="bg-[#0D0D0D] p-3 rounded-xl border border-[#70BEFA]/30">
-                    <p className="text-xs text-[#70BEFA] font-semibold mb-1">{lesson.conversationExample.correctionLabel}</p>
-                    <p className="text-gray-200 text-sm">{lesson.conversationExample.correctionMessage}</p>
+                  <div className="bg-background p-3 rounded-xl border border-primary/30">
+                    <p className="text-xs text-primary font-semibold mb-1">{lesson.conversationExample.correctionLabel}</p>
+                    <p className="text-foreground text-sm">{lesson.conversationExample.correctionMessage}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-                <p className="font-bold text-[#70BEFA] mb-2 text-sm">{lesson.correctionTipsLabel}</p>
+              <div className="bg-secondary p-4 rounded-xl border border-primary/30">
+                <p className="font-bold text-primary mb-2 text-sm">{lesson.correctionTipsLabel}</p>
                 <div className="space-y-1.5">
                   {lesson.correctionTips.map((tip, index) => (
                     <div key={index} className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-300 text-sm">{tip}</span>
+                      <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-muted-foreground text-sm">{tip}</span>
                     </div>
                   ))}
                 </div>
@@ -660,36 +663,36 @@ const PromptEngineeringGame = () => {
           type: lesson.type,
           content: (
             <div className="space-y-4">
-              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-                <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+              <div className="bg-secondary/80 p-4 rounded-xl border border-primary/30">
+                <h3 className="font-bold text-primary mb-2 flex items-center gap-2 text-sm">
                   <Book className="w-4 h-4" />
                   {lesson.keyPrincipleLabel}
                 </h3>
-                <p className="text-gray-300 text-sm">{lesson.keyPrincipleText}</p>
+                <p className="text-muted-foreground text-sm">{lesson.keyPrincipleText}</p>
               </div>
 
-              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-                <p className="font-bold text-white mb-3 text-sm">{lesson.waysToProvideLabel}</p>
+              <div className="bg-secondary p-4 rounded-xl border border-primary/30">
+                <p className="font-bold text-foreground mb-3 text-sm">{lesson.waysToProvideLabel}</p>
                 <div className="space-y-2">
                   {lesson.exampleWays.map((way, index) => (
                     <div key={index} className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5"></div>
                       <div className="text-sm">
-                        <span className="font-semibold text-white">{way.type}</span>
-                        <span className="text-gray-400 ml-2">{way.example}</span>
+                        <span className="font-semibold text-foreground">{way.type}</span>
+                        <span className="text-muted-foreground ml-2">{way.example}</span>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-                <p className="font-bold text-[#70BEFA] mb-2 text-sm">{lesson.whyExamplesWorkLabel}</p>
+              <div className="bg-secondary p-4 rounded-xl border border-primary/30">
+                <p className="font-bold text-primary mb-2 text-sm">{lesson.whyExamplesWorkLabel}</p>
                 <div className="space-y-1.5">
                   {lesson.benefits.map((benefit, index) => (
                     <div key={index} className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-[#70BEFA] flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-300 text-sm">{benefit}</span>
+                      <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-muted-foreground text-sm">{benefit}</span>
                     </div>
                   ))}
                 </div>
@@ -707,36 +710,36 @@ const PromptEngineeringGame = () => {
           type: lesson.type,
           content: (
             <div className="space-y-4">
-              <div className="bg-[#0A1929]/80 p-4 rounded-xl border border-[#70BEFA]/30">
-                <h3 className="font-bold text-[#70BEFA] mb-2 flex items-center gap-2 text-sm">
+              <div className="bg-secondary/80 p-4 rounded-xl border border-primary/30">
+                <h3 className="font-bold text-primary mb-2 flex items-center gap-2 text-sm">
                   <Book className="w-4 h-4" />
                   {lesson.keyPrincipleLabel}
                 </h3>
-                <p className="text-gray-300 text-sm">{lesson.keyPrincipleText}</p>
+                <p className="text-muted-foreground text-sm">{lesson.keyPrincipleText}</p>
               </div>
 
-              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-                <p className="font-bold text-white mb-3 text-sm">{lesson.bestPracticesLabel}</p>
+              <div className="bg-secondary p-4 rounded-xl border border-primary/30">
+                <p className="font-bold text-foreground mb-3 text-sm">{lesson.bestPracticesLabel}</p>
                 <div className="space-y-2">
                   {lesson.bestPractices.map((practice, index) => (
                     <div key={index} className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-full mt-1.5"></div>
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5"></div>
                       <div className="text-sm">
-                        <span className="font-semibold text-white">{practice.type}</span>
-                        <span className="text-gray-400 ml-2">{practice.example}</span>
+                        <span className="font-semibold text-foreground">{practice.type}</span>
+                        <span className="text-muted-foreground ml-2">{practice.example}</span>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-[#1A1A1A] p-4 rounded-xl border border-[#70BEFA]/30">
-                <p className="font-bold text-[#70BEFA] mb-2 text-sm">{lesson.mistakesToAvoidLabel}</p>
+              <div className="bg-secondary p-4 rounded-xl border border-primary/30">
+                <p className="font-bold text-primary mb-2 text-sm">{lesson.mistakesToAvoidLabel}</p>
                 <div className="space-y-1.5">
                   {lesson.commonMistakes.map((mistake, index) => (
                     <div key={index} className="flex items-start gap-2">
                       <XCircle className="w-4 h-4 text-orange-400 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-300 text-sm">{mistake}</span>
+                      <span className="text-muted-foreground text-sm">{mistake}</span>
                     </div>
                   ))}
                 </div>
@@ -1040,7 +1043,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
         yAxisLabel: 'Sales',
         showValues: false,
         showGrid: true,
-        colors: ['#10B981'],
+        colors: ['#34C759'],
         showLegend: false,
         interpretation: "Error generating chart. Using default configuration."
       };
@@ -1111,7 +1114,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
       if (usedSuggestion) {
         points = Math.floor(points / 10);
       }
-      setScore(score + points);
+      // Store pending points - will be added to score when user clicks Continue
+      setPendingPoints(points);
     }
 
     setIsLoading(false);
@@ -1123,6 +1127,12 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
   };
 
   const handleNext = () => {
+    // Add pending points to score when completing the lesson
+    if (pendingPoints > 0) {
+      setScore(score + pendingPoints);
+      setPendingPoints(0);
+    }
+
     if (!completedLessons.includes(lessons[currentLesson].id)) {
       setCompletedLessons([...completedLessons, lessons[currentLesson].id]);
     }
@@ -1173,6 +1183,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
     setAiResponse(null);
     setEvaluation(null);
     setGeneratedChart(null);
+    setPendingPoints(0);
   };
 
   const downloadCertificate = async () => {
@@ -1214,23 +1225,28 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
   if (currentScreen === 'welcome') {
     return (
-      <div className="min-h-screen bg-[#0D0D0D] p-4 md:p-8">
+      <div className="min-h-screen bg-background p-4 md:p-8 relative">
+        {/* Auth Button - Top Right */}
+        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
+          <AuthButton />
+        </div>
+
         <div className="max-w-6xl mx-auto pt-12 md:pt-20">
           {/* Asymmetric header - left aligned */}
           <div className="mb-16 max-w-2xl">
             <div className="inline-block mb-6">
-              <div className="flex items-center gap-2 text-[#70BEFA] text-sm font-mono tracking-wider">
-                <div className="w-2 h-2 bg-[#70BEFA] rounded-sm"></div>
+              <div className="flex items-center gap-2 text-primary text-sm font-mono tracking-wider">
+                <div className="w-2 h-2 bg-primary rounded-sm"></div>
                 {t('welcome.badge')}
               </div>
             </div>
 
-            <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-[1.1] tracking-tight">
+            <h1 className="text-6xl md:text-7xl font-bold text-foreground mb-6 leading-[1.1] tracking-tight">
               {t('welcome.title')}
               <br />
-              <span className="text-[#70BEFA]">{t('welcome.titleHighlight')}</span>
+              <span className="text-primary">{t('welcome.titleHighlight')}</span>
             </h1>
-            <p className="text-xl text-gray-400 leading-relaxed">
+            <p className="text-xl text-muted-foreground leading-relaxed">
               {t('welcome.subtitle')}
             </p>
           </div>
@@ -1242,8 +1258,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 onClick={() => setLanguage('en')}
                 variant={language === 'en' ? 'default' : 'outline'}
                 className={language === 'en'
-                  ? 'flex-1 bg-[#70BEFA] text-black hover:bg-[#5AAFED] border-0'
-                  : 'flex-1 bg-[#1A1A1A] border-gray-700 text-gray-300 hover:bg-[#252525] hover:border-[#70BEFA]/50'}
+                  ? 'flex-1 bg-primary text-black hover:bg-primary/90 border-0'
+                  : 'flex-1 bg-secondary border-border text-muted-foreground hover:bg-secondary/80 hover:border-primary/50'}
               >
                 <Globe className="w-4 h-4 mr-2" />
                 {t('ui.language.english')}
@@ -1252,8 +1268,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 onClick={() => setLanguage('fr')}
                 variant={language === 'fr' ? 'default' : 'outline'}
                 className={language === 'fr'
-                  ? 'flex-1 bg-[#70BEFA] text-black hover:bg-[#5AAFED] border-0'
-                  : 'flex-1 bg-[#1A1A1A] border-gray-700 text-gray-300 hover:bg-[#252525] hover:border-[#70BEFA]/50'}
+                  ? 'flex-1 bg-primary text-black hover:bg-primary/90 border-0'
+                  : 'flex-1 bg-secondary border-border text-muted-foreground hover:bg-secondary/80 hover:border-primary/50'}
               >
                 <Globe className="w-4 h-4 mr-2" />
                 {t('ui.language.french')}
@@ -1265,32 +1281,32 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           <div className="grid md:grid-cols-12 gap-6 mb-16">
             {/* Left side - Course info */}
             <div className="md:col-span-7 space-y-6">
-              <Card className="bg-[#1A1A1A] border-l-4 border-l-[#70BEFA] border-r-0 border-t-0 border-b-0 rounded-none rounded-r-lg">
+              <Card className="bg-secondary border-l-4 border-l-primary border-r-0 border-t-0 border-b-0 rounded-none rounded-r-lg">
                 <CardContent className="p-6">
-                  <h3 className="text-sm font-mono text-[#70BEFA] mb-4 tracking-wider">{t('welcome.principles.heading')}</h3>
+                  <h3 className="text-sm font-mono text-primary mb-4 tracking-wider">{t('welcome.principles.heading')}</h3>
                   <div className="space-y-4">
-                    <div className="border-l-2 border-gray-700 pl-4 hover:border-[#70BEFA] transition-colors">
-                      <h4 className="text-white font-semibold mb-1">{t('welcome.principles.breakItDown.title')}</h4>
-                      <p className="text-gray-400 text-sm">{t('welcome.principles.breakItDown.description')}</p>
+                    <div className="border-l-2 border-border pl-4 hover:border-primary transition-colors">
+                      <h4 className="text-foreground font-semibold mb-1">{t('welcome.principles.breakItDown.title')}</h4>
+                      <p className="text-muted-foreground text-sm">{t('welcome.principles.breakItDown.description')}</p>
                     </div>
-                    <div className="border-l-2 border-gray-700 pl-4 hover:border-[#70BEFA] transition-colors">
-                      <h4 className="text-white font-semibold mb-1">{t('welcome.principles.beSpecific.title')}</h4>
-                      <p className="text-gray-400 text-sm">{t('welcome.principles.beSpecific.description')}</p>
+                    <div className="border-l-2 border-border pl-4 hover:border-primary transition-colors">
+                      <h4 className="text-foreground font-semibold mb-1">{t('welcome.principles.beSpecific.title')}</h4>
+                      <p className="text-muted-foreground text-sm">{t('welcome.principles.beSpecific.description')}</p>
                     </div>
-                    <div className="border-l-2 border-gray-700 pl-4 hover:border-[#70BEFA] transition-colors">
-                      <h4 className="text-white font-semibold mb-1">{t('welcome.principles.iterateQuickly.title')}</h4>
-                      <p className="text-gray-400 text-sm">{t('welcome.principles.iterateQuickly.description')}</p>
+                    <div className="border-l-2 border-border pl-4 hover:border-primary transition-colors">
+                      <h4 className="text-foreground font-semibold mb-1">{t('welcome.principles.iterateQuickly.title')}</h4>
+                      <p className="text-muted-foreground text-sm">{t('welcome.principles.iterateQuickly.description')}</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-[#1A1A1A] border-[#70BEFA]/20">
+              <Card className="bg-secondary border-primary/20">
                 <CardContent className="p-6">
-                  <p className="text-gray-300 leading-relaxed mb-4">
+                  <p className="text-muted-foreground leading-relaxed mb-4">
                     {t('welcome.description')}
                   </p>
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Book className="w-4 h-4" />{t('welcome.stats.lessons')}
                     </span>
@@ -1307,7 +1323,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
             {/* Right side - CTA */}
             <div className="md:col-span-5">
-              <Card className="bg-[#70BEFA] border-0 sticky top-8">
+              <Card className="bg-primary border-0 sticky top-8">
                 <CardContent className="p-8">
                   <div className="mb-6">
                     <div className="text-5xl font-bold text-black mb-2">{t('welcome.pointsToEarn')}</div>
@@ -1317,7 +1333,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   <Button
                     onClick={handleStart}
                     size="lg"
-                    className="w-full bg-black text-white hover:bg-black/90 font-semibold py-6 group"
+                    className="w-full bg-black text-foreground hover:bg-black/90 font-semibold py-6 group"
                   >
                     {completedLessons.length > 0 ? t('welcome.cta.continue') : t('welcome.cta.start')}
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -1350,15 +1366,15 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
     });
 
     return (
-      <div className="min-h-screen bg-[#0D0D0D] p-4 md:p-8">
+      <div className="min-h-screen bg-background p-4 md:p-8">
         <div className="max-w-5xl mx-auto pt-12">
           {showNameInput && (
             <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-              <div className="bg-[#1A1A1A] rounded-2xl p-8 max-w-md w-full shadow-2xl border border-[#70BEFA]/30">
-                <h3 className="text-2xl font-bold text-white mb-2">
+              <div className="bg-secondary rounded-2xl p-8 max-w-md w-full shadow-2xl border border-primary/30">
+                <h3 className="text-2xl font-bold text-foreground mb-2">
                   {language === 'fr' ? 'Entrez votre nom' : 'Enter Your Name'}
                 </h3>
-                <p className="text-gray-400 text-sm mb-6">
+                <p className="text-muted-foreground text-sm mb-6">
                   {language === 'fr'
                     ? 'Votre nom apparaîtra sur votre certificat'
                     : 'Your name will appear on your certificate'}
@@ -1368,7 +1384,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   placeholder={t('ui.placeholders.fullName')}
-                  className="w-full p-4 bg-[#0D0D0D] border-2 border-[#70BEFA]/30 text-white rounded-xl focus:border-[#70BEFA] focus:outline-none mb-6"
+                  className="w-full p-4 bg-background border-2 border-primary/30 text-foreground rounded-xl focus:border-primary focus:outline-none mb-6"
                   autoFocus
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && userName.trim()) {
@@ -1379,7 +1395,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 <div className="flex gap-3">
                   <button
                     onClick={() => setShowNameInput(false)}
-                    className="flex-1 px-6 py-3 border-2 border-gray-600 rounded-xl font-semibold text-gray-300 hover:bg-gray-700/50 transition-colors"
+                    className="flex-1 px-6 py-3 border-2 border-border rounded-xl font-semibold text-muted-foreground hover:bg-border/50 transition-colors"
                   >
                     {t('ui.buttons.cancel')}
                   </button>
@@ -1390,7 +1406,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       }
                     }}
                     disabled={!userName.trim()}
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-[#70BEFA] to-[#5AAFED] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#70BEFA]/50 disabled:opacity-50 transition-all"
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-primary to-primary/80 text-foreground rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/50 disabled:opacity-50 transition-all"
                   >
                     {t('ui.buttons.confirm')}
                   </button>
@@ -1402,28 +1418,28 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           <div className="max-w-4xl mx-auto mb-16">
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-2 h-2 bg-[#70BEFA] rounded-sm"></div>
-                <span className="text-sm font-mono text-[#70BEFA] tracking-wider">COURSE COMPLETED</span>
+                <div className="w-2 h-2 bg-primary rounded-sm"></div>
+                <span className="text-sm font-mono text-primary tracking-wider">COURSE COMPLETED</span>
               </div>
 
-              <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-[1.1] tracking-tight">
+              <h1 className="text-6xl md:text-7xl font-bold text-foreground mb-6 leading-[1.1] tracking-tight">
                 You did it.
               </h1>
-              <p className="text-xl text-gray-400 max-w-2xl">You've learned the fundamentals of effective AI prompting</p>
+              <p className="text-xl text-muted-foreground max-w-2xl">You've learned the fundamentals of effective AI prompting</p>
             </div>
           </div>
 
           {/* Social Media Share Card - Beautiful Design with Orb Hero */}
           <div className="relative mb-8 mx-auto w-full max-w-2xl px-4 sm:px-0">
             {/* Outer glow effect for the card */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#70BEFA]/20 via-transparent to-[#70BEFA]/20 rounded-3xl blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/20 rounded-3xl blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
 
             {/* Animated floating particles */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
               <defs>
                 <radialGradient id="particleGlow">
-                  <stop offset="0%" stopColor="#70BEFA" stopOpacity="0.8"/>
-                  <stop offset="100%" stopColor="#70BEFA" stopOpacity="0"/>
+                  <stop offset="0%" stopColor="#007AFF" stopOpacity="0.8"/>
+                  <stop offset="100%" stopColor="#007AFF" stopOpacity="0"/>
                 </radialGradient>
               </defs>
 
@@ -1450,7 +1466,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               </circle>
 
               {/* Rotating ring animation */}
-              <circle cx="50%" cy="50%" r="45%" fill="none" stroke="#70BEFA" strokeWidth="0.5" opacity="0.2">
+              <circle cx="50%" cy="50%" r="45%" fill="none" stroke="#007AFF" strokeWidth="0.5" opacity="0.2">
                 <animate attributeName="r" from="40%" to="50%" dur="6s" repeatCount="indefinite"/>
                 <animate attributeName="opacity" values="0.4;0.1;0.4" dur="6s" repeatCount="indefinite"/>
               </circle>
@@ -1465,7 +1481,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                 scale: 1.02,
                 transition: { duration: 0.3 }
               }}
-              className="relative bg-gradient-to-br from-[#0D0D0D] via-[#1A1A1A] to-[#0D0D0D] border-2 border-[#70BEFA] rounded-3xl overflow-hidden shadow-2xl shadow-[#70BEFA]/30"
+              className="relative bg-gradient-to-br from-background via-secondary to-background border-2 border-primary rounded-3xl overflow-hidden shadow-2xl shadow-primary/30"
               style={{ zIndex: 2 }}
             >
             {/* Grid Background Pattern */}
@@ -1473,8 +1489,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               className="absolute inset-0 opacity-20"
               style={{
                 backgroundImage: `
-                  linear-gradient(rgba(112, 190, 250, 0.1) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(112, 190, 250, 0.1) 1px, transparent 1px)
+                  linear-gradient(rgba(0, 122, 255, 0.1) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(0, 122, 255, 0.1) 1px, transparent 1px)
                 `,
                 backgroundSize: '20px 20px'
               }}
@@ -1484,16 +1500,16 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             <div
               className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-96 rounded-full opacity-40 blur-3xl"
               style={{
-                background: `radial-gradient(circle, ${userShapeObj?.colors.primary || '#70BEFA'}90 0%, transparent 70%)`
+                background: `radial-gradient(circle, ${userShapeObj?.colors.primary || '#007AFF'}90 0%, transparent 70%)`
               }}
             ></div>
 
             {/* Animated corner accents */}
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-6 left-6 w-12 h-12 border-t-2 border-l-2 border-[#70BEFA]/50 rounded-tl-lg"></div>
-              <div className="absolute top-6 right-6 w-12 h-12 border-t-2 border-r-2 border-[#70BEFA]/50 rounded-tr-lg"></div>
-              <div className="absolute bottom-6 left-6 w-12 h-12 border-b-2 border-l-2 border-[#70BEFA]/50 rounded-bl-lg"></div>
-              <div className="absolute bottom-6 right-6 w-12 h-12 border-b-2 border-r-2 border-[#70BEFA]/50 rounded-br-lg"></div>
+              <div className="absolute top-6 left-6 w-12 h-12 border-t-2 border-l-2 border-primary/50 rounded-tl-lg"></div>
+              <div className="absolute top-6 right-6 w-12 h-12 border-t-2 border-r-2 border-primary/50 rounded-tr-lg"></div>
+              <div className="absolute bottom-6 left-6 w-12 h-12 border-b-2 border-l-2 border-primary/50 rounded-bl-lg"></div>
+              <div className="absolute bottom-6 right-6 w-12 h-12 border-b-2 border-r-2 border-primary/50 rounded-br-lg"></div>
             </div>
 
             {/* Hero Section - Orb Takes Center Stage */}
@@ -1505,8 +1521,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
               {/* Shape Name Badge */}
               {userShapeObj && (
-                <div className="px-5 py-2 bg-gradient-to-r from-[#0D0D0D]/90 to-[#1A1A1A]/90 border border-[#70BEFA]/50 rounded-full backdrop-blur-md shadow-lg shadow-[#70BEFA]/20">
-                  <p className="text-sm font-mono text-[#70BEFA] tracking-[0.2em] font-bold">
+                <div className="px-5 py-2 bg-gradient-to-r from-background/90 to-secondary/90 border border-primary/50 rounded-full backdrop-blur-md shadow-lg shadow-primary/20">
+                  <p className="text-sm font-mono text-primary tracking-[0.2em] font-bold">
                     {userShapeObj.name.toUpperCase()}
                   </p>
                 </div>
@@ -1517,28 +1533,28 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             <div className="relative z-10 px-4 sm:px-8 pb-6 sm:pb-10 space-y-4 sm:space-y-6">
               {/* Main Message */}
               <div className="text-center space-y-1 sm:space-y-2">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight tracking-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight">
                   Course Complete!
                 </h2>
                 {userName && (
-                  <p className="text-base sm:text-lg md:text-xl font-bold text-[#70BEFA]">{userName}</p>
+                  <p className="text-base sm:text-lg md:text-xl font-bold text-primary">{userName}</p>
                 )}
               </div>
 
               {/* Stats - Compact Single Row */}
               <div className="flex justify-center items-center gap-2 sm:gap-4 py-2">
                 <div className="flex items-center gap-1.5">
-                  <div className="text-xl sm:text-2xl font-bold text-[#70BEFA] font-mono">{score}</div>
-                  <div className="text-[10px] text-gray-400 font-mono">PTS</div>
+                  <div className="text-xl sm:text-2xl font-bold text-primary font-mono">{score}</div>
+                  <div className="text-[10px] text-muted-foreground font-mono">PTS</div>
                 </div>
-                <div className="w-px h-6 bg-gray-700/50"></div>
+                <div className="w-px h-6 bg-border/50"></div>
                 <div className="flex items-center gap-1.5">
-                  <div className="text-xl sm:text-2xl font-bold text-white font-mono">{completedLessons.length}</div>
-                  <div className="text-[10px] text-gray-400 font-mono">LESSONS</div>
+                  <div className="text-xl sm:text-2xl font-bold text-foreground font-mono">{completedLessons.length}</div>
+                  <div className="text-[10px] text-muted-foreground font-mono">LESSONS</div>
                 </div>
-                <div className="w-px h-6 bg-gray-700/50"></div>
+                <div className="w-px h-6 bg-border/50"></div>
                 <div className="flex items-center gap-1.5">
-                  <div className="text-xl sm:text-2xl font-bold text-[#70BEFA] font-mono">100%</div>
+                  <div className="text-xl sm:text-2xl font-bold text-primary font-mono">100%</div>
                 </div>
               </div>
 
@@ -1549,53 +1565,53 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   let badge, icon;
                   if (score >= 180) {
                     badge = 'ITERATION MASTER';
-                    icon = <Zap className="w-4 h-4 text-[#70BEFA]" />;
+                    icon = <Zap className="w-4 h-4 text-primary" />;
                   } else if (score >= 160) {
                     badge = 'SPECIFICITY EXPERT';
-                    icon = <Target className="w-4 h-4 text-[#70BEFA]" />;
+                    icon = <Target className="w-4 h-4 text-primary" />;
                   } else {
                     badge = 'CLARITY CHAMPION';
-                    icon = <CheckCircle className="w-4 h-4 text-[#70BEFA]" />;
+                    icon = <CheckCircle className="w-4 h-4 text-primary" />;
                   }
 
                   return (
-                    <div className="bg-gradient-to-r from-[#1A1A1A] to-[#0D0D0D] border border-[#70BEFA]/30 rounded-full px-4 py-2 flex items-center gap-2 shadow-lg shadow-[#70BEFA]/10">
+                    <div className="bg-gradient-to-r from-secondary to-background border border-primary/30 rounded-full px-4 py-2 flex items-center gap-2 shadow-lg shadow-primary/10">
                       {icon}
-                      <span className="text-xs font-mono text-gray-300 tracking-wider">{badge}</span>
+                      <span className="text-xs font-mono text-muted-foreground tracking-wider">{badge}</span>
                     </div>
                   );
                 })()}
               </div>
 
               {/* Branding Footer - Elegant Separator */}
-              <div className="border-t border-gray-800/50 pt-4 text-center space-y-1">
-                <div className="text-base font-bold text-[#70BEFA] tracking-wide">Novagen Labs</div>
-                <div className="text-xs text-gray-500 font-mono tracking-wider">AI PROMPT ENGINEERING</div>
+              <div className="border-t border-border/50 pt-4 text-center space-y-1">
+                <div className="text-base font-bold text-primary tracking-wide">Novagen Labs</div>
+                <div className="text-xs text-muted-foreground font-mono tracking-wider">AI PROMPT ENGINEERING</div>
               </div>
 
               {/* Call to Action - More Prominent */}
-              <div className="bg-gradient-to-r from-[#70BEFA]/10 to-[#70BEFA]/5 border border-[#70BEFA]/30 rounded-xl p-4 text-center shadow-lg shadow-[#70BEFA]/10">
-                <div className="text-xs text-gray-400 tracking-wider">Try it yourself:</div>
-                <div className="text-sm font-bold text-[#70BEFA] font-mono tracking-wide mt-1">
+              <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/30 rounded-xl p-4 text-center shadow-lg shadow-primary/10">
+                <div className="text-xs text-muted-foreground tracking-wider">Try it yourself:</div>
+                <div className="text-sm font-bold text-primary font-mono tracking-wide mt-1">
                   learn2prompt.xyz
                 </div>
-                <div className="text-xs text-gray-500 mt-1">Beat my score! 🎯</div>
+                <div className="text-xs text-muted-foreground mt-1">Beat my score! 🎯</div>
               </div>
             </div>
           </motion.div>
           </div>
 
           {/* Sharing Options */}
-          <div className="bg-[#0D0D0D] border border-gray-800 rounded p-8 mb-8 max-w-3xl mx-auto">
+          <div className="bg-background border border-border rounded p-8 mb-8 max-w-3xl mx-auto">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-              <span className="text-xs font-mono text-white tracking-wider">SHARE</span>
+              <span className="text-xs font-mono text-foreground tracking-wider">SHARE</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <Button
                 onClick={shareToTwitter}
                 variant="outline"
-                className="flex items-center justify-center gap-2 bg-black text-white border-gray-800 hover:bg-[#70BEFA] hover:text-black hover:border-[#70BEFA] transition-colors"
+                className="flex items-center justify-center gap-2 bg-black text-foreground border-border hover:bg-primary hover:text-black hover:border-primary transition-colors"
               >
                 <Share2 className="w-4 h-4" />
                 <span className="text-sm">{t('ui.buttons.twitter')}</span>
@@ -1603,7 +1619,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               <Button
                 onClick={shareToLinkedIn}
                 variant="outline"
-                className="flex items-center justify-center gap-2 bg-black text-white border-gray-800 hover:bg-[#70BEFA] hover:text-black hover:border-[#70BEFA] transition-colors"
+                className="flex items-center justify-center gap-2 bg-black text-foreground border-border hover:bg-primary hover:text-black hover:border-primary transition-colors"
               >
                 <Share2 className="w-4 h-4" />
                 <span className="text-sm">{t('ui.buttons.linkedin')}</span>
@@ -1611,7 +1627,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               <Button
                 onClick={shareCertificate}
                 variant="outline"
-                className="flex items-center justify-center gap-2 bg-black text-white border-gray-800 hover:bg-[#70BEFA] hover:text-black hover:border-[#70BEFA] transition-colors"
+                className="flex items-center justify-center gap-2 bg-black text-foreground border-border hover:bg-primary hover:text-black hover:border-primary transition-colors"
               >
                 <Share2 className="w-4 h-4" />
                 <span className="text-sm">{t('ui.buttons.share')}</span>
@@ -1623,7 +1639,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             <Button
               onClick={confirmReset}
               size="lg"
-              className="bg-black text-white border border-[#70BEFA]/30 hover:bg-[#70BEFA] hover:text-black transition-colors"
+              className="bg-black text-foreground border border-primary/30 hover:bg-primary hover:text-black transition-colors"
             >
               {t('ui.buttons.startOver')}
             </Button>
@@ -1636,33 +1652,36 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
   const currentLessonData = lessons[currentLesson];
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] p-4 md:p-8">
+    <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-6xl mx-auto pt-8">
         {/* Compact Header - Not centered */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-[#70BEFA] rounded-sm"></div>
-            <span className="text-sm font-mono text-[#70BEFA] tracking-wider">
+            <div className="w-2 h-2 bg-primary rounded-sm"></div>
+            <span className="text-sm font-mono text-primary tracking-wider">
               {t('ui.navigation.lessonCounter').replace('{{current}}', String(currentLesson + 1)).replace('{{total}}', String(lessons.length))}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-gray-400 border-gray-700 font-mono text-xs">
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="text-muted-foreground border-border font-mono text-xs">
               {t('ui.navigation.pointsLabel').replace('{{score}}', String(score))}
             </Badge>
             <button
               onClick={handleResetProgress}
-              className="text-xs text-gray-500 hover:text-[#70BEFA] font-mono transition-colors"
+              className="text-xs text-muted-foreground hover:text-primary font-mono transition-colors"
               title={t('ui.navigation.resetTitle')}
             >
               {t('ui.navigation.reset')}
             </button>
+            <div className="hidden sm:block">
+              <AuthButton showName={false} />
+            </div>
           </div>
         </div>
 
         {/* Progress bar - enhanced with animation */}
         <div className="mb-12 space-y-2 relative">
-          <div className="flex items-center justify-between text-xs text-gray-500 font-mono">
+          <div className="flex items-center justify-between text-xs text-muted-foreground font-mono">
             <span>{t('ui.navigation.progress').replace('{{percent}}', String(Math.round(progress)))}</span>
             <span>{t('ui.navigation.lessonsCompleted').replace('{{completed}}', String(completedLessons.length)).replace('{{total}}', String(lessons.length))}</span>
           </div>
@@ -1675,9 +1694,9 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             <motion.div
               animate={showProgressCelebration ? {
                 boxShadow: [
-                  '0 0 0px rgba(112, 190, 250, 0)',
-                  '0 0 15px rgba(112, 190, 250, 0.8)',
-                  '0 0 0px rgba(112, 190, 250, 0)'
+                  '0 0 0px rgba(0, 122, 255, 0)',
+                  '0 0 15px rgba(0, 122, 255, 0.8)',
+                  '0 0 0px rgba(0, 122, 255, 0)'
                 ]
               } : {}}
               transition={{ duration: 0.8 }}
@@ -1702,17 +1721,17 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   <React.Fragment key={idx}>
                     {idx === currentLesson - 1 && idx > 0 && (
                       <div className="flex items-center gap-2">
-                        <div className="text-gray-600 text-xs">...</div>
-                        <ArrowRight className="w-3 h-3 text-gray-700" />
+                        <div className="text-muted-foreground text-xs">...</div>
+                        <ArrowRight className="w-3 h-3 text-muted-foreground" />
                       </div>
                     )}
                     <div
                       className={`flex items-center gap-2 px-3 py-1.5 rounded-full border whitespace-nowrap transition-all ${
                         isCurrent
-                          ? 'bg-[#70BEFA]/10 border-[#70BEFA] text-[#70BEFA]'
+                          ? 'bg-primary/10 border-primary text-primary'
                           : isPast
-                          ? 'bg-[#0D0D0D] border-gray-800 text-gray-500'
-                          : 'bg-[#0D0D0D] border-gray-800 text-gray-600'
+                          ? 'bg-background border-border text-muted-foreground'
+                          : 'bg-background border-border text-muted-foreground'
                       }`}
                     >
                       {isPast && <CheckCircle className="w-3 h-3" />}
@@ -1720,7 +1739,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       {isCurrent && <span className="text-xs font-medium truncate max-w-[120px]">{lesson.title}</span>}
                     </div>
                     {!isNext && idx < lessons.length - 1 && (
-                      <ArrowRight className={`w-3 h-3 ${isCurrent ? 'text-gray-700' : 'text-gray-800'}`} />
+                      <ArrowRight className={`w-3 h-3 ${isCurrent ? 'text-muted-foreground' : 'text-foreground'}`} />
                     )}
                   </React.Fragment>
                 );
@@ -1728,7 +1747,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               return null;
             })}
             {currentLesson < lessons.length - 2 && (
-              <div className="text-gray-600 text-xs">...</div>
+              <div className="text-muted-foreground text-xs">...</div>
             )}
           </div>
         </div>
@@ -1739,18 +1758,18 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           <div className="md:col-span-8 space-y-8">
             {/* Title - Left aligned, no card */}
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 leading-tight tracking-tight">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3 leading-tight tracking-tight">
                 {currentLessonData.title}
               </h1>
-              <Separator className="mb-0 bg-gray-800" />
+              <Separator className="mb-0 bg-secondary" />
             </div>
 
           {currentLessonData.type === 'lesson' ? (
             <div className="space-y-8">
               {/* Lesson content in card with left accent */}
-              <Card className="bg-[#0D0D0D] border-l-4 border-l-[#70BEFA] border-r-0 border-t-0 border-b-0 rounded-none rounded-r-xl">
+              <Card className="bg-background border-l-4 border-l-primary border-r-0 border-t-0 border-b-0 rounded-none rounded-r-xl">
                 <CardContent className="p-6">
-                  <div className="text-gray-300 leading-relaxed space-y-4">
+                  <div className="text-muted-foreground leading-relaxed space-y-4">
                     {currentLessonData.content}
                   </div>
                 </CardContent>
@@ -1759,7 +1778,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               <Button
                 onClick={handleNext}
                 size="lg"
-                className="bg-black text-white border border-[#70BEFA]/30 hover:bg-[#70BEFA] hover:text-black transition-all duration-200 group"
+                className="bg-black text-foreground border border-primary/30 hover:bg-primary hover:text-black transition-all duration-200 group"
               >
                 <span>{t('ui.buttons.continue')}</span>
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -1768,28 +1787,28 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           ) : (
             <div className="space-y-8">
               {/* Scenario - left accent card */}
-              <Card className="bg-[#0D0D0D] border-l-4 border-l-[#70BEFA] border-r-0 border-t-0 border-b-0 rounded-none rounded-r-xl">
+              <Card className="bg-background border-l-4 border-l-primary border-r-0 border-t-0 border-b-0 rounded-none rounded-r-xl">
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-sm"></div>
-                    <span className="text-xs font-mono text-[#70BEFA] tracking-wider">{t('ui.labels.scenario')}</span>
+                    <div className="w-1.5 h-1.5 bg-primary rounded-sm"></div>
+                    <span className="text-xs font-mono text-primary tracking-wider">{t('ui.labels.scenario')}</span>
                   </div>
-                  <p className="text-gray-300 leading-relaxed">{currentLessonData.scenario}</p>
-                  <div className="pt-2 border-t border-gray-800">
-                    <p className="text-sm text-gray-400 font-medium">{currentLessonData.task}</p>
+                  <p className="text-muted-foreground leading-relaxed">{currentLessonData.scenario}</p>
+                  <div className="pt-2 border-t border-border">
+                    <p className="text-sm text-muted-foreground font-medium">{currentLessonData.task}</p>
                   </div>
 
                   {currentLessonData.salesData && (
                     <div className="mt-6 space-y-3">
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                        <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.data')}</span>
+                        <span className="text-xs font-mono text-foreground tracking-wider">{t('ui.labels.data')}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         {currentLessonData.salesData.map((item, idx) => (
-                          <div key={idx} className="bg-[#1A1A1A] p-4 rounded border border-gray-800 hover:border-[#70BEFA]/30 transition-colors">
-                            <div className="text-xs font-mono text-gray-400 mb-2">{item.quarter}</div>
-                            <div className="text-2xl font-bold text-white">
+                          <div key={idx} className="bg-secondary p-4 rounded border border-border hover:border-primary/30 transition-colors">
+                            <div className="text-xs font-mono text-muted-foreground mb-2">{item.quarter}</div>
+                            <div className="text-2xl font-bold text-foreground">
                               ${item.sales.toLocaleString()}
                             </div>
                           </div>
@@ -1805,9 +1824,9 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                         <span className="text-xs font-mono text-orange-400 tracking-wider">AI'S PREVIOUS RESPONSE</span>
                       </div>
                       <div className="bg-orange-950/20 border border-orange-500/30 p-4 rounded">
-                        <p className="text-gray-300 text-sm leading-relaxed">{currentLessonData.mockBadResponse}</p>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{currentLessonData.mockBadResponse}</p>
                       </div>
-                      <p className="text-xs text-gray-500 italic">This response needs correction!</p>
+                      <p className="text-xs text-muted-foreground italic">This response needs correction!</p>
                     </div>
                   )}
 
@@ -1815,8 +1834,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   {currentLessonData.hasDifficultyModes && (
                     <div className="mt-6 space-y-4">
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-1.5 h-1.5 bg-[#70BEFA] rounded-sm"></div>
-                        <span className="text-xs font-mono text-[#70BEFA] tracking-wider">SELECT DIFFICULTY</span>
+                        <div className="w-1.5 h-1.5 bg-primary rounded-sm"></div>
+                        <span className="text-xs font-mono text-primary tracking-wider">SELECT DIFFICULTY</span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
@@ -1826,12 +1845,12 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                           className={`group relative p-6 rounded-lg border-2 transition-all ${
                             exerciseDifficulty === 'easy'
                               ? 'bg-green-950/30 border-green-500 border-l-4'
-                              : 'bg-[#1A1A1A] border-gray-700 hover:border-green-500/50'
+                              : 'bg-secondary border-border hover:border-green-500/50'
                           }`}
                         >
                           <div className="flex items-start justify-between mb-3">
                             <div>
-                              <h4 className="text-lg font-bold text-white mb-1">Easy Mode</h4>
+                              <h4 className="text-lg font-bold text-foreground mb-1">Easy Mode</h4>
                               <Badge className="bg-green-600/20 text-green-300 border-green-500/30 text-xs">
                                 Recommended
                               </Badge>
@@ -1840,7 +1859,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                               <CheckCircle className="w-5 h-5 text-green-400" />
                             )}
                           </div>
-                          <p className="text-sm text-gray-400">
+                          <p className="text-sm text-muted-foreground">
                             Analyze simple meeting notes with clear action items.
                           </p>
                         </button>
@@ -1851,12 +1870,12 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                           className={`group relative p-6 rounded-lg border-2 transition-all ${
                             exerciseDifficulty === 'hard'
                               ? 'bg-orange-950/30 border-orange-500 border-l-4'
-                              : 'bg-[#1A1A1A] border-gray-700 hover:border-orange-500/50'
+                              : 'bg-secondary border-border hover:border-orange-500/50'
                           }`}
                         >
                           <div className="flex items-start justify-between mb-3">
                             <div>
-                              <h4 className="text-lg font-bold text-white mb-1">Hard Mode</h4>
+                              <h4 className="text-lg font-bold text-foreground mb-1">Hard Mode</h4>
                               <Badge className="bg-orange-600/20 text-orange-300 border-orange-500/30 text-xs">
                                 Challenge
                               </Badge>
@@ -1865,7 +1884,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                               <CheckCircle className="w-5 h-5 text-orange-400" />
                             )}
                           </div>
-                          <p className="text-sm text-gray-400">
+                          <p className="text-sm text-muted-foreground">
                             Upload and analyze comprehensive business reports.
                           </p>
                         </button>
@@ -1885,17 +1904,17 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                         <div className="flex items-center gap-2 mb-3">
                           <FileText className="w-5 h-5 text-green-400" />
                           <div>
-                            <h4 className="text-sm font-semibold text-white">{easyModeDocument.title}</h4>
-                            <p className="text-xs text-gray-400">{easyModeDocument.date} • {easyModeDocument.attendees.length} attendees</p>
+                            <h4 className="text-sm font-semibold text-foreground">{easyModeDocument.title}</h4>
+                            <p className="text-xs text-muted-foreground">{easyModeDocument.date} • {easyModeDocument.attendees.length} attendees</p>
                           </div>
                         </div>
 
-                        <div className="bg-[#0D0D0D] border border-green-500/20 rounded p-3 space-y-3 text-sm">
+                        <div className="bg-background border border-green-500/20 rounded p-3 space-y-3 text-sm">
                           <div>
                             <p className="text-xs font-mono text-green-400 mb-2">ATTENDEES</p>
                             <div className="flex flex-wrap gap-2">
                               {easyModeDocument.attendees.map((attendee, idx) => (
-                                <span key={idx} className="text-xs bg-[#1A1A1A] border border-green-500/20 px-2 py-1 rounded text-gray-300">
+                                <span key={idx} className="text-xs bg-secondary border border-green-500/20 px-2 py-1 rounded text-muted-foreground">
                                   {attendee}
                                 </span>
                               ))}
@@ -1906,7 +1925,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                             <p className="text-xs font-mono text-green-400 mb-2">DISCUSSION POINTS</p>
                             <div className="space-y-1.5">
                               {easyModeDocument.content.map((item, idx) => (
-                                <p key={idx} className="text-xs text-gray-300">• {item}</p>
+                                <p key={idx} className="text-xs text-muted-foreground">• {item}</p>
                               ))}
                             </div>
                           </div>
@@ -1917,7 +1936,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                               {easyModeDocument.actionItems.map((item, idx) => (
                                 <div key={idx} className="flex items-start gap-2">
                                   <Target className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" />
-                                  <span className="text-xs text-gray-300">{item}</span>
+                                  <span className="text-xs text-muted-foreground">{item}</span>
                                 </div>
                               ))}
                             </div>
@@ -1927,7 +1946,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                        <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.yourPrompt')}</span>
+                        <span className="text-xs font-mono text-foreground tracking-wider">{t('ui.labels.yourPrompt')}</span>
                       </div>
                     </div>
                   )}
@@ -1944,7 +1963,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                         <Button
                           onClick={handleDocumentUpload}
                           disabled={uploadingDocument}
-                          className="w-full bg-[#70BEFA] hover:bg-[#5AAFED] text-black font-semibold py-6 rounded-lg flex items-center justify-center gap-3 transition-all"
+                          className="w-full bg-primary hover:bg-primary/90 text-black font-semibold py-6 rounded-lg flex items-center justify-center gap-3 transition-all"
                         >
                           {uploadingDocument ? (
                             <>
@@ -1959,36 +1978,36 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                           )}
                         </Button>
                       ) : mockCompanyData && (
-                        <div className="bg-[#70BEFA]/10 border border-[#70BEFA]/30 rounded-lg p-4 space-y-3">
+                        <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 space-y-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-[#70BEFA] rounded-lg flex items-center justify-center">
+                            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                               <FileText className="w-5 h-5 text-black" />
                             </div>
                             <div className="flex-1">
-                              <p className="text-sm font-semibold text-white">{mockCompanyData.name} - Business Report</p>
-                              <p className="text-xs text-gray-400">10 pages • Uploaded successfully</p>
+                              <p className="text-sm font-semibold text-foreground">{mockCompanyData.name} - Business Report</p>
+                              <p className="text-xs text-muted-foreground">10 pages • Uploaded successfully</p>
                             </div>
                             <CheckCircle className="w-5 h-5 text-green-400" />
                           </div>
 
-                          <Separator className="bg-[#70BEFA]/20" />
+                          <Separator className="bg-primary/20" />
 
                           <div className="space-y-2">
-                            <p className="text-xs font-mono text-[#70BEFA] tracking-wider">DOCUMENT CONTENTS</p>
-                            <div className="bg-[#0D0D0D] border border-[#70BEFA]/20 rounded p-3 space-y-2 text-xs text-gray-300">
-                              <p><span className="text-[#70BEFA] font-semibold">Company:</span> {mockCompanyData.name}</p>
-                              <p><span className="text-[#70BEFA] font-semibold">Industry:</span> {mockCompanyData.industry}</p>
-                              <p><span className="text-[#70BEFA] font-semibold">Employees:</span> {mockCompanyData.employees}</p>
-                              <p><span className="text-[#70BEFA] font-semibold">Revenue:</span> {mockCompanyData.revenue} (Growth: {mockCompanyData.quarterlyGrowth})</p>
-                              <p><span className="text-[#70BEFA] font-semibold">Key Projects:</span></p>
+                            <p className="text-xs font-mono text-primary tracking-wider">DOCUMENT CONTENTS</p>
+                            <div className="bg-background border border-primary/20 rounded p-3 space-y-2 text-xs text-muted-foreground">
+                              <p><span className="text-primary font-semibold">Company:</span> {mockCompanyData.name}</p>
+                              <p><span className="text-primary font-semibold">Industry:</span> {mockCompanyData.industry}</p>
+                              <p><span className="text-primary font-semibold">Employees:</span> {mockCompanyData.employees}</p>
+                              <p><span className="text-primary font-semibold">Revenue:</span> {mockCompanyData.revenue} (Growth: {mockCompanyData.quarterlyGrowth})</p>
+                              <p><span className="text-primary font-semibold">Key Projects:</span></p>
                               <ul className="ml-4 space-y-1">
                                 {mockCompanyData.keyProjects.map((project, idx) => (
                                   <li key={idx} className="text-xs">• {project}</li>
                                 ))}
                               </ul>
-                              <p><span className="text-[#70BEFA] font-semibold">Quarterly Sales:</span> Q1: {mockCompanyData.salesData.q1}, Q2: {mockCompanyData.salesData.q2}, Q3: {mockCompanyData.salesData.q3}, Q4: {mockCompanyData.salesData.q4}</p>
-                              <p><span className="text-[#70BEFA] font-semibold">Marketing:</span> Budget: {mockCompanyData.marketing.budget}, Leads: {mockCompanyData.marketing.leads}, Conversion: {mockCompanyData.marketing.conversionRate}</p>
-                              <p><span className="text-[#70BEFA] font-semibold">Key Challenges:</span></p>
+                              <p><span className="text-primary font-semibold">Quarterly Sales:</span> Q1: {mockCompanyData.salesData.q1}, Q2: {mockCompanyData.salesData.q2}, Q3: {mockCompanyData.salesData.q3}, Q4: {mockCompanyData.salesData.q4}</p>
+                              <p><span className="text-primary font-semibold">Marketing:</span> Budget: {mockCompanyData.marketing.budget}, Leads: {mockCompanyData.marketing.leads}, Conversion: {mockCompanyData.marketing.conversionRate}</p>
+                              <p><span className="text-primary font-semibold">Key Challenges:</span></p>
                               <ul className="ml-4 space-y-1">
                                 {mockCompanyData.challenges.map((challenge, idx) => (
                                   <li key={idx} className="text-xs">• {challenge}</li>
@@ -2002,7 +2021,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       {documentUploaded && (
                         <div className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                          <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.yourPrompt')}</span>
+                          <span className="text-xs font-mono text-foreground tracking-wider">{t('ui.labels.yourPrompt')}</span>
                         </div>
                       )}
                     </div>
@@ -2020,7 +2039,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                         <Button
                           onClick={handleLoadCampaignBrief}
                           disabled={loadingCampaignBrief}
-                          className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-6 rounded-lg flex items-center justify-center gap-3 transition-all"
+                          className="w-full bg-purple-600 hover:bg-purple-700 text-foreground font-semibold py-6 rounded-lg flex items-center justify-center gap-3 transition-all"
                         >
                           {loadingCampaignBrief ? (
                             <>
@@ -2040,36 +2059,36 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                           <div className="bg-purple-950/20 border-l-4 border-purple-500 border-r border-t border-b border-purple-500/30 rounded-r-lg p-4 space-y-3">
                             <div className="flex items-start gap-3">
                               <div className="w-10 h-10 bg-purple-600 rounded flex items-center justify-center flex-shrink-0">
-                                <Mail className="w-5 h-5 text-white" />
+                                <Mail className="w-5 h-5 text-foreground" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-semibold text-white">New Campaign Brief from {mockCampaignData.clientName}</p>
-                                <p className="text-xs text-gray-400">{mockCampaignData.clientRole} • {mockCampaignData.companyName}</p>
+                                <p className="text-sm font-semibold text-foreground">New Campaign Brief from {mockCampaignData.clientName}</p>
+                                <p className="text-xs text-muted-foreground">{mockCampaignData.clientRole} • {mockCampaignData.companyName}</p>
                               </div>
                             </div>
 
-                            <div className="bg-[#0D0D0D] border border-purple-500/20 rounded p-3 space-y-3 text-sm text-gray-300">
+                            <div className="bg-background border border-purple-500/20 rounded p-3 space-y-3 text-sm text-muted-foreground">
                               <div className="border-b border-purple-500/20 pb-2">
                                 <span className="text-purple-400 font-semibold">Product Launch: </span>
-                                <span className="text-white">{mockCampaignData.productLaunch}</span>
+                                <span className="text-foreground">{mockCampaignData.productLaunch}</span>
                               </div>
 
                               {/* Asymmetric Grid for Campaign Details */}
                               <div className="grid grid-cols-2 gap-3">
                                 <div className="col-span-2 bg-purple-950/30 border-l-2 border-purple-500 p-3 rounded-r">
                                   <p className="text-xs font-mono text-purple-400 mb-1">TARGET AUDIENCE</p>
-                                  <p className="text-xs text-gray-300">{mockCampaignData.targetAudience.primary}</p>
-                                  <p className="text-xs text-gray-400 mt-1">{mockCampaignData.targetAudience.secondary}</p>
+                                  <p className="text-xs text-muted-foreground">{mockCampaignData.targetAudience.primary}</p>
+                                  <p className="text-xs text-muted-foreground mt-1">{mockCampaignData.targetAudience.secondary}</p>
                                 </div>
 
-                                <div className="bg-[#1A1A1A] border border-purple-500/20 p-2 rounded">
+                                <div className="bg-secondary border border-purple-500/20 p-2 rounded">
                                   <p className="text-xs font-mono text-purple-400">BUDGET</p>
-                                  <p className="text-lg font-bold text-white">{mockCampaignData.budget}</p>
+                                  <p className="text-lg font-bold text-foreground">{mockCampaignData.budget}</p>
                                 </div>
 
-                                <div className="bg-[#1A1A1A] border border-purple-500/20 p-2 rounded">
+                                <div className="bg-secondary border border-purple-500/20 p-2 rounded">
                                   <p className="text-xs font-mono text-purple-400">TIMELINE</p>
-                                  <p className="text-xs font-semibold text-white mt-1">{mockCampaignData.timeline}</p>
+                                  <p className="text-xs font-semibold text-foreground mt-1">{mockCampaignData.timeline}</p>
                                 </div>
                               </div>
 
@@ -2079,7 +2098,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                                   {mockCampaignData.campaignGoals.map((goal, idx) => (
                                     <div key={idx} className="flex items-start gap-2">
                                       <Target className="w-3 h-3 text-purple-500 flex-shrink-0 mt-0.5" />
-                                      <span className="text-xs text-gray-300">{goal}</span>
+                                      <span className="text-xs text-muted-foreground">{goal}</span>
                                     </div>
                                   ))}
                                 </div>
@@ -2100,7 +2119,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                                 <p className="text-xs font-mono text-purple-400 mb-1">CHANNELS</p>
                                 <div className="flex flex-wrap gap-2">
                                   {mockCampaignData.channels.map((channel, idx) => (
-                                    <span key={idx} className="text-xs bg-[#1A1A1A] border border-purple-500/20 px-2 py-1 rounded">
+                                    <span key={idx} className="text-xs bg-secondary border border-purple-500/20 px-2 py-1 rounded">
                                       {channel}
                                     </span>
                                   ))}
@@ -2109,7 +2128,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
                               <div className="bg-orange-950/20 border-l-2 border-orange-500 p-2 rounded-r">
                                 <p className="text-xs font-mono text-orange-400 mb-1">COMPETITIVE EDGE</p>
-                                <p className="text-xs text-gray-300 italic">{mockCampaignData.competitorInsight}</p>
+                                <p className="text-xs text-muted-foreground italic">{mockCampaignData.competitorInsight}</p>
                               </div>
                             </div>
                           </div>
@@ -2117,7 +2136,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                           {campaignBriefLoaded && (
                             <div className="flex items-center gap-2">
                               <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                              <span className="text-xs font-mono text-white tracking-wider">STEP 2: WRITE YOUR CREATIVE PROMPT</span>
+                              <span className="text-xs font-mono text-foreground tracking-wider">STEP 2: WRITE YOUR CREATIVE PROMPT</span>
                             </div>
                           )}
                         </div>
@@ -2137,7 +2156,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                         <Button
                           onClick={handleLoadAnalytics}
                           disabled={loadingAnalytics}
-                          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-6 rounded-lg flex items-center justify-center gap-3 transition-all"
+                          className="w-full bg-green-600 hover:bg-green-700 text-foreground font-semibold py-6 rounded-lg flex items-center justify-center gap-3 transition-all"
                         >
                           {loadingAnalytics ? (
                             <>
@@ -2156,59 +2175,59 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                           {/* Dashboard Header */}
                           <div className="bg-green-950/20 border-l-4 border-green-500 border-r border-t border-b border-green-500/30 rounded-r-lg p-4">
                             <div className="flex items-center justify-between mb-2">
-                              <h3 className="text-lg font-bold text-white">{mockAnalyticsData.companyName}</h3>
+                              <h3 className="text-lg font-bold text-foreground">{mockAnalyticsData.companyName}</h3>
                               <Badge className="bg-green-600/20 text-green-300 border-green-500/30">{mockAnalyticsData.period}</Badge>
                             </div>
-                            <p className="text-xs text-gray-400">Cross-Department Performance Dashboard</p>
+                            <p className="text-xs text-muted-foreground">Cross-Department Performance Dashboard</p>
                           </div>
 
                           {/* Asymmetric Stats Grid: 2-1-2-1 Layout */}
                           <div className="grid grid-cols-3 gap-3">
                             {/* Sales - Wide Card */}
-                            <div className="col-span-2 bg-[#0D0D0D] border-l-4 border-green-500 border-r border-t border-b border-green-500/30 rounded-r p-3">
+                            <div className="col-span-2 bg-background border-l-4 border-green-500 border-r border-t border-b border-green-500/30 rounded-r p-3">
                               <div className="flex items-center gap-2 mb-2">
                                 <TrendingUp className="w-4 h-4 text-green-400" />
                                 <span className="text-xs font-mono text-green-400">SALES</span>
                               </div>
                               <div className="flex items-baseline gap-2">
-                                <span className="text-2xl font-bold text-white">{mockAnalyticsData.departments.sales.revenue}</span>
+                                <span className="text-2xl font-bold text-foreground">{mockAnalyticsData.departments.sales.revenue}</span>
                                 <span className="text-sm text-green-400">{mockAnalyticsData.departments.sales.growth}</span>
                               </div>
                               <div className="mt-2 space-y-1">
-                                <p className="text-xs text-gray-400">Top: {mockAnalyticsData.departments.sales.topProducts[0].name}</p>
-                                <p className="text-xs text-gray-500">{mockAnalyticsData.departments.sales.salesTeam.reps} reps • {mockAnalyticsData.departments.sales.salesTeam.avgDealsPerRep} avg deals</p>
+                                <p className="text-xs text-muted-foreground">Top: {mockAnalyticsData.departments.sales.topProducts[0].name}</p>
+                                <p className="text-xs text-muted-foreground">{mockAnalyticsData.departments.sales.salesTeam.reps} reps • {mockAnalyticsData.departments.sales.salesTeam.avgDealsPerRep} avg deals</p>
                               </div>
                             </div>
 
                             {/* Marketing - Narrow Card */}
-                            <div className="col-span-1 bg-[#0D0D0D] border-l-4 border-purple-500 border-r border-t border-b border-purple-500/30 rounded-r p-3">
+                            <div className="col-span-1 bg-background border-l-4 border-purple-500 border-r border-t border-b border-purple-500/30 rounded-r p-3">
                               <div className="flex items-center gap-2 mb-2">
                                 <Zap className="w-4 h-4 text-purple-400" />
                                 <span className="text-xs font-mono text-purple-400">MARKETING</span>
                               </div>
-                              <div className="text-lg font-bold text-white">{mockAnalyticsData.departments.marketing.spent}</div>
-                              <p className="text-xs text-gray-400 mt-1">of {mockAnalyticsData.departments.marketing.budget}</p>
+                              <div className="text-lg font-bold text-foreground">{mockAnalyticsData.departments.marketing.spent}</div>
+                              <p className="text-xs text-muted-foreground mt-1">of {mockAnalyticsData.departments.marketing.budget}</p>
                               <p className="text-xs text-purple-400 mt-2">Best ROI: {mockAnalyticsData.departments.marketing.campaigns[0].roi}</p>
                             </div>
 
                             {/* Accounting - Wide Card */}
-                            <div className="col-span-2 bg-[#0D0D0D] border-l-4 border-orange-500 border-r border-t border-b border-orange-500/30 rounded-r p-3">
+                            <div className="col-span-2 bg-background border-l-4 border-orange-500 border-r border-t border-b border-orange-500/30 rounded-r p-3">
                               <div className="flex items-center gap-2 mb-2">
                                 <DollarSign className="w-4 h-4 text-orange-400" />
                                 <span className="text-xs font-mono text-orange-400">ACCOUNTING</span>
                               </div>
                               <div className="grid grid-cols-3 gap-2">
                                 <div>
-                                  <p className="text-xs text-gray-400">Revenue</p>
-                                  <p className="text-sm font-bold text-white">{mockAnalyticsData.departments.accounting.revenue}</p>
+                                  <p className="text-xs text-muted-foreground">Revenue</p>
+                                  <p className="text-sm font-bold text-foreground">{mockAnalyticsData.departments.accounting.revenue}</p>
                                 </div>
                                 <div>
-                                  <p className="text-xs text-gray-400">Profit</p>
+                                  <p className="text-xs text-muted-foreground">Profit</p>
                                   <p className="text-sm font-bold text-green-400">{mockAnalyticsData.departments.accounting.profit}</p>
                                 </div>
                                 <div>
-                                  <p className="text-xs text-gray-400">Margin</p>
-                                  <p className="text-sm font-bold text-white">{mockAnalyticsData.departments.accounting.profitMargin}</p>
+                                  <p className="text-xs text-muted-foreground">Margin</p>
+                                  <p className="text-sm font-bold text-foreground">{mockAnalyticsData.departments.accounting.profitMargin}</p>
                                 </div>
                               </div>
                               <p className="text-xs text-orange-400 mt-2">Outstanding: {typeof mockAnalyticsData.departments.accounting.outstandingInvoices === 'object'
@@ -2217,14 +2236,14 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                             </div>
 
                             {/* Operations - Narrow Card */}
-                            <div className="col-span-1 bg-[#0D0D0D] border-l-4 border-blue-500 border-r border-t border-b border-blue-500/30 rounded-r p-3">
+                            <div className="col-span-1 bg-background border-l-4 border-blue-500 border-r border-t border-b border-blue-500/30 rounded-r p-3">
                               <div className="flex items-center gap-2 mb-2">
                                 <Users className="w-4 h-4 text-blue-400" />
                                 <span className="text-xs font-mono text-blue-400">OPERATIONS</span>
                               </div>
-                              <div className="text-lg font-bold text-white">{mockAnalyticsData.departments.operations.productivity}</div>
+                              <div className="text-lg font-bold text-foreground">{mockAnalyticsData.departments.operations.productivity}</div>
                               {(mockAnalyticsData.departments.operations.team?.employees || mockAnalyticsData.departments.operations.teamMetrics?.employeeCount) && (
-                                <p className="text-xs text-gray-400 mt-1">
+                                <p className="text-xs text-muted-foreground mt-1">
                                   {mockAnalyticsData.departments.operations.team?.employees || mockAnalyticsData.departments.operations.teamMetrics?.employeeCount} employees
                                 </p>
                               )}
@@ -2245,7 +2264,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                               </p>
                               <div className="space-y-1.5">
                                 {mockAnalyticsData.keyInsights.slice(0, 3).map((insight, idx) => (
-                                  <p key={idx} className="text-xs text-gray-300">• {insight}</p>
+                                  <p key={idx} className="text-xs text-muted-foreground">• {insight}</p>
                                 ))}
                               </div>
                             </div>
@@ -2257,7 +2276,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                               </p>
                               <div className="space-y-1.5">
                                 {mockAnalyticsData.concerns.map((concern, idx) => (
-                                  <p key={idx} className="text-xs text-gray-300">• {concern}</p>
+                                  <p key={idx} className="text-xs text-muted-foreground">• {concern}</p>
                                 ))}
                               </div>
                             </div>
@@ -2266,7 +2285,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                           {analyticsLoaded && (
                             <div className="flex items-center gap-2">
                               <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                              <span className="text-xs font-mono text-white tracking-wider">STEP 2: WRITE YOUR ANALYSIS PROMPT</span>
+                              <span className="text-xs font-mono text-foreground tracking-wider">STEP 2: WRITE YOUR ANALYSIS PROMPT</span>
                             </div>
                           )}
                         </div>
@@ -2288,7 +2307,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                        <label className="text-xs font-mono text-white tracking-wider">
+                        <label className="text-xs font-mono text-foreground tracking-wider">
                           {t('ui.labels.yourPrompt')}
                         </label>
                       </div>
@@ -2303,11 +2322,11 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                         }}
                         className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono transition-all ${
                           easyModeEnabled
-                            ? 'bg-[#70BEFA]/20 text-[#70BEFA] border border-[#70BEFA]/30'
-                            : 'bg-[#1A1A1A] text-gray-400 border border-gray-700 hover:border-gray-600'
+                            ? 'bg-primary/20 text-primary border border-primary/30'
+                            : 'bg-secondary text-muted-foreground border border-border hover:border-border'
                         }`}
                       >
-                        <Zap className={`w-3 h-3 ${easyModeEnabled ? 'text-[#70BEFA]' : 'text-gray-500'}`} />
+                        <Zap className={`w-3 h-3 ${easyModeEnabled ? 'text-primary' : 'text-muted-foreground'}`} />
                         {easyModeEnabled ? 'Easy Mode: ON' : 'Easy Mode: OFF'}
                         <span className="text-[10px] opacity-70">(1/10 pts)</span>
                       </button>
@@ -2318,8 +2337,8 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   {easyModeEnabled && PROMPT_SUGGESTIONS[currentLessonData.id] && (
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <Sparkles className="w-3 h-3 text-[#70BEFA]" />
-                        <span className="text-xs text-gray-400 font-mono">SUGGESTED PROMPTS</span>
+                        <Sparkles className="w-3 h-3 text-primary" />
+                        <span className="text-xs text-muted-foreground font-mono">SUGGESTED PROMPTS</span>
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {PROMPT_SUGGESTIONS[currentLessonData.id].map((suggestion, index) => (
@@ -2329,10 +2348,10 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                               setUserInput(suggestion);
                               setUsedSuggestion(true);
                             }}
-                            className="text-left px-3 py-2 bg-[#1A1A1A] hover:bg-[#70BEFA]/10 border border-gray-800 hover:border-[#70BEFA]/30 rounded-lg text-xs text-gray-300 hover:text-white transition-all group"
+                            className="text-left px-3 py-2 bg-secondary hover:bg-primary/10 border border-border hover:border-primary/30 rounded-lg text-xs text-muted-foreground hover:text-foreground transition-all group"
                           >
                             <div className="flex items-start gap-2">
-                              <span className="text-[#70BEFA] font-mono text-[10px] mt-0.5">#{index + 1}</span>
+                              <span className="text-primary font-mono text-[10px] mt-0.5">#{index + 1}</span>
                               <span className="flex-1 line-clamp-2 group-hover:line-clamp-none">{suggestion}</span>
                             </div>
                           </button>
@@ -2352,7 +2371,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                   <Textarea
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
-                    className="w-full bg-[#0D0D0D] border border-gray-800 text-white focus:border-[#70BEFA] focus:ring-0 min-h-[140px] placeholder-gray-600 rounded"
+                    className="w-full bg-background border border-border text-foreground focus:border-primary focus:ring-0 min-h-[140px] placeholder-muted-foreground rounded"
                     placeholder={t('ui.placeholders.promptInput')}
                     disabled={isLoading}
                   />
@@ -2366,42 +2385,42 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
               {/* AI Response */}
               {(aiResponse || isStreaming) && (
-                <Card className="bg-[#0D0D0D] border-l-0 border-r-0 border-t border-b border-gray-800 rounded-none">
+                <Card className="bg-background border-l-0 border-r-0 border-t border-b border-border rounded-none">
                   <CardContent className="p-6 space-y-3">
                     <div className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                      <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.response')}</span>
+                      <span className="text-xs font-mono text-foreground tracking-wider">{t('ui.labels.response')}</span>
                       {isStreaming && (
-                        <span className="text-xs text-[#70BEFA] animate-pulse">{t('ui.labels.streaming')}</span>
+                        <span className="text-xs text-primary animate-pulse">{t('ui.labels.streaming')}</span>
                       )}
                     </div>
                     <div className="prose prose-invert prose-sm max-w-none">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
-                          p: ({node, ...props}) => <p className="text-gray-300 leading-relaxed mb-4" {...props} />,
-                          h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-white mt-6 mb-4" {...props} />,
-                          h2: ({node, ...props}) => <h2 className="text-xl font-bold text-white mt-5 mb-3" {...props} />,
-                          h3: ({node, ...props}) => <h3 className="text-lg font-bold text-white mt-4 mb-2" {...props} />,
-                          ul: ({node, ...props}) => <ul className="list-disc list-inside text-gray-300 space-y-2 mb-4" {...props} />,
-                          ol: ({node, ...props}: any) => <ol className="list-decimal list-inside text-gray-300 space-y-2 mb-4" {...props} />,
-                          li: ({node, ...props}: any) => <li className="text-gray-300" {...props} />,
+                          p: ({node, ...props}) => <p className="text-muted-foreground leading-relaxed mb-4" {...props} />,
+                          h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-foreground mt-6 mb-4" {...props} />,
+                          h2: ({node, ...props}) => <h2 className="text-xl font-bold text-foreground mt-5 mb-3" {...props} />,
+                          h3: ({node, ...props}) => <h3 className="text-lg font-bold text-foreground mt-4 mb-2" {...props} />,
+                          ul: ({node, ...props}) => <ul className="list-disc list-inside text-muted-foreground space-y-2 mb-4" {...props} />,
+                          ol: ({node, ...props}: any) => <ol className="list-decimal list-inside text-muted-foreground space-y-2 mb-4" {...props} />,
+                          li: ({node, ...props}: any) => <li className="text-muted-foreground" {...props} />,
                           code: ({node, inline, ...props}: any) =>
                             inline ?
-                              <code className="bg-[#1A1A1A] text-[#70BEFA] px-1.5 py-0.5 rounded text-sm font-mono" {...props} /> :
-                              <code className="block bg-[#1A1A1A] text-[#70BEFA] p-4 rounded text-sm font-mono overflow-x-auto mb-4" {...props} />,
-                          pre: ({node, ...props}: any) => <pre className="bg-[#1A1A1A] rounded p-4 mb-4 overflow-x-auto" {...props} />,
-                          blockquote: ({node, ...props}: any) => <blockquote className="border-l-4 border-[#70BEFA] pl-4 italic text-gray-400 mb-4" {...props} />,
-                          a: ({node, ...props}) => <a className="text-[#70BEFA] hover:underline" {...props} />,
-                          strong: ({node, ...props}) => <strong className="font-bold text-white" {...props} />,
-                          em: ({node, ...props}) => <em className="italic text-gray-300" {...props} />,
-                          hr: ({node, ...props}) => <hr className="border-gray-700 my-6" {...props} />,
-                          table: ({node, ...props}) => <table className="min-w-full border-collapse border border-gray-700 mb-4" {...props} />,
-                          thead: ({node, ...props}) => <thead className="bg-[#1A1A1A]" {...props} />,
+                              <code className="bg-secondary text-primary px-1.5 py-0.5 rounded text-sm font-mono" {...props} /> :
+                              <code className="block bg-secondary text-primary p-4 rounded text-sm font-mono overflow-x-auto mb-4" {...props} />,
+                          pre: ({node, ...props}: any) => <pre className="bg-secondary rounded p-4 mb-4 overflow-x-auto" {...props} />,
+                          blockquote: ({node, ...props}: any) => <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground mb-4" {...props} />,
+                          a: ({node, ...props}) => <a className="text-primary hover:underline" {...props} />,
+                          strong: ({node, ...props}) => <strong className="font-bold text-foreground" {...props} />,
+                          em: ({node, ...props}) => <em className="italic text-muted-foreground" {...props} />,
+                          hr: ({node, ...props}) => <hr className="border-border my-6" {...props} />,
+                          table: ({node, ...props}) => <table className="min-w-full border-collapse border border-border mb-4" {...props} />,
+                          thead: ({node, ...props}) => <thead className="bg-secondary" {...props} />,
                           tbody: ({node, ...props}) => <tbody {...props} />,
-                          tr: ({node, ...props}) => <tr className="border-b border-gray-700" {...props} />,
-                          th: ({node, ...props}) => <th className="border border-gray-700 px-4 py-2 text-left text-white font-semibold" {...props} />,
-                          td: ({node, ...props}) => <td className="border border-gray-700 px-4 py-2 text-gray-300" {...props} />,
+                          tr: ({node, ...props}) => <tr className="border-b border-border" {...props} />,
+                          th: ({node, ...props}) => <th className="border border-border px-4 py-2 text-left text-foreground font-semibold" {...props} />,
+                          td: ({node, ...props}) => <td className="border border-border px-4 py-2 text-muted-foreground" {...props} />,
                         }}
                       >
                         {isStreaming ? streamingText : aiResponse}
@@ -2415,38 +2434,35 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               {evaluation && (
                 <Card className={`border-l-4 border-r-0 border-t-0 border-b-0 rounded-none rounded-r-xl ${
                   evaluation.passed
-                    ? 'bg-[#0D0D0D] border-l-[#70BEFA]'
-                    : 'bg-[#0D0D0D] border-l-orange-500'
+                    ? 'bg-background border-l-primary'
+                    : 'bg-background border-l-orange-500'
                 }`}>
                   <CardContent className="p-6 space-y-6">
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-4">
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
                           {evaluation.passed ? (
-                            <CheckCircle className="w-5 h-5 text-[#70BEFA]" />
+                            <CheckCircle className="w-5 h-5 text-primary" />
                           ) : (
                             <AlertCircle className="w-5 h-5 text-orange-400" />
                           )}
-                          <span className="text-xs font-mono tracking-wider text-white">
+                          <span className="text-xs font-mono tracking-wider text-foreground">
                             {evaluation.passed ? 'PASSED' : 'NEEDS WORK'}
                           </span>
                         </div>
-                        <p className="text-gray-300 leading-relaxed">{evaluation.mainFeedback}</p>
-                      </div>
-                      <div className="bg-[#1A1A1A] px-4 py-2 rounded border border-gray-800">
-                        <span className="font-mono text-sm text-white">{evaluation.score}/10</span>
+                        <p className="text-muted-foreground leading-relaxed">{evaluation.mainFeedback}</p>
                       </div>
                     </div>
 
                     {evaluation.highlights && evaluation.highlights.length > 0 && (
-                      <div className="border-t border-gray-800 pt-4 space-y-2">
-                        <span className="text-xs font-mono text-gray-400 tracking-wider">
+                      <div className="border-t border-border pt-4 space-y-2">
+                        <span className="text-xs font-mono text-muted-foreground tracking-wider">
                           {evaluation.passed ? 'HIGHLIGHTS' : 'WATCH OUT'}
                         </span>
-                        <ul className="text-sm text-gray-400 space-y-2">
+                        <ul className="text-sm text-muted-foreground space-y-2">
                           {evaluation.highlights.map((highlight, idx) => (
                             <li key={idx} className="flex items-start gap-2">
-                              <span className="text-[#70BEFA] mt-1">—</span>
+                              <span className="text-primary mt-1">—</span>
                               <span>"{highlight}"</span>
                             </li>
                           ))}
@@ -2455,12 +2471,12 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     )}
 
                     {evaluation.strengths && evaluation.strengths.length > 0 && (
-                      <div className="border-t border-gray-800 pt-4 space-y-2">
-                        <span className="text-xs font-mono text-gray-400 tracking-wider">STRENGTHS</span>
-                        <ul className="text-sm text-gray-400 space-y-2">
+                      <div className="border-t border-border pt-4 space-y-2">
+                        <span className="text-xs font-mono text-muted-foreground tracking-wider">STRENGTHS</span>
+                        <ul className="text-sm text-muted-foreground space-y-2">
                           {evaluation.strengths.map((strength, idx) => (
                             <li key={idx} className="flex items-start gap-2">
-                              <span className="text-[#70BEFA] mt-1">+</span>
+                              <span className="text-primary mt-1">+</span>
                               <span>{strength}</span>
                             </li>
                           ))}
@@ -2469,9 +2485,9 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     )}
 
                     {evaluation.weaknesses && evaluation.weaknesses.length > 0 && (
-                      <div className="border-t border-gray-800 pt-4 space-y-2">
-                        <span className="text-xs font-mono text-gray-400 tracking-wider">IMPROVE</span>
-                        <ul className="text-sm text-gray-400 space-y-2">
+                      <div className="border-t border-border pt-4 space-y-2">
+                        <span className="text-xs font-mono text-muted-foreground tracking-wider">IMPROVE</span>
+                        <ul className="text-sm text-muted-foreground space-y-2">
                           {evaluation.weaknesses.map((weakness, idx) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-orange-400 mt-1">—</span>
@@ -2483,9 +2499,9 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     )}
 
                     {evaluation.nextSteps && (
-                      <div className="border-t border-gray-800 pt-4 space-y-2">
-                        <span className="text-xs font-mono text-gray-400 tracking-wider">NEXT STEP</span>
-                        <p className="text-sm text-gray-300">{evaluation.nextSteps}</p>
+                      <div className="border-t border-border pt-4 space-y-2">
+                        <span className="text-xs font-mono text-muted-foreground tracking-wider">NEXT STEP</span>
+                        <p className="text-sm text-muted-foreground">{evaluation.nextSteps}</p>
                       </div>
                     )}
                   </CardContent>
@@ -2499,7 +2515,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     onClick={handleSubmitExercise}
                     disabled={!userInput.trim() || isLoading}
                     size="lg"
-                    className="flex-1 bg-[#70BEFA] text-black hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-primary text-black hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (
                       <>
@@ -2518,7 +2534,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       <Button
                         onClick={handleTryAgain}
                         size="lg"
-                        className="flex-1 bg-black text-white border border-orange-500 hover:bg-orange-500 hover:text-black transition-colors"
+                        className="flex-1 bg-black text-foreground border border-orange-500 hover:bg-orange-500 hover:text-black transition-colors"
                       >
                         {t('ui.buttons.tryAgain')}
                       </Button>
@@ -2526,7 +2542,7 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                     <Button
                       onClick={handleNext}
                       size="lg"
-                      className="flex-1 bg-black text-white border border-[#70BEFA]/30 hover:bg-[#70BEFA] hover:text-black transition-colors group"
+                      className="flex-1 bg-black text-foreground border border-primary/30 hover:bg-primary hover:text-black transition-colors group"
                     >
                       <span>{evaluation.passed ? t('ui.buttons.continue') : t('ui.buttons.skipLesson')}</span>
                       <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -2542,16 +2558,16 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
           <div className="md:col-span-4 space-y-6">
             {/* Hints Card */}
             {!evaluation && currentLessonData.hints && currentLessonData.type === 'exercise' && (
-              <Card className="bg-[#0D0D0D] border border-gray-800 rounded sticky top-8">
+              <Card className="bg-background border border-border rounded sticky top-8">
                 <CardContent className="p-6 space-y-3">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                    <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.hints')}</span>
+                    <span className="text-xs font-mono text-foreground tracking-wider">{t('ui.labels.hints')}</span>
                   </div>
-                  <ul className="space-y-3 text-sm text-gray-400">
+                  <ul className="space-y-3 text-sm text-muted-foreground">
                     {currentLessonData.hints.map((hint, idx) => (
-                      <li key={idx} className="flex items-start gap-2 hover:text-gray-300 transition-colors">
-                        <span className="text-[#70BEFA] mt-1 flex-shrink-0">—</span>
+                      <li key={idx} className="flex items-start gap-2 hover:text-muted-foreground transition-colors">
+                        <span className="text-primary mt-1 flex-shrink-0">—</span>
                         <span>{hint}</span>
                       </li>
                     ))}
@@ -2561,11 +2577,11 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
             )}
 
             {/* Lesson Navigation */}
-            <Card className="bg-[#0D0D0D] border border-gray-800 rounded">
+            <Card className="bg-background border border-border rounded">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                  <span className="text-xs font-mono text-white tracking-wider">{t('ui.labels.lessons')}</span>
+                  <span className="text-xs font-mono text-foreground tracking-wider">{t('ui.labels.lessons')}</span>
                 </div>
                 <div className="space-y-2">
                   {lessons.map((lesson, idx) => (
@@ -2573,10 +2589,10 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
                       key={idx}
                       className={`text-sm p-2 border-l-2 pl-3 transition-colors ${
                         idx === currentLesson
-                          ? 'border-[#70BEFA] text-white'
+                          ? 'border-primary text-foreground'
                           : idx < currentLesson
-                          ? 'border-gray-800 text-gray-500'
-                          : 'border-gray-800 text-gray-600'
+                          ? 'border-border text-muted-foreground'
+                          : 'border-border text-muted-foreground'
                       }`}
                     >
                       <div className="font-mono text-xs mb-1">
@@ -2609,31 +2625,31 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
               transition={{ type: "spring", duration: 0.5 }}
               className="max-w-md w-full"
             >
-              <Card className="bg-[#0D0D0D] border-l-4 border-l-[#70BEFA] border-r border-t border-b border-[#70BEFA]/30 rounded-r-xl shadow-2xl">
+              <Card className="bg-background border-l-4 border-l-primary border-r border-t border-b border-primary/30 rounded-r-xl shadow-2xl">
                 <CardContent className="p-6 space-y-4">
                   {/* Pulsating Blue Orb */}
                   <div className="flex justify-center">
                     <div className="relative w-24 h-24">
                       {/* Outer glow rings */}
-                      <div className="absolute inset-0 rounded-full bg-[#70BEFA]/30 animate-ping" style={{animationDuration: '2s'}}></div>
-                      <div className="absolute inset-2 rounded-full bg-[#70BEFA]/40 animate-pulse" style={{animationDuration: '1.5s'}}></div>
+                      <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" style={{animationDuration: '2s'}}></div>
+                      <div className="absolute inset-2 rounded-full bg-primary/40 animate-pulse" style={{animationDuration: '1.5s'}}></div>
                       {/* Core orb with constant glow */}
-                      <div className="absolute inset-6 rounded-full bg-[#70BEFA] shadow-[0_0_40px_rgba(112,190,250,0.8),0_0_80px_rgba(112,190,250,0.6),inset_0_0_20px_rgba(255,255,255,0.5)]"></div>
+                      <div className="absolute inset-6 rounded-full bg-primary shadow-[0_0_40px_rgba(0,122,255,0.8),0_0_80px_rgba(0,122,255,0.6),inset_0_0_20px_rgba(255,255,255,0.5)]"></div>
                     </div>
                   </div>
 
                   {/* Title */}
                   <div className="text-center">
-                    <h3 className="text-2xl font-bold text-white mb-1">
+                    <h3 className="text-2xl font-bold text-foreground mb-1">
                       {milestoneData.title}
                     </h3>
-                    <Badge className="bg-[#70BEFA]/20 text-[#70BEFA] border-[#70BEFA]/30">
+                    <Badge className="bg-primary/20 text-primary border-primary/30">
                       {milestoneData.badge}
                     </Badge>
                   </div>
 
                   {/* Message */}
-                  <p className="text-gray-300 text-center text-sm leading-relaxed">
+                  <p className="text-muted-foreground text-center text-sm leading-relaxed">
                     {milestoneData.message}
                   </p>
                 </CardContent>
@@ -2645,24 +2661,24 @@ DO NOT OUTPUT ANYTHING EXCEPT VALID JSON`
 
       {/* Reset Progress Confirmation Dialog */}
       <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
-        <AlertDialogContent className="bg-[#1A1A1A] border-gray-800">
+        <AlertDialogContent className="bg-secondary border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">
+            <AlertDialogTitle className="text-foreground">
               {language === 'fr' ? 'Réinitialiser la progression ?' : 'Reset Progress?'}
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-400">
+            <AlertDialogDescription className="text-muted-foreground">
               {language === 'fr'
                 ? 'Êtes-vous sûr de vouloir réinitialiser toute votre progression ? Cette action ne peut pas être annulée.'
                 : 'Are you sure you want to reset all your progress? This action cannot be undone.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-gray-800 text-white border-gray-700 hover:bg-gray-700">
+            <AlertDialogCancel className="bg-secondary text-foreground border-border hover:bg-secondary">
               {language === 'fr' ? 'Annuler' : 'Cancel'}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmReset}
-              className="bg-red-600 text-white hover:bg-red-700"
+              className="bg-red-600 text-foreground hover:bg-red-700"
             >
               {language === 'fr' ? 'Réinitialiser' : 'Reset'}
             </AlertDialogAction>

@@ -1,0 +1,650 @@
+{
+  "welcome": {
+    "badge": "COURS INTERACTIF",
+    "title": "Rédigez des prompts",
+    "titleHighlight": "qui fonctionnent vraiment",
+    "subtitle": "La plupart des gens écrivent des prompts vagues et obtiennent des résultats vagues. Ce cours vous enseigne les trois principes qui changent tout.",
+    "principles": {
+      "heading": "LES TROIS PRINCIPES",
+      "breakItDown": {
+        "title": "Décomposez",
+        "description": "Une étape claire vaut mieux que dix instructions vagues"
+      },
+      "beSpecific": {
+        "title": "Soyez précis",
+        "description": "Les détails éliminent les suppositions et les hypothèses"
+      },
+      "iterateQuickly": {
+        "title": "Itérez rapidement",
+        "description": "Corrigez les erreurs immédiatement, n'attendez pas"
+      }
+    },
+    "description": "Vous rédigerez de vrais prompts et verrez les réponses réelles de l'IA. Quand vous ferez des erreurs (et vous en ferez), vous apprendrez exactement pourquoi c'est arrivé et comment les corriger.",
+    "stats": {
+      "lessons": "3 leçons",
+      "exercises": "4 exercices",
+      "duration": "~30 min"
+    },
+    "pointsToEarn": "210",
+    "pointsLabel": "points à gagner",
+    "cta": {
+      "start": "Commencer le cours",
+      "continue": "Continuer le cours",
+      "reset": "Réinitialiser la progression"
+    },
+    "free": "Gratuit • Aucune inscription requise"
+  },
+  "lessons": [
+    {
+      "id": "intro",
+      "title": "Le problème des prompts vagues",
+      "type": "lesson",
+      "vaguePromptLabel": "Prompt vague",
+      "vaguePromptExample": "\"Fais un sandwich\"",
+      "whatAiMightDoLabel": "Ce que l'IA pourrait faire :",
+      "aiProblems": [
+        "Mettre les ingrédients sur le comptoir au lieu du pain",
+        "Utiliser des ingrédients que vous ne voulez pas",
+        "Sauter complètement des étapes",
+        "Mal comprendre ce que \"sandwich\" signifie pour vous"
+      ],
+      "solutionLabel": "La solution",
+      "solutionText": "Décomposez votre demande en étapes claires et précises. Guidez l'IA comme si vous enseigniez à quelqu'un qui n'a jamais fait de sandwich auparavant !"
+    },
+    {
+      "id": "lesson1",
+      "title": "Leçon 1 : Décomposez",
+      "type": "lesson",
+      "keyPrincipleLabel": "Principe clé : Une étape à la fois",
+      "keyPrincipleText": "Au lieu de demander un résultat complet, décomposez votre tâche en petites étapes claires.",
+      "exampleLabel": "Exemple : Préparer des œufs",
+      "exampleSteps": [
+        "Allumez la cuisinière",
+        "Mettez la poêle sur la cuisinière",
+        "Ajoutez du beurre dans la poêle",
+        "Augmentez la température à 60°C",
+        "Cassez deux œufs dans la zone de cuisson"
+      ],
+      "whyWorksLabel": "Pourquoi cela fonctionne :",
+      "benefits": [
+        "Chaque étape est simple et claire",
+        "Vous gardez le contrôle",
+        "Détectez les erreurs rapidement",
+        "L'IA sait quoi faire ensuite"
+      ]
+    },
+    {
+      "id": "exercise1",
+      "title": "Exercice 1 : Décomposer une tâche",
+      "type": "exercise",
+      "scenario": "Vous voulez que l'IA rédige un email professionnel à votre responsable pour demander un congé pour des vacances.",
+      "task": "Rédigez un prompt qui décompose cette tâche en étapes claires. Voyez comment l'IA répond !",
+      "evaluationCriteria": "décomposer la tâche en étapes",
+      "hints": [
+        "Pensez à la structure de l'email : salutation, explication, demande, conclusion",
+        "Quelles informations spécifiques doivent être incluses ?",
+        "Quel ton devrait être utilisé ?"
+      ]
+    },
+    {
+      "id": "lesson2",
+      "title": "Leçon 2 : Soyez précis",
+      "type": "lesson",
+      "keyPrincipleLabel": "Principe clé : Les détails comptent",
+      "keyPrincipleText": "Les instructions vagues mènent à des résultats inattendus. Ajoutez des détails précis sur quoi, où et comment.",
+      "vagueLabel": "Vague",
+      "vagueExample": "\"Ajoutez du beurre\"",
+      "vagueQuestion": "Où ? Combien ? À quelle température ?",
+      "specificLabel": "Précis",
+      "specificExample": "\"Ajoutez 1 cuillère à soupe de beurre au centre de la poêle\"",
+      "specificNote": "Emplacement et quantité clairs !",
+      "specificsLabel": "Types de précision à inclure :",
+      "specificTypes": [
+        {
+          "type": "Emplacement :",
+          "example": "\"dans la poêle\" et non simplement \"ajoutez du beurre\""
+        },
+        {
+          "type": "Quantité :",
+          "example": "\"deux œufs\" et non simplement \"ajoutez des œufs\""
+        },
+        {
+          "type": "Unités :",
+          "example": "\"60 degrés Celsius\" et non simplement \"60 degrés\""
+        },
+        {
+          "type": "Position :",
+          "example": "\"sur la deuxième étagère à votre gauche\""
+        },
+        {
+          "type": "Contexte :",
+          "example": "\"pour un public professionnel\""
+        }
+      ]
+    },
+    {
+      "id": "exercise2",
+      "title": "Exercice 2 : Ajouter de la précision",
+      "type": "exercise",
+      "scenario": "Vous avez besoin d'une visualisation de données montrant les performances de ventes trimestrielles de votre entreprise pour 2024.",
+      "task": "Rédigez un prompt précis pour créer un graphique à partir de ces données. Regardez l'IA générer la visualisation réelle en fonction de vos instructions !",
+      "evaluationCriteria": "être précis avec les détails (type de graphique, étiquettes, couleurs, titre, légendes des axes)",
+      "dataLabel": "DONNÉES",
+      "hints": [
+        "Quel type de graphique ? (barres, lignes, secteurs, zones ?)",
+        "Quelles couleurs devraient être utilisées ?",
+        "Que devrait dire le titre ?",
+        "Devrait-il y avoir des légendes d'axes ? Que devraient-elles dire ?",
+        "Un formatage spécifique ? (afficher les valeurs, lignes de grille, légende ?)"
+      ]
+    },
+    {
+      "id": "lesson3",
+      "title": "Leçon 3 : Itérez et corrigez",
+      "type": "lesson",
+      "keyPrincipleLabel": "Principe clé : Corrigez les malentendus immédiatement",
+      "keyPrincipleText": "L'IA comprendra parfois mal. Ce n'est pas grave ! Corrigez-la immédiatement et donnez du contexte pour les étapes futures.",
+      "conversationLabel": "Exemple de conversation :",
+      "conversationExample": {
+        "userLabel": "Vous :",
+        "userMessage": "\"Ajoutez du beurre dans la poêle\"",
+        "aiLabel": "IA :",
+        "aiMessage": "*Place le beurre sur la poignée de la poêle*",
+        "correctionLabel": "Vous (en corrigeant) :",
+        "correctionMessage": "\"Pas sur la poignée ! Mettez-le dans la zone de cuisson de la poêle. Dorénavant, quand je dis 'ajoutez dans la poêle', je veux dire la zone de cuisson.\""
+      },
+      "correctionTipsLabel": "Conseils pour les corrections :",
+      "correctionTips": [
+        "Signalez l'erreur clairement",
+        "Expliquez ce que vous vouliez vraiment dire",
+        "Ajoutez du contexte pour les instructions futures",
+        "Soyez précis sur ce qui doit changer"
+      ]
+    },
+    {
+      "id": "exercise3",
+      "title": "Exercice 3 : Corriger et itérer",
+      "type": "exercise",
+      "scenario": "Vous avez demandé à l'IA de créer une publication pour les réseaux sociaux pour votre entreprise, mais elle est revenue trop décontractée et utilise des emojis. Vous avez besoin d'un ton professionnel.",
+      "task": "Rédigez un prompt de correction qui corrige l'erreur ET établit des attentes pour les futures publications.",
+      "evaluationCriteria": "corriger les erreurs et établir des attentes futures",
+      "previousResponseLabel": "RÉPONSE PRÉCÉDENTE DE L'IA",
+      "mockBadResponse": "Salut les amis ! 🎉 Trop excité d'annoncer notre INCROYABLE nouvelle gamme de produits !!! 😍🔥 C'est littéralement la MEILLEURE chose que vous verrez aujourd'hui ! Super abordable et ça vaut vraiment le coup ! 💯 Envoyez-nous un DM ASAP si vous en voulez un !!! Stock limité ! 🚀✨",
+      "responseNote": "Cette réponse nécessite une correction !",
+      "hints": [
+        "Signalez ce qui s'est mal passé de manière précise",
+        "Spécifiez le ton correct",
+        "Ajoutez des instructions pour les futures demandes"
+      ]
+    },
+    {
+      "id": "lesson4",
+      "title": "Leçon 4 : Fournir des exemples",
+      "type": "lesson",
+      "keyPrincipleLabel": "Principe clé : Montrez, ne vous contentez pas de dire",
+      "keyPrincipleText": "Au lieu de seulement décrire ce que vous voulez, fournissez des exemples. L'IA apprend les modèles de vos exemples et reproduit ce style.",
+      "waysToProvideLabel": "Façons de fournir des exemples :",
+      "exampleWays": [
+        {
+          "type": "Échantillons de texte :",
+          "example": "\"Écrivez comme ceci : [coller l'exemple]\""
+        },
+        {
+          "type": "Liens :",
+          "example": "\"Reproduisez le style de cet article : [URL]\""
+        },
+        {
+          "type": "Exemples de format :",
+          "example": "\"Utilisez cette structure : [modèle]\""
+        },
+        {
+          "type": "Avant/Après :",
+          "example": "\"Transformez ceci [entrée] en cela [sortie]\""
+        }
+      ],
+      "whyExamplesWorkLabel": "Pourquoi les exemples fonctionnent :",
+      "benefits": [
+        "L'IA voit exactement ce que vous voulez",
+        "Reproduit le ton et le style automatiquement",
+        "Réduit les allers-retours de clarification",
+        "Fonctionne mieux que de longues descriptions"
+      ]
+    },
+    {
+      "id": "exercise4",
+      "title": "Exercice 4 : Utiliser des exemples",
+      "type": "exercise",
+      "scenario": "Vous devez rédiger des articles de blog pour votre entreprise technologique. Vous voulez que l'IA reproduise le style d'articles existants que vous aimez.",
+      "task": "Rédigez un prompt qui fait référence à des articles exemples (vous pouvez inclure des URL) et demande à l'IA de reproduire ce style d'écriture pour un nouveau sujet.",
+      "evaluationCriteria": "inclure des exemples de référence (texte ou URL) et demander à l'IA de reproduire le style",
+      "hints": [
+        "Vous pouvez faire référence à des URL d'articles exemples",
+        "Ou coller directement un exemple de texte dans votre prompt",
+        "Signalez des éléments de style spécifiques (ton, structure, longueur)",
+        "Indiquez clairement le nouveau sujet que vous souhaitez traiter",
+        "Demandez à l'IA d'analyser et de reproduire le style de l'exemple"
+      ]
+    },
+    {
+      "id": "lesson5",
+      "title": "Leçon 5 : Travailler avec des documents",
+      "type": "lesson",
+      "keyPrincipleLabel": "Principe clé : Guidez l'IA à travers vos documents",
+      "keyPrincipleText": "Lorsque vous travaillez avec des documents téléchargés, dites à l'IA exactement ce qu'elle doit chercher et comment utiliser les informations.",
+      "bestPracticesLabel": "Bonnes pratiques pour les prompts de documents :",
+      "bestPractices": [
+        {
+          "type": "Référencer le document :",
+          "example": "\"En se basant sur le document téléchargé...\""
+        },
+        {
+          "type": "Spécifier les sections :",
+          "example": "\"Concentrez-vous sur les données financières de la section 3\""
+        },
+        {
+          "type": "Définir clairement la tâche :",
+          "example": "\"Résumez les principales conclusions\" ou \"Extrayez toutes les dates\""
+        },
+        {
+          "type": "Spécifier le format de sortie :",
+          "example": "\"Créez une liste à puces\" ou \"Faites un tableau\""
+        },
+        {
+          "type": "Poser des questions :",
+          "example": "\"Quels sont les principaux risques mentionnés ?\""
+        }
+      ],
+      "mistakesToAvoidLabel": "Erreurs courantes à éviter :",
+      "commonMistakes": [
+        "\"Analysez ceci\" (trop vague - analyser quel aspect ?)",
+        "\"Parlez-moi du document\" (quoi spécifiquement ?)",
+        "Ne pas mentionner quel document (si plusieurs ont été téléchargés)"
+      ]
+    },
+    {
+      "id": "exercise5",
+      "title": "Exercice 5 : Analyse de document",
+      "type": "exercise",
+      "scenario": "Analysez des notes de réunion ou des documents professionnels pour extraire les informations clés et les actions à entreprendre.",
+      "task": "Choisissez votre difficulté : Le mode facile affiche des notes de réunion, le mode difficile nécessite le téléchargement d'un rapport d'affaires complet.",
+      "evaluationCriteria": "faire référence au document, spécifier ce qu'il faut extraire et définir le format de sortie",
+      "hints": [
+        "Reconnaissez explicitement le document/les notes",
+        "Spécifiez sur quelles informations se concentrer",
+        "Définissez quelles informations vous devez extraire",
+        "Spécifiez comment vous voulez que la sortie soit formatée (tableau, puces, résumé, etc.)"
+      ]
+    },
+    {
+      "id": "exercise6",
+      "title": "Défi final 1 : Écriture créative",
+      "type": "exercise",
+      "scenario": "Examinez le brief de campagne marketing et créez un contenu de campagne convaincant qui résonne avec le public cible.",
+      "task": "Chargez le brief de campagne, puis rédigez un prompt pour créer du contenu d'email, des publications sociales ou du contenu publicitaire aligné avec les objectifs de la campagne.",
+      "evaluationCriteria": "faire référence aux détails de la campagne, cibler l'audience, aborder les objectifs, demande de sortie créative et spécifique",
+      "hints": [
+        "Faites référence au produit spécifique et au public cible",
+        "Mentionnez les objectifs de la campagne et les messages clés",
+        "Spécifiez le type de contenu nécessaire (email, social, pub)",
+        "Définissez le ton, la longueur et le format",
+        "Incluez les insights sur les concurrents pour vous différencier"
+      ]
+    },
+    {
+      "id": "exercise7",
+      "title": "Défi final 2 : Pensée analytique",
+      "type": "exercise",
+      "scenario": "Analysez les données d'affaires interdépartementales pour identifier des insights, des tendances et des recommandations exploitables pour l'équipe de direction.",
+      "task": "Chargez le tableau de bord d'analyse d'affaires, puis rédigez un prompt pour extraire des insights à travers les Ventes, le Marketing, la Comptabilité et les Opérations.",
+      "evaluationCriteria": "faire référence à plusieurs départements, spécifier le type d'analyse, définir le format de sortie, demander des insights exploitables",
+      "hints": [
+        "Faites référence à des départements et métriques spécifiques",
+        "Demandez des corrélations et modèles interdépartementaux",
+        "Spécifiez quels insights vous avez besoin (opportunités, préoccupations, tendances)",
+        "Définissez le format de sortie (résumé exécutif, points, recommandations)",
+        "Demandez des recommandations exploitables et priorisées"
+      ]
+    }
+  ],
+  "ui": {
+    "language": {
+      "english": "Anglais",
+      "french": "Français"
+    },
+    "certificate": {
+      "enterName": "Entrez votre nom pour le certificat"
+    },
+    "completion": {
+      "title": "Vous l'avez fait.",
+      "subtitle": "Vous avez appris les fondamentaux du prompt engineering efficace",
+      "courseCompleted": "COURS TERMINÉ"
+    },
+    "navigation": {
+      "lessonCounter": "LEÇON {{current}}/{{total}}",
+      "pointsLabel": "{{score}} pts",
+      "reset": "Réinitialiser",
+      "resetTitle": "Réinitialiser toute la progression",
+      "progress": "{{percent}}% TERMINÉ",
+      "lessonsCompleted": "{{completed}}/{{total}} LEÇONS"
+    },
+    "buttons": {
+      "continue": "Continuer",
+      "tryAgain": "Réessayer",
+      "skipLesson": "Passer la leçon",
+      "submitPrompt": "Soumettre le prompt",
+      "generateVisualization": "Générer la visualisation",
+      "generating": "Génération en cours...",
+      "startOver": "Recommencer",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "download": "Télécharger",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "share": "Partager",
+      "uploadBusinessReport": "Télécharger le rapport d'affaires",
+      "loadCampaignBrief": "Charger le brief de campagne",
+      "loadAnalyticsDashboard": "Charger le tableau de bord analytique"
+    },
+    "labels": {
+      "scenario": "SCÉNARIO",
+      "data": "DONNÉES",
+      "yourPrompt": "VOTRE PROMPT",
+      "response": "RÉPONSE",
+      "streaming": "● Flux en cours...",
+      "hints": "INDICES",
+      "lessons": "LEÇONS",
+      "passed": "RÉUSSI",
+      "needsWork": "À AMÉLIORER",
+      "highlights": "POINTS FORTS",
+      "watchOut": "ATTENTION",
+      "strengths": "FORCES",
+      "improve": "À AMÉLIORER",
+      "nextStep": "PROCHAINE ÉTAPE",
+      "share": "PARTAGER",
+      "aiPreviousResponse": "RÉPONSE PRÉCÉDENTE DE L'IA",
+      "needsCorrection": "Cette réponse nécessite une correction !",
+      "selectDifficulty": "SÉLECTIONNER LA DIFFICULTÉ",
+      "meetingNotes": "NOTES DE RÉUNION",
+      "attendeesCount": "{{count}} participants",
+      "attendees": "PARTICIPANTS",
+      "discussionPoints": "POINTS DE DISCUSSION",
+      "actionItems": "ACTIONS À FAIRE",
+      "writeYourPrompt": "RÉDIGEZ VOTRE PROMPT",
+      "step1UploadDocument": "ÉTAPE 1 : TÉLÉCHARGER LE DOCUMENT",
+      "uploadingDocument": "Téléchargement du document...",
+      "businessReportTitle": "{{company}} - Rapport d'affaires",
+      "uploadSuccess": "10 pages • Téléchargé avec succès",
+      "documentContents": "CONTENU DU DOCUMENT",
+      "company": "Entreprise :",
+      "industry": "Secteur :",
+      "employees": "Employés :",
+      "revenue": "Revenu :",
+      "growth": "Croissance :",
+      "keyProjects": "Projets clés :",
+      "quarterlySales": "Ventes trimestrielles :",
+      "marketing": "Marketing :",
+      "budget": "Budget :",
+      "leads": "Prospects :",
+      "conversion": "Conversion :",
+      "keyChallenges": "Défis clés :",
+      "step2WritePrompt": "ÉTAPE 2 : RÉDIGEZ VOTRE PROMPT",
+      "step1LoadCampaignBrief": "ÉTAPE 1 : CHARGER LE BRIEF DE CAMPAGNE",
+      "loadingCampaignBrief": "Chargement du brief de campagne...",
+      "step2WriteCreativePrompt": "ÉTAPE 2 : RÉDIGEZ VOTRE PROMPT CRÉATIF",
+      "step1LoadAnalytics": "ÉTAPE 1 : CHARGER LES ANALYSES D'AFFAIRES",
+      "loadingAnalyticsDashboard": "Chargement du tableau de bord analytique...",
+      "step2WriteAnalysisPrompt": "ÉTAPE 2 : RÉDIGEZ VOTRE PROMPT D'ANALYSE",
+      "easyModeOn": "Mode Facile : ACTIVÉ",
+      "easyModeOff": "Mode Facile : DÉSACTIVÉ",
+      "reducedPoints": "(1/10 pts)",
+      "suggestedPrompts": "PROMPTS SUGGÉRÉS",
+      "suggestionWarning": "Utiliser les suggestions réduit votre score à 1/10 des points normaux",
+      "pts": "PTS",
+      "courseCompleted": "COURS TERMINÉ"
+    },
+    "placeholders": {
+      "promptInput": "Écrivez votre prompt ici...",
+      "fullName": "Votre nom complet"
+    },
+    "difficulty": {
+      "easyMode": "Mode Facile",
+      "recommended": "Recommandé",
+      "easyDescription": "Analysez des notes de réunion simples avec des actions claires.",
+      "hardMode": "Mode Difficile",
+      "challenge": "Défi",
+      "hardDescription": "Téléchargez et analysez des rapports d'affaires complets."
+    }
+  },
+  "difficulty": {
+    "selectDifficulty": "SÉLECTIONNER LA DIFFICULTÉ",
+    "easy": {
+      "title": "Mode facile",
+      "badge": "Recommandé",
+      "description": "Analysez des notes de réunion simples avec des actions claires à entreprendre."
+    },
+    "hard": {
+      "title": "Mode difficile",
+      "badge": "Défi",
+      "description": "Téléchargez et analysez des rapports d'affaires complets."
+    }
+  },
+  "easyMode": {
+    "toggle": {
+      "on": "Mode facile : ACTIVÉ",
+      "off": "Mode facile : DÉSACTIVÉ",
+      "penalty": "(1/10 pts)"
+    },
+    "suggestedPrompts": "PROMPTS SUGGÉRÉS",
+    "warning": "L'utilisation de suggestions réduit votre score à 1/10 des points normaux",
+    "meetingNotes": "NOTES DE RÉUNION",
+    "attendees": "PARTICIPANTS",
+    "discussionPoints": "POINTS DE DISCUSSION",
+    "actionItems": "ACTIONS À ENTREPRENDRE",
+    "writePrompt": "RÉDIGEZ VOTRE PROMPT"
+  },
+  "exercise5": {
+    "step1Upload": "ÉTAPE 1 : TÉLÉCHARGER LE DOCUMENT",
+    "step2Prompt": "ÉTAPE 2 : RÉDIGEZ VOTRE PROMPT",
+    "uploadButton": "Télécharger le rapport d'affaires",
+    "uploading": "Téléchargement du document...",
+    "uploadedSuccess": "Téléchargement réussi",
+    "documentContents": "CONTENU DU DOCUMENT",
+    "fields": {
+      "company": "Entreprise :",
+      "industry": "Industrie :",
+      "employees": "Employés :",
+      "revenue": "Revenu :",
+      "keyProjects": "Projets clés :",
+      "quarterlySales": "Ventes trimestrielles :",
+      "marketing": "Marketing :",
+      "keyChallenges": "Défis clés :"
+    }
+  },
+  "exercise6": {
+    "step1LoadBrief": "ÉTAPE 1 : CHARGER LE BRIEF DE CAMPAGNE",
+    "step2WritePrompt": "ÉTAPE 2 : RÉDIGEZ VOTRE PROMPT CRÉATIF",
+    "loadButton": "Charger le brief de campagne",
+    "loading": "Chargement du brief de campagne...",
+    "briefFrom": "Nouveau brief de campagne de {{name}}",
+    "productLaunch": "Lancement de produit : ",
+    "targetAudience": "PUBLIC CIBLE",
+    "budget": "BUDGET",
+    "timeline": "CALENDRIER",
+    "campaignGoals": "OBJECTIFS DE CAMPAGNE",
+    "keyMessages": "MESSAGES CLÉS",
+    "channels": "CANAUX",
+    "competitiveEdge": "AVANTAGE CONCURRENTIEL"
+  },
+  "exercise7": {
+    "step1LoadAnalytics": "ÉTAPE 1 : CHARGER LES ANALYSES D'AFFAIRES",
+    "step2WritePrompt": "ÉTAPE 2 : RÉDIGEZ VOTRE PROMPT D'ANALYSE",
+    "loadButton": "Charger le tableau de bord analytique",
+    "loading": "Chargement du tableau de bord analytique...",
+    "dashboardSubtitle": "Tableau de bord de performance interdépartemental",
+    "departments": {
+      "sales": "VENTES",
+      "marketing": "MARKETING",
+      "accounting": "COMPTABILITÉ",
+      "operations": "OPÉRATIONS"
+    },
+    "fields": {
+      "top": "Top :",
+      "reps": "commerciaux",
+      "avgDeals": "ventes moy",
+      "of": "de",
+      "bestROI": "Meilleur ROI :",
+      "revenue": "Revenu",
+      "profit": "Profit",
+      "margin": "Marge",
+      "outstanding": "En attente :",
+      "employees": "employés",
+      "satisfaction": "Satisfaction :"
+    },
+    "keyInsights": "INSIGHTS CLÉS",
+    "concerns": "PRÉOCCUPATIONS"
+  },
+  "completion": {
+    "badge": "COURS TERMINÉ",
+    "title": "Vous avez réussi.",
+    "subtitle": "Vous avez appris les fondamentaux du prompting efficace avec l'IA",
+    "certificateTitle": "Cours terminé !",
+    "stats": {
+      "pts": "PTS",
+      "lessons": "LEÇONS",
+      "completion": "100%"
+    },
+    "badges": {
+      "iterationMaster": "MAÎTRE DE L'ITÉRATION",
+      "specificityExpert": "EXPERT EN PRÉCISION",
+      "clarityChampion": "CHAMPION DE LA CLARTÉ"
+    },
+    "branding": {
+      "company": "Novagen Labs",
+      "course": "AI PROMPT ENGINEERING"
+    },
+    "cta": {
+      "tryYourself": "Essayez vous-même :",
+      "website": "learn2prompt.xyz",
+      "challenge": "Battez mon score ! 🎯"
+    },
+    "share": {
+      "heading": "PARTAGER",
+      "download": "Télécharger",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "share": "Partager"
+    },
+    "shareText": "Je viens de terminer le cours AI Prompt Engineering et j'ai obtenu {{score}} points ! 🎓✨ Maîtrisez l'art de communiquer efficacement avec l'IA.",
+    "shareTextTwitter": "Je viens de terminer le cours AI Prompt Engineering et j'ai obtenu {{score}} points ! 🎓✨",
+    "nameInput": {
+      "title": "Entrez votre nom pour le certificat",
+      "placeholder": "Votre nom complet",
+      "cancel": "Annuler",
+      "confirm": "Confirmer"
+    }
+  },
+  "milestone": {
+    "halfwayTitle": "À mi-chemin ! 🎯",
+    "halfwayMessage": "Vous maîtrisez le prompt engineering ! Vos prompts deviennent plus précis et efficaces.",
+    "halfwayBadge": "50% terminé"
+  },
+  "chart": {
+    "unknownType": "Type de graphique inconnu",
+    "aiInterpretation": "Interprétation de l'IA : ",
+    "errorGenerating": "Erreur lors de la génération du graphique. Utilisation de la configuration par défaut."
+  },
+  "shapes": {
+    "circles": {
+      "azureOrb": "Orbe azur",
+      "violetSphere": "Sphère violette",
+      "emeraldGlobe": "Globe émeraude",
+      "goldenOrb": "Orbe doré"
+    },
+    "squares": {
+      "cyanCrystal": "Cristal cyan",
+      "roseDiamond": "Diamant rose",
+      "amberBlock": "Bloc ambré",
+      "indigoGem": "Gemme indigo"
+    },
+    "triangles": {
+      "rubyPrism": "Prisme rubis",
+      "tealPyramid": "Pyramide sarcelle",
+      "sunburstTriangle": "Triangle solaire",
+      "limeShard": "Éclat citron vert"
+    }
+  },
+  "alerts": {
+    "resetConfirm": "Êtes-vous sûr de vouloir réinitialiser toute votre progression ? Cette action ne peut pas être annulée.",
+    "resetSuccess": "La progression a été réinitialisée avec succès !",
+    "shareCopied": "Texte de partage copié dans le presse-papiers !",
+    "shareFailed": "Échec de la copie. Veuillez réessayer.",
+    "certificateFailed": "Échec du téléchargement du certificat. Veuillez réessayer."
+  },
+  "errors": {
+    "evaluationError": "Une erreur s'est produite lors de l'évaluation de votre prompt. Veuillez réessayer.",
+    "tryResubmit": "Essayez de soumettre à nouveau votre réponse.",
+    "responseError": "Erreur lors de la génération de la réponse. Veuillez réessayer."
+  },
+  "mockData": {
+    "easyModeDocument": {
+      "type": "Notes de réunion",
+      "title": "Réunion stratégie marketing T4",
+      "date": "15 octobre 2024",
+      "attendees": [
+        "Sarah (Responsable marketing)",
+        "Mike (Directeur des ventes)",
+        "Alex (Chef de produit)"
+      ],
+      "content": [
+        "Discussion sur le lancement d'une nouvelle gamme de produits au T1 2025",
+        "Public cible : Propriétaires de petites entreprises, 30-50 ans",
+        "Budget approuvé : 45 000 $ pour la campagne initiale",
+        "Principaux canaux : LinkedIn, Email, Événements du secteur",
+        "Message clé : 'Économisez 20 heures/semaine avec l'automatisation'",
+        "Objectif de vente : 200 démos réservées dans les 60 premiers jours"
+      ],
+      "actionItems": [
+        "Sarah doit créer le calendrier de campagne d'ici le 22 octobre",
+        "Mike doit préparer la présentation de vente pour les démos",
+        "Alex doit finaliser le message produit"
+      ]
+    }
+  },
+  "promptSuggestions": {
+    "exercise1": [
+      "Rédigez un email professionnel de demande de congé. Commencez par une salutation polie, expliquez les dates (JJ/MM au JJ/MM), fournissez le contexte sur la couverture prévue, et terminez professionnellement.",
+      "Créez un email de demande de congé à mon responsable. Incluez : 1) Salutation 2) Dates demandées 3) Plan de couverture du travail 4) Exprimez votre disponibilité pour en discuter",
+      "Rédigez un email demandant l'approbation de congé. Structure : salutation → indiquer les dates → expliquer les plans de transfert → remercier le responsable pour sa considération"
+    ],
+    "exercise2": [
+      "Créez un graphique à barres montrant les ventes trimestrielles pour T1-T4 2024. Axe X : trimestres, Axe Y : revenu en dollars. Incluez des lignes de grille et un titre 'Performance des ventes trimestrielles 2024'.",
+      "Générez une visualisation avec : Type : graphique à barres, Données : T1 450K$, T2 520K$, T3 610K$, T4 580K$, Étiquettes sur les deux axes, Légende montrant les données de ventes",
+      "Faites un graphique de ventes. Spécifications : format en barres, quatre trimestres comme catégories, chiffres de ventes comme valeurs, étiquettes d'axes claires, palette de couleurs professionnelle"
+    ],
+    "exercise3": [
+      "La publication précédente était trop décontractée. Réécrivez-la avec : ton professionnel, pas d'emojis, focus sur la proposition de valeur, adapté pour LinkedIn, maximum 2-3 phrases.",
+      "Veuillez réviser la publication sur les réseaux sociaux. Changements nécessaires : retirer tous les emojis, utiliser un langage adapté aux affaires, maintenir le message clé mais élever le ton, rester sous 280 caractères.",
+      "Correction : le ton doit être plus professionnel. Réécrivez avec : langage d'affaires formel, pas d'argot ni d'emojis, déclaration de valeur claire, approprié pour un public d'entreprise"
+    ],
+    "exercise4": [
+      "Rédigez un article de blog technologique sur [sujet]. Reproduisez ce style : [coller l'exemple]. Utilisez des éléments similaires : structure de phrases, profondeur technique, ton, longueur de paragraphes et accroches d'ouverture.",
+      "Créez un article de blog en suivant cet exemple : [texte d'exemple]. Éléments clés à reproduire : ton décontracté mais professionnel, utilisation d'analogies, formatage des paragraphes, style de conclusion.",
+      "Générez un article de blog dans le style de : [exemple]. Reproduisez : voix de l'écriture, niveau technique, utilisation d'exemples, structure des paragraphes et introductions engageantes."
+    ],
+    "exercise5": [
+      "Analysez ce document de notes de réunion. Extrayez : 1) Décisions clés prises 2) Actions à entreprendre avec les responsables 3) Échéances mentionnées 4) Sujets de suivi. Formatez en listes à puces.",
+      "Examinez le document téléchargé et fournissez : résumé des principaux sujets, liste des actions à entreprendre (qui/quoi/quand), risques ou obstacles mentionnés, prochaines étapes requises.",
+      "Analysez ce document d'affaires. Sortie : résumé exécutif (3 phrases), tableau des actions (responsable, tâche, échéance), métriques ou chiffres clés, questions en suspens."
+    ],
+    "exercise6": [
+      "D'après le brief de campagne : créez 3 options de titres, 2 variations de texte principal et 1 appel à l'action. Reproduisez le ton du public cible et abordez leurs points de douleur mentionnés dans le brief.",
+      "En utilisant le brief marketing fourni : développez le contenu de campagne incluant accroche/titre, paragraphe de proposition de valeur, élément de preuve sociale et CTA clair. Alignez avec les données démographiques de l'audience.",
+      "Examinez le brief de campagne et générez : titre accrocheur, texte principal persuasif (150 mots), appel émotionnel pertinent pour le public cible, CTA de clôture fort"
+    ],
+    "exercise7": [
+      "Analysez le tableau de bord d'analyse d'affaires. Identifiez : 3 opportunités de croissance clés, 2 tendances préoccupantes, modèles interdépartementaux, et fournissez 3 recommandations exploitables avec justification.",
+      "Examinez les données analytiques à travers tous les départements. Créez un résumé exécutif avec : points forts de chaque dép., insights interdépartementaux, top 3 priorités, actions recommandées.",
+      "Examinez les données d'affaires fournies. Livrez : points forts de performance, zones nécessitant attention, modèles à travers les départements, recommandations stratégiques pour l'équipe de direction avec données à l'appui."
+    ]
+  }
+}

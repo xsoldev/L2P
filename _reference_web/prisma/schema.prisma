@@ -1,0 +1,219 @@
+// Prisma Schema for Learn2Prompt
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==================== NextAuth Models ====================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?       // Hashed password for email/password auth
+  accounts      Account[]
+  sessions      Session[]
+  progress      GameProgress? // Legacy - keeping for backward compatibility
+
+  // Gamification
+  xp              Int       @default(0)
+  level           Int       @default(1)
+  hearts          Int       @default(5)
+  heartsUpdatedAt DateTime  @default(now())
+  streakCount     Int       @default(0)
+  streakLastDate  DateTime?
+  streakFreezes   Int       @default(0)
+  league          String    @default("bronze")
+  weeklyXp        Int       @default(0)
+
+  // Relations
+  courseProgress  CourseProgress[]
+  achievements    UserAchievement[]
+  lessonHistory   LessonHistory[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ==================== Game Progress Model ====================
+
+model GameProgress {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Game state
+  currentScreen      String   @default("welcome") // 'welcome' | 'lesson' | 'certificate' | 'complete'
+  currentLesson      Int      @default(0)
+  score              Int      @default(0)
+  completedLessons   String[] @default([])
+
+  // User preferences
+  userName           String   @default("")
+  userShape          String?
+  exerciseDifficulty String   @default("easy") // 'easy' | 'hard'
+  language           String   @default("en")   // 'en' | 'fr'
+
+  // Timestamps
+  lastSaved          DateTime @default(now())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+// ==================== Multi-Course Platform Models ====================
+
+model Course {
+  id          String   @id @default(cuid())
+  slug        String   @unique  // "business", "creative", "kids", "elderly"
+  name        String
+  description String
+  icon        String            // Emoji or icon name
+  color       String            // Accent color for course
+  difficulty  String            // "beginner", "intermediate", "advanced"
+  targetAge   String?           // "8-14", "65+", null for general
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  units       Unit[]
+  progress    CourseProgress[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Unit {
+  id          String   @id @default(cuid())
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  order       Int
+  name        String
+  description String?
+  icon        String?
+  lessons     Lesson[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  unitId      String
+  unit        Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  order       Int
+  type        String   // "lesson", "exercise", "quiz"
+  name        String
+  description String?
+  content     Json     // Lesson content structure (varies by type)
+  xpReward    Int      @default(10)
+  isActive    Boolean  @default(true)
+  history     LessonHistory[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([unitId])
+}
+
+model CourseProgress {
+  id               String    @id @default(cuid())
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId         String
+  course           Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  currentUnitId    String?
+  currentLessonId  String?
+  completedLessons String[]  @default([])
+  totalXpEarned    Int       @default(0)
+  startedAt        DateTime  @default(now())
+  completedAt      DateTime?
+  updatedAt        DateTime  @updatedAt
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+}
+
+model LessonHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  score       Int?     // For exercises/quizzes (0-100)
+  xpEarned    Int
+  mistakes    Int      @default(0)
+  timeSpent   Int?     // Seconds spent on lesson
+  completedAt DateTime @default(now())
+
+  @@index([userId, completedAt])
+  @@index([lessonId])
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  icon        String   // Emoji or icon name
+  category    String   // "streak", "course", "xp", "social", "special"
+  requirement Json     // Criteria to unlock (e.g., {type: "streak", value: 7})
+  xpReward    Int      @default(0)
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  users       UserAchievement[]
+  createdAt   DateTime @default(now())
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  unlockedAt    DateTime    @default(now())
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+}

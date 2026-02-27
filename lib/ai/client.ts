@@ -229,6 +229,111 @@ Respond ONLY with a JSON object in this exact format (no markdown, no code block
 }
 
 /**
+ * Generate an image using OpenRouter's image generation API
+ *
+ * @param prompt - The image generation prompt
+ * @param aspectRatio - Aspect ratio (1:1, 16:9, 9:16, etc.)
+ * @returns Object with images array (base64 data URLs) and optional text
+ */
+export async function generateImage(
+  prompt: string,
+  aspectRatio: string = '1:1'
+): Promise<{
+  images: string[];
+  text: string;
+  error?: string;
+}> {
+  try {
+    const response = await fetch('/api/generate-image', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt,
+        aspectRatio,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        images: [],
+        text: '',
+        error: errorData.error || 'Failed to generate image',
+      };
+    }
+
+    const data = await response.json();
+    return {
+      images: data.images || [],
+      text: data.text || '',
+    };
+  } catch (error) {
+    console.error('Image generation error:', error);
+    return {
+      images: [],
+      text: '',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Edit an existing image using OpenRouter's image editing API
+ *
+ * @param prompt - The edit instructions (e.g., "Remove the background", "Add a sunset")
+ * @param imageUrl - The input image (base64 data URL or public URL)
+ * @param aspectRatio - Aspect ratio for the output (1:1, 16:9, 9:16, etc.)
+ * @returns Object with edited images array and optional text
+ */
+export async function editImage(
+  prompt: string,
+  imageUrl: string,
+  aspectRatio: string = '1:1'
+): Promise<{
+  images: string[];
+  text: string;
+  error?: string;
+}> {
+  try {
+    const response = await fetch('/api/edit-image', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt,
+        imageUrl,
+        aspectRatio,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        images: [],
+        text: '',
+        error: errorData.error || 'Failed to edit image',
+      };
+    }
+
+    const data = await response.json();
+    return {
+      images: data.images || [],
+      text: data.text || '',
+    };
+  } catch (error) {
+    console.error('Image editing error:', error);
+    return {
+      images: [],
+      text: '',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
  * Generate a visualization configuration from user prompt
  *
  * Used in Exercise 2 for chart generation
@@ -287,7 +392,7 @@ Respond ONLY with a JSON object in this exact format (no markdown, no code block
       title: config.title || 'Sales Data',
       xAxisLabel: config.xAxisLabel || 'Month',
       yAxisLabel: config.yAxisLabel || 'Sales',
-      colors: config.colors || ['#70BEFA', '#5AAFED'],
+      colors: config.colors || ['#007AFF', '#34C759'],
       showGrid: config.showGrid !== false,
       showLegend: config.showLegend !== false,
       showValues: config.showValues !== false,
@@ -301,7 +406,7 @@ Respond ONLY with a JSON object in this exact format (no markdown, no code block
       title: 'Sales Data Visualization',
       xAxisLabel: 'Month',
       yAxisLabel: 'Sales',
-      colors: ['#70BEFA', '#5AAFED', '#8CCFFD'],
+      colors: ['#007AFF', '#34C759', '#FF9500'],
       showGrid: true,
       showLegend: true,
       showValues: true,
